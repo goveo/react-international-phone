@@ -1,8 +1,5 @@
-import { countries, CountryData } from "./data/countryData";
-
-export const removeNonDigits = (value: string): string => {
-  return value.replace(/\D/g, "");
-};
+import { countries, CountryData } from "../data/countryData";
+import { removeNonDigits } from "./common";
 
 export interface ParsedCountry {
   name: CountryData[0];
@@ -13,7 +10,7 @@ export interface ParsedCountry {
   priority: CountryData[5];
 }
 
-const parseCountry = (countryData: CountryData): ParsedCountry => {
+export const parseCountry = (countryData: CountryData): ParsedCountry => {
   const [name, regions, iso2, dialCode, format, priority] = countryData;
   return {
     name,

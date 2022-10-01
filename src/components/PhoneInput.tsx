@@ -1,23 +1,28 @@
 import React, { useState } from "react";
-import { guessCountryByPartialNumber, removeNonDigits } from "../utils";
+
+import { removeNonDigits } from "../utils/common/removeNonDigits";
 
 interface PhoneInputProps {
-  prefix: string;
+  prefix?: string;
 }
 
 export const PhoneInput: React.FC<PhoneInputProps> = ({ prefix = "+" }) => {
   const [value, setValue] = useState("");
 
-  const updateValue = (newValue: string) => {
+  const updateValue = (v: string) => {
+    let newValue = v;
     const shouldStartWithPrefix = newValue.length > 0;
 
     if (shouldStartWithPrefix && newValue[0] !== prefix) {
-      return setValue(`${prefix}${newValue}`);
+      newValue = `${prefix}${newValue}`;
     }
+
     setValue(newValue);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
     let newValue = e.target.value;
 
     // should pass prefix input
@@ -25,9 +30,6 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({ prefix = "+" }) => {
       newValue = removeNonDigits(newValue);
     }
     updateValue(newValue);
-
-    const country = guessCountryByPartialNumber(newValue);
-    console.log("country:", country);
   };
 
   return <input onChange={handleChange} value={value} />;
