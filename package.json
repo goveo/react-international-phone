@@ -1,0 +1,59 @@
+{
+  "name": "react-international-phone",
+  "version": "0.1.0",
+  "description": "international phone component for React",
+  "private": true,
+  "author": "Yuriy Brusentsov <yuriybrusentsov@gmail.com>",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "storybook": "start-storybook -p 6006",
+    "lint": "eslint ./src --ext .ts,.tsx --config .eslintrc",
+    "format": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goveo/react-international-phone.git"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@storybook/addon-knobs": "^6.0.28",
+    "@storybook/react": "^6.0.28",
+    "@types/jest": "^26.0.24",
+    "@types/react": "^16.14.32",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.21.3",
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "husky": "^8.0.1",
+    "jest": "^26.6.3",
+    "lint-staged": "^13.0.3",
+    "prettier": "2.7.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "ts-jest": "^26.5.6",
+    "ts-loader": "^8.4.0",
+    "typescript": "^4.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    ".ts|.tsx|.js": [
+      "yarn lint",
+      "yarn format"
+    ]
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}

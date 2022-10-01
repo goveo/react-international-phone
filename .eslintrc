@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "rules": {
+    "@typescript-eslint/no-var-requires": "off",
+    "no-trailing-spaces": ["error"],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "brace-style": ["error"],
+    "comma-spacing": ["error"],
+    "array-bracket-spacing": ["error"],
+    "keyword-spacing": ["error"],
+    "key-spacing": ["error"],
+    "eol-last": ["error"],
+    "quotes": ["error", "double", "avoid-escape"],
+    "switch-colon-spacing": ["error", { "after": true, "before": false }],
+    "object-curly-spacing": ["error", "always"],
+    "space-infix-ops": ["error", { "int32Hint": false }],
+    "space-before-blocks": ["warn"],
+    "arrow-parens": ["warn"],
+    "react/jsx-uses-vars": ["error"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
