@@ -21,9 +21,16 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     return selectedCountry?.format;
   }, [selectedCountry?.format]);
 
-  const updateValue = (v: string) => {
+  const updateValue = (
+    v: string,
+    config?: { setWithoutFormatting: boolean },
+  ) => {
+    if (config?.setWithoutFormatting) {
+      return setValue(v);
+    }
+
     let newValue = v;
-    const shouldStartWithPrefix = newValue.length > 0;
+    const shouldStartWithPrefix = true;
 
     if (shouldStartWithPrefix && newValue[0] !== prefix) {
       newValue = `${prefix}${newValue}`;
@@ -45,13 +52,16 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
-    let newValue = e.target.value;
+    const inputValue = e.target.value;
+
+    let newValue = inputValue;
 
     // should pass prefix input
     if (newValue !== prefix) {
       newValue = removeNonDigits(newValue);
     }
-    updateValue(newValue);
+
+    updateValue(newValue, { setWithoutFormatting: inputValue.length === 0 });
   };
 
   return <input onChange={handleChange} value={value} />;
