@@ -1,24 +1,37 @@
-export const applyMask = (
-  value: string,
-  mask: string,
-  maskSymbol: string,
-): string => {
-  const [result] = mask.split("").reduce(
-    (acc: [string, number], maskChar): [string, number] => {
-      let [result, valueIndex] = acc;
+interface ApplyMaskArgs {
+  value: string;
+  mask: string;
+  maskSymbol: string;
+  offset?: number;
+  insertSpaceAfterOffset?: boolean;
+}
 
-      if (valueIndex >= value.length) return [result, valueIndex];
+export const applyMask = ({
+  value,
+  mask,
+  maskSymbol,
+  offset = 0,
+  insertSpaceAfterOffset = true,
+}: ApplyMaskArgs): string => {
+  const savedValuePart = value.slice(0, offset);
+  const valueToMask = value.slice(offset);
 
-      if (maskChar === maskSymbol) {
-        result += value[valueIndex];
-        valueIndex += 1;
-      } else {
-        result += maskChar;
-      }
+  let result = savedValuePart;
 
-      return [result, valueIndex];
-    },
-    ["", 0],
-  );
+  if (offset > 0 && insertSpaceAfterOffset) {
+    result += " ";
+  }
+
+  let charsPlaced = 0;
+
+  mask.split("").forEach((maskChar) => {
+    if (charsPlaced >= valueToMask.length) return;
+    if (maskChar === maskSymbol) {
+      result += valueToMask[charsPlaced];
+      charsPlaced += 1;
+    } else {
+      result += maskChar;
+    }
+  });
   return result;
 };
