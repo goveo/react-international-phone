@@ -37,6 +37,13 @@ describe("guessCountryByPartialNumber", () => {
     expect(shouldFindBahamas).toHaveProperty("dialCode", "1242");
   });
 
+  test("should respect priority value", () => {
+    const shouldFindUS = guessCountryByPartialNumber("+1999");
+    expect(shouldFindUS).toHaveProperty("dialCode", "1");
+    expect(shouldFindUS).not.toHaveProperty("name", "Canada");
+    expect(shouldFindUS).toHaveProperty("name", "United States");
+  });
+
   test("should return undefined if code is not found", () => {
     expect(guessCountryByPartialNumber("+999")).toBeUndefined();
     expect(guessCountryByPartialNumber("+000")).toBeUndefined();

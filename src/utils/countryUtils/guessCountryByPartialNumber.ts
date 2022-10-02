@@ -17,6 +17,15 @@ export const guessCountryByPartialNumber = (
   }
 
   let _currentCountry: ParsedCountry | undefined;
+  const updateCurrentCountry = (country: ParsedCountry) => {
+    const sameDialCode = country.dialCode === _currentCountry?.dialCode;
+    const newPriorityValueLower =
+      (country.priority ?? 0) < (_currentCountry?.priority ?? 0);
+
+    if (!sameDialCode || newPriorityValueLower) {
+      _currentCountry = country;
+    }
+  };
 
   for (const c of countries) {
     const parsedCountry = parseCountry(c);
@@ -29,11 +38,11 @@ export const guessCountryByPartialNumber = (
       if (dialCode.startsWith(phone)) {
         // make sure that we found shorter dialCode match
         const isNewDialCodeShorter = _currentCountry
-          ? dialCodeAsNumber < Number(_currentCountry.dialCode)
+          ? dialCodeAsNumber <= Number(_currentCountry.dialCode)
           : true;
 
         if (isNewDialCodeShorter) {
-          _currentCountry = parsedCountry;
+          updateCurrentCountry(parsedCountry);
         }
       }
       continue;
@@ -43,11 +52,11 @@ export const guessCountryByPartialNumber = (
     if (phone.startsWith(dialCode)) {
       // make sure that we found longest dialCode match
       const isNewDialCodeLonger = _currentCountry
-        ? dialCode.length > _currentCountry.dialCode.length
+        ? dialCode.length >= _currentCountry.dialCode.length
         : true;
 
       if (isNewDialCodeLonger) {
-        _currentCountry = parsedCountry;
+        updateCurrentCountry(parsedCountry);
       }
     }
   }
