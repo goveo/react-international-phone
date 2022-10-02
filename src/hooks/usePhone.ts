@@ -1,16 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   applyMask,
   guessCountryByPartialNumber,
   insertChar,
   removeNonDigits,
 } from "../utils";
+import { useHistoryState } from "./useHistoryState";
 
 export interface UsePhoneConfig {
   prefix?: string;
   maskChar?: string;
   insertSpaceAfterDialCode?: boolean;
   maxLength?: number;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
 const defaultPhoneConfig = {
@@ -21,12 +23,32 @@ const defaultPhoneConfig = {
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
-  const { prefix, maskChar, insertSpaceAfterDialCode, maxLength } = {
+  const { prefix, maskChar, insertSpaceAfterDialCode, maxLength, inputRef } = {
     ...defaultPhoneConfig,
     ...config,
   };
 
-  const [phone, setPhone] = useState(value);
+  const [phone, setPhone, undo, redo] = useHistoryState(value);
+
+  // Handle undo/redo events
+  useEffect(() => {
+    const input = inputRef?.current;
+    if (!input) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      const ctrlPressed = e.ctrlKey;
+      const shiftPressed = e.shiftKey;
+      const zPressed = e.key.toLowerCase() === "z";
+
+      if (!ctrlPressed || !zPressed) return;
+      return shiftPressed ? redo() : undo();
+    };
+
+    input?.addEventListener("keydown", onKeyDown);
+    return () => {
+      input?.removeEventListener("keydown", onKeyDown);
+    };
+  }, [inputRef, undo, redo]);
 
   const rawPhone = useMemo(() => {
     return removeNonDigits(phone);
