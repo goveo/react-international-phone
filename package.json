@@ -6,7 +6,7 @@
   "author": "Yuriy Brusentsov <yuriybrusentsov@gmail.com>",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
     "lint": "eslint ./src --ext .ts,.tsx --config .eslintrc",
     "format": "prettier --write .",

@@ -1,6 +1,8 @@
 // The data was taken from the form react-phone-input-2
 // https://github.com/bl00mber/react-phone-input-2/blob/master/src/rawCountries.js
 
+import { CountryData } from "../types";
+
 // Country model:
 // [
 //    Country name,
@@ -11,41 +13,6 @@
 //    Order priority (if >1 country with same dial code),
 //    Area codes (if >1 country with same dial code)
 // ]
-
-type Region = "america" | "europe" | "asia" | "oceania" | "africa";
-type SubRegion =
-  | "north-america"
-  | "south-america"
-  | "central-america"
-  | "carribean"
-  | "eu-union"
-  | "ex-ussr"
-  | "ex-yugos"
-  | "baltic"
-  | "middle-east"
-  | "north-africa";
-
-type BaseCountryData = [
-  string, // country name
-  Array<Region | SubRegion>, // regions
-  string, // iso2 code
-  string, // international dial code
-];
-
-type CountryDataWithFormat = [
-  ...BaseCountryData,
-  string, // format
-];
-
-type CountryDataWithOrder = [
-  ...CountryDataWithFormat,
-  number, // order priority
-];
-
-export type CountryData =
-  | BaseCountryData
-  | CountryDataWithFormat
-  | CountryDataWithOrder;
 
 export const countries: CountryData[] = [
   ["Afghanistan", ["asia"], "af", "93"],
