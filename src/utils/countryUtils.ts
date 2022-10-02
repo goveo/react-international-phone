@@ -37,6 +37,10 @@ export const getCountryByCode = (
 export const guessCountryByPartialNumber = (
   partialPhone: string,
 ): ParsedCountry | undefined => {
+  if (!partialPhone) {
+    return undefined;
+  }
+
   let _country: ParsedCountry | undefined;
 
   const updateCountry = (parsedCountry: ParsedCountry) => {

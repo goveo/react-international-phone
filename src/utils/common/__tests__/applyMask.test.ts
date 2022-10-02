@@ -64,17 +64,15 @@ describe("applyMask", () => {
         mask: "(..) ... .. ..",
         maskSymbol: ".",
         offset: 4,
-        insertSpaceAfterOffset: true,
-      }),
-    ).toBe("+380 (99) 123 45 67");
-    expect(
-      applyMask({
-        value: "+380991234567",
-        mask: "(..) ... .. ..",
-        maskSymbol: ".",
-        offset: 4,
-        insertSpaceAfterOffset: false,
       }),
     ).toBe("+380(99) 123 45 67");
+    expect(
+      applyMask({
+        value: "+380 991234567",
+        mask: "(..) ... .. ..",
+        maskSymbol: ".",
+        offset: 5,
+      }),
+    ).toBe("+380 (99) 123 45 67");
   });
 });

@@ -3,7 +3,6 @@ interface ApplyMaskArgs {
   mask: string;
   maskSymbol: string;
   offset?: number;
-  insertSpaceAfterOffset?: boolean;
 }
 
 export const applyMask = ({
@@ -11,16 +10,11 @@ export const applyMask = ({
   mask,
   maskSymbol,
   offset = 0,
-  insertSpaceAfterOffset = true,
 }: ApplyMaskArgs): string => {
   const savedValuePart = value.slice(0, offset);
   const valueToMask = value.slice(offset);
 
   let result = savedValuePart;
-
-  if (offset > 0 && insertSpaceAfterOffset) {
-    result += " ";
-  }
 
   let charsPlaced = 0;
 
