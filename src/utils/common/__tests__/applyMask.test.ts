@@ -30,10 +30,10 @@ describe("applyMask", () => {
   test("should apply mask on value that shorter that mask", () => {
     expect(
       applyMask({ value: "1234", mask: ".. .. ....", maskSymbol: "." }),
-    ).toBe("12 34");
+    ).toBe("12 34 ");
     expect(
       applyMask({ value: "1234", mask: ".... ....", maskSymbol: "." }),
-    ).toBe("1234");
+    ).toBe("1234 ");
     expect(applyMask({ value: "1", mask: ".... ....", maskSymbol: "." })).toBe(
       "1",
     );
@@ -53,8 +53,8 @@ describe("applyMask", () => {
       applyMask({ value: "+12345678", mask: ".... ....", maskSymbol: "." }),
     ).toBe("+123 4567");
     expect(
-      applyMask({ value: "+123", mask: ".... ....", maskSymbol: "." }),
-    ).toBe("+123");
+      applyMask({ value: "+1a", mask: ".... ....", maskSymbol: "." }),
+    ).toBe("+1a");
   });
 
   test("should handle offset", () => {
@@ -74,5 +74,34 @@ describe("applyMask", () => {
         offset: 5,
       }),
     ).toBe("+380 (99) 123 45 67");
+    expect(
+      applyMask({
+        value: "+12345678",
+        mask: "(....)",
+        maskSymbol: ".",
+        offset: 2,
+      }),
+    ).toBe("+1(2345)");
+    expect(
+      applyMask({
+        value: "+12345678",
+        mask: "(....)",
+        maskSymbol: ".",
+        offset: 5,
+      }),
+    ).toBe("+1234(5678)");
+  });
+
+  test("should handle trimNonMaskCharsLeftover option", () => {
+    const maskConfig = {
+      value: "1234",
+      mask: "(....) .. ..",
+      maskSymbol: ".",
+    };
+
+    expect(applyMask(maskConfig)).toBe("(1234) ");
+    expect(applyMask({ ...maskConfig, trimNonMaskCharsLeftover: true })).toBe(
+      "(1234",
+    );
   });
 });

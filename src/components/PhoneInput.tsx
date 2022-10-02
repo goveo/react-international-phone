@@ -7,13 +7,7 @@ interface PhoneInputProps extends UsePhoneConfig {
 }
 
 export const PhoneInput: React.FC<PhoneInputProps> = () => {
-  const { phone, updatePhone } = usePhone("");
+  const { phone, handlePhoneValueChange } = usePhone("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const inputValue = e.target.value;
-    updatePhone(inputValue);
-  };
-
-  return <input onChange={handleChange} value={phone} type="tel" />;
+  return <input onChange={handlePhoneValueChange} value={phone} type="tel" />;
 };

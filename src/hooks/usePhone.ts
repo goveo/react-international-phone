@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   applyMask,
   guessCountryByPartialNumber,
@@ -36,7 +36,16 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     return guessCountryByPartialNumber(phone);
   }, [phone]);
 
-  const updatePhone = (newValue: string) => {
+  const handlePhoneValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    // Didn't find out how to properly type it
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const inputType: string = (e.nativeEvent as any).inputType;
+    const isDeletion = inputType.toLocaleLowerCase().includes("delete");
+
+    let newValue = e.target.value;
+
     if (!newValue) {
       return setPhone(newValue);
     }
@@ -62,6 +71,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
         mask: guessedCountry.format,
         maskSymbol: maskChar,
         offset: guessedCountry.dialCode.length + prefix.length,
+        trimNonMaskCharsLeftover: isDeletion,
       });
     }
 
@@ -83,7 +93,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   return {
     phone,
     rawPhone,
-    updatePhone,
+    handlePhoneValueChange,
     guessedCountry,
   };
 };
