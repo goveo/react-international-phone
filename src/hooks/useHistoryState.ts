@@ -12,7 +12,7 @@ interface SetStateConfig {
   /**
    * Update last history element (not create new one)
    */
-  skipHistorySave?: boolean;
+  overrideLastHistoryItem?: boolean;
 }
 
 type UseHistoryStateReturn = [
@@ -26,21 +26,17 @@ export const useHistoryState = (
   initialValue: string,
   config?: UseHistoryStateConfig,
 ): UseHistoryStateReturn => {
-  const { size } = { ...config, ...defaultConfig };
+  const { size } = { ...defaultConfig, ...config };
 
   const [state, _setState] = useState(initialValue);
-  const [history, setHistory] = useState<string[]>(
-    typeof initialValue !== "undefined" ? [initialValue] : [],
-  );
-  const [pointer, setPointer] = useState<number>(
-    typeof initialValue !== "undefined" ? 0 : -1,
-  );
+  const [history, setHistory] = useState<string[]>([initialValue]);
+  const [pointer, setPointer] = useState<number>(0);
 
   const setState = useCallback(
     (value: string, config?: SetStateConfig) => {
       if (value === state) return;
 
-      if (config?.skipHistorySave) {
+      if (config?.overrideLastHistoryItem) {
         setHistory((prev) => {
           return [...prev.slice(0, pointer), value];
         });

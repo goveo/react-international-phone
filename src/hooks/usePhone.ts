@@ -126,11 +126,11 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     newValue = newValue.trim();
 
     const msAfterLastChange = timer.check();
-    const shouldSkipHistorySave = msAfterLastChange
+    const overrideLastHistoryItem = msAfterLastChange
       ? msAfterLastChange < historySaveDebounceMS
       : false;
 
-    setPhone(newValue, { skipHistorySave: shouldSkipHistorySave });
+    setPhone(newValue, { overrideLastHistoryItem });
   };
 
   return {

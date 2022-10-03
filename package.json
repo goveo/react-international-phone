@@ -55,5 +55,8 @@
   },
   "engines": {
     "node": "16.x"
+  },
+  "dependencies": {
+    "@testing-library/react-hooks": "^8.0.1"
   }
 }
