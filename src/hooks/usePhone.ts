@@ -1,14 +1,14 @@
-import React, { useEffect, useMemo } from "react";
-import { CountryName } from "../types";
+import React, { useEffect, useMemo } from 'react';
+import { CountryName } from '../types';
 import {
   applyMask,
   guessCountryByPartialNumber,
   insertChar,
   removeNonDigits,
-} from "../utils";
-import { getCountry } from "../utils/countryUtils/getCountry";
-import { useHistoryState } from "./useHistoryState";
-import { useTimer } from "./useTimer";
+} from '../utils';
+import { getCountry } from '../utils/countryUtils/getCountry';
+import { useHistoryState } from './useHistoryState';
+import { useTimer } from './useTimer';
 
 export interface UsePhoneConfig {
   prefix?: string;
@@ -21,10 +21,10 @@ export interface UsePhoneConfig {
 }
 
 const defaultPhoneConfig: Required<
-  Omit<UsePhoneConfig, "inputRef" | "country">
+  Omit<UsePhoneConfig, 'inputRef' | 'country'>
 > = {
-  prefix: "+",
-  maskChar: ".",
+  prefix: '+',
+  maskChar: '.',
   insertSpaceAfterDialCode: true,
   maxLength: 15,
   historySaveDebounceMS: 200,
@@ -52,14 +52,14 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   const passedCountry = useMemo(() => {
     if (!country) return;
-    return getCountry(country, "name");
+    return getCountry(country, 'name');
   }, [country]);
 
   // Force country dial code (if country provided)
   useEffect(() => {
     if (passedCountry) {
       const dialCodeWithPrefix = `${prefix}${passedCountry.dialCode}${
-        insertSpaceAfterDialCode ? " " : ""
+        insertSpaceAfterDialCode ? ' ' : ''
       }`;
       if (phone.startsWith(dialCodeWithPrefix)) return;
       setPhone(dialCodeWithPrefix, { overrideLastHistoryItem: true });
@@ -76,15 +76,15 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const onKeyDown = (e: KeyboardEvent) => {
       const ctrlPressed = e.ctrlKey;
       const shiftPressed = e.shiftKey;
-      const zPressed = e.key.toLowerCase() === "z";
+      const zPressed = e.key.toLowerCase() === 'z';
 
       if (!ctrlPressed || !zPressed) return;
       return shiftPressed ? redo() : undo();
     };
 
-    input?.addEventListener("keydown", onKeyDown);
+    input?.addEventListener('keydown', onKeyDown);
     return () => {
-      input?.removeEventListener("keydown", onKeyDown);
+      input?.removeEventListener('keydown', onKeyDown);
     };
   }, [inputRef, undo, redo]);
 
@@ -94,7 +94,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     // Didn't find out how to properly type it
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inputType: string = (e.nativeEvent as any).inputType;
-    const isDeletion = inputType.toLocaleLowerCase().includes("delete");
+    const isDeletion = inputType.toLocaleLowerCase().includes('delete');
 
     let phoneValue = e.target.value;
 
@@ -133,7 +133,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       phoneValue = insertChar({
         value: phoneValue,
         position: prefix.length + currentCountry.dialCode.length,
-        char: " ",
+        char: ' ',
       });
     }
 

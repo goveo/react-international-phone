@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useRef } from 'react';
 
-import { usePhone, UsePhoneConfig } from "../hooks/usePhone";
+import { usePhone, UsePhoneConfig } from '../hooks/usePhone';
 
 interface PhoneInputProps extends UsePhoneConfig {
   onChange?: (phone: string) => void;
@@ -9,9 +9,9 @@ interface PhoneInputProps extends UsePhoneConfig {
 export const PhoneInput: React.FC<PhoneInputProps> = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { phone, handlePhoneValueChange } = usePhone("", {
+  const { phone, handlePhoneValueChange } = usePhone('', {
     inputRef,
-    country: "Ukraine",
+    country: 'Ukraine',
   });
 
   return (

@@ -1,3 +1,3 @@
-export * from "./applyMask";
-export * from "./insertChar";
-export * from "./removeNonDigits";
+export * from './applyMask';
+export * from './insertChar';
+export * from './removeNonDigits';

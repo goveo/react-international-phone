@@ -38,7 +38,7 @@ export const applyMask = ({
 
   let charsPlaced = 0;
 
-  for (const maskChar of mask.split("")) {
+  for (const maskChar of mask.split('')) {
     if (charsPlaced >= valueToMask.length) {
       if (!trimNonMaskCharsLeftover && maskChar !== maskSymbol) {
         result += maskChar;

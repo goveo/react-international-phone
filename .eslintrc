@@ -23,7 +23,7 @@
     "keyword-spacing": ["error"],
     "key-spacing": ["error"],
     "eol-last": ["error"],
-    "quotes": ["error", "double", "avoid-escape"],
+    "quotes": ["error", "single", "avoid-escape"],
     "switch-colon-spacing": ["error", { "after": true, "before": false }],
     "object-curly-spacing": ["error", "always"],
     "space-infix-ops": ["error", { "int32Hint": false }],

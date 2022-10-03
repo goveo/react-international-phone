@@ -1,7 +1,7 @@
-import { countries } from "../../data/countryData";
-import { ParsedCountry } from "../../types";
-import { removeNonDigits } from "../common";
-import { parseCountry } from "./parseCountry";
+import { countries } from '../../data/countryData';
+import { ParsedCountry } from '../../types';
+import { removeNonDigits } from '../common';
+import { parseCountry } from './parseCountry';
 
 export const guessCountryByPartialNumber = (
   partialPhone: string,

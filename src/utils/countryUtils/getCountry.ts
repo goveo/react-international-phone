@@ -1,6 +1,6 @@
-import { countries } from "../../data/countryData";
-import { CountryData, ParsedCountry } from "../../types";
-import { parseCountry } from "./parseCountry";
+import { countries } from '../../data/countryData';
+import { CountryData, ParsedCountry } from '../../types';
+import { parseCountry } from './parseCountry';
 
 export const getCountry = (
   value: CountryData[number],

@@ -1,6 +1,6 @@
-import { countries } from "../../data/countryData";
-import { ParsedCountry } from "../../types";
-import { parseCountry } from "./parseCountry";
+import { countries } from '../../data/countryData';
+import { ParsedCountry } from '../../types';
+import { parseCountry } from './parseCountry';
 
 export const getCountryByCode = (
   countryCode: string,
