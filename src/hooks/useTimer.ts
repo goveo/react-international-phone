@@ -5,9 +5,11 @@ export const useTimer = () => {
   const [currentTime, setCurrentTime] = useState<number>(Date.now());
 
   const check = () => {
-    const difference = prevTime ? currentTime - prevTime : undefined;
+    const newTime = Date.now();
+    const difference = prevTime ? newTime - currentTime : undefined;
+
     setPrevTime(currentTime);
-    setCurrentTime(Date.now());
+    setCurrentTime(newTime);
 
     return difference;
   };
