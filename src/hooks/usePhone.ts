@@ -2,11 +2,11 @@ import React, { useEffect, useMemo } from 'react';
 import { CountryName } from '../types';
 import {
   applyMask,
+  getCountry,
   guessCountryByPartialNumber,
   insertChar,
   removeNonDigits,
 } from '../utils';
-import { getCountry } from '../utils/countryUtils/getCountry';
 import { useHistoryState } from './useHistoryState';
 import { useTimer } from './useTimer';
 
