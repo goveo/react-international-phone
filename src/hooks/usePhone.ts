@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { ParsedCountry } from "../types";
 import {
   applyMask,
   guessCountryByPartialNumber,
@@ -6,29 +7,45 @@ import {
   removeNonDigits,
 } from "../utils";
 import { useHistoryState } from "./useHistoryState";
+import { useTimer } from "./useTimer";
 
 export interface UsePhoneConfig {
   prefix?: string;
   maskChar?: string;
   insertSpaceAfterDialCode?: boolean;
   maxLength?: number;
+  historySaveDebounceMS?: number;
   inputRef?: React.RefObject<HTMLInputElement>;
 }
 
-const defaultPhoneConfig = {
+const defaultPhoneConfig: Required<Omit<UsePhoneConfig, "inputRef">> = {
   prefix: "+",
   maskChar: ".",
   insertSpaceAfterDialCode: true,
   maxLength: 15,
+  historySaveDebounceMS: 200,
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
-  const { prefix, maskChar, insertSpaceAfterDialCode, maxLength, inputRef } = {
+  const {
+    prefix,
+    maskChar,
+    insertSpaceAfterDialCode,
+    maxLength,
+    historySaveDebounceMS,
+    inputRef,
+  } = {
     ...defaultPhoneConfig,
     ...config,
   };
 
   const [phone, setPhone, undo, redo] = useHistoryState(value);
+
+  const [selectedCountry, setSelectedCountry] = useState<
+    ParsedCountry | undefined
+  >();
+
+  const timer = useTimer();
 
   // Handle undo/redo events
   useEffect(() => {
@@ -54,10 +71,6 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     return removeNonDigits(phone);
   }, [phone]);
 
-  const guessedCountry = useMemo(() => {
-    return guessCountryByPartialNumber(phone);
-  }, [phone]);
-
   const handlePhoneValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -67,6 +80,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const isDeletion = inputType.toLocaleLowerCase().includes("delete");
 
     let newValue = e.target.value;
+
+    const guessedCountry = guessCountryByPartialNumber(newValue);
+    setSelectedCountry(guessedCountry);
 
     if (!newValue) {
       return setPhone(newValue);
@@ -93,7 +109,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
         mask: guessedCountry.format,
         maskSymbol: maskChar,
         offset: guessedCountry.dialCode.length + prefix.length,
-        trimNonMaskCharsLeftover: isDeletion,
+        trimNonMaskCharsLeftover: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
       });
     }
 
@@ -109,13 +125,18 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     newValue = newValue.trim();
 
-    setPhone(newValue);
+    const msAfterLastChange = timer.check();
+    const shouldSkipHistorySave = msAfterLastChange
+      ? msAfterLastChange < historySaveDebounceMS
+      : false;
+
+    setPhone(newValue, { skipHistorySave: shouldSkipHistorySave });
   };
 
   return {
     phone,
     rawPhone,
     handlePhoneValueChange,
-    guessedCountry,
+    selectedCountry,
   };
 };

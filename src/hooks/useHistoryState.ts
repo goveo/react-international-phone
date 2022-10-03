@@ -1,15 +1,33 @@
 import { useCallback, useState } from "react";
 
+interface UseHistoryStateConfig {
+  size?: number;
+}
+
+const defaultConfig: Required<UseHistoryStateConfig> = {
+  size: 20,
+};
+
+interface SetStateConfig {
+  /**
+   * Update last history element (not create new one)
+   */
+  skipHistorySave?: boolean;
+}
+
 type UseHistoryStateReturn = [
   string, // state
-  (v: string) => void, // setState
+  (v: string, config?: SetStateConfig) => void, // setState
   () => boolean, // undo
   () => boolean, // redo
 ];
 
 export const useHistoryState = (
   initialValue: string,
+  config?: UseHistoryStateConfig,
 ): UseHistoryStateReturn => {
+  const { size } = { ...config, ...defaultConfig };
+
   const [state, _setState] = useState(initialValue);
   const [history, setHistory] = useState<string[]>(
     typeof initialValue !== "undefined" ? [initialValue] : [],
@@ -19,13 +37,27 @@ export const useHistoryState = (
   );
 
   const setState = useCallback(
-    (value: string) => {
+    (value: string, config?: SetStateConfig) => {
       if (value === state) return;
-      setHistory((prev) => [...prev.slice(0, pointer + 1), value]);
-      setPointer((prev) => prev + 1);
+
+      if (config?.skipHistorySave) {
+        setHistory((prev) => {
+          return [...prev.slice(0, pointer), value];
+        });
+        // do not update pointer
+      } else {
+        const isSizeOverflow = history.length >= size;
+        setHistory((prev) => [
+          ...prev.slice(isSizeOverflow ? 1 : 0, pointer + 1),
+          value,
+        ]);
+        if (!isSizeOverflow) {
+          setPointer((prev) => prev + 1);
+        }
+      }
       _setState(value);
     },
-    [state, pointer],
+    [state, pointer, history.length, size],
   );
 
   const undo = useCallback(() => {
