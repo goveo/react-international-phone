@@ -1,0 +1,13 @@
+.phone-input {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-input__flag-emoji {
+  width: 25px;
+  height: 25px;
+}
+
+.phone-input__country-selector {
+  display: flex;
+}
