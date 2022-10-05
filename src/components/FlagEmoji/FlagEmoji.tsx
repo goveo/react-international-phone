@@ -5,8 +5,6 @@ import React, { CSSProperties } from 'react';
 
 import { ParsedCountry } from '../../types';
 
-import './FlagEmoji.style.css';
-
 const protocol =
   typeof location !== 'undefined' && location.protocol === 'http:'
     ? 'http:'
@@ -43,16 +41,14 @@ const getFlagCodepointByIso2 = (iso2: string) => {
   return [codepoints[iso2[0]], codepoints[iso2[1]]].join('-');
 };
 
-interface FlagEmojiProps extends React.HTMLAttributes<HTMLSpanElement> {
+interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
   iso2: ParsedCountry['iso2'];
-  width?: CSSProperties['width'];
-  height?: CSSProperties['height'];
+  size?: CSSProperties['width'];
 }
 
 export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   iso2,
-  height = '25px',
-  width = '25px',
+  size = '24px',
   ...restProps
 }) => {
   if (!iso2) {
@@ -63,15 +59,12 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   const src = `${protocol}//twemoji.maxcdn.com/2/svg/${flagCodepoint}.svg`;
 
   return (
-    <span
-      className="emoji-container"
-      style={{
-        height,
-        width,
-      }}
+    <img
+      src={src}
+      width={size}
+      height={size}
+      draggable={false}
       {...restProps}
-    >
-      <img src={src} height={height} width={width} />
-    </span>
+    />
   );
 };

@@ -1,0 +1,13 @@
+.country-selector-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 30px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid gainsboro;
+  background-color: ghostwhite;
+  user-select: none;
+  cursor: pointer;
+}
