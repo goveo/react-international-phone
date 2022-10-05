@@ -1,3 +1,5 @@
+import './CountrySelectorDropdown.style.scss';
+
 import React, { useCallback, useRef } from 'react';
 
 import { countries } from '../../data/countryData';
@@ -5,8 +7,6 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { ParsedCountry } from '../../types';
 import { parseCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
-
-import './CountrySelectorDropdown.style.scss';
 
 export interface CountrySelectorDropdownProps {
   show: boolean;

@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
-import { CountryData } from '../../../types';
 
+import { CountryData } from '../../../types';
 import { parseCountry } from '../parseCountry';
 
 describe('parseCountry', () => {

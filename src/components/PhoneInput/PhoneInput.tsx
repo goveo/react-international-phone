@@ -1,11 +1,11 @@
+import './PhoneInput.style.scss';
+
 import React, { useMemo, useRef, useState } from 'react';
 
 import { usePhone, UsePhoneConfig } from '../../hooks/usePhone';
 import { CountryName } from '../../types';
 import { getCountry } from '../../utils';
 import { CountrySelector } from '../CountrySelector/CountrySelector';
-
-import './PhoneInput.style.scss';
 
 interface PhoneInputProps extends UsePhoneConfig {
   onChange?: (phone: string) => void;

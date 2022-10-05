@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+
 import { CountryName, ParsedCountry } from '../types';
 import {
   applyMask,

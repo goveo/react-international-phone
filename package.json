@@ -9,7 +9,7 @@
     "build": "webpack",
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
-    "lint": "eslint ./src --ext .ts,.tsx --config .eslintrc",
+    "lint": "eslint ./src --ext .ts,.tsx --config .eslintrc --fix",
     "format": "prettier --write .",
     "prepare": "husky install"
   },
@@ -38,6 +38,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.21.3",
     "eslint-plugin-react-hooks": "^4.1.2",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "husky": "^8.0.1",
     "jest": "^29.1.2",
     "jest-environment-jsdom": "^29.1.2",

@@ -1,12 +1,12 @@
+import './CountrySelector.style.scss';
+
 import React, { useState } from 'react';
 
+import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 import {
   CountrySelectorDropdown,
   CountrySelectorDropdownProps,
 } from './CountrySelectorDropdown';
-import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
-
-import './CountrySelector.style.scss';
 
 interface CountrySelectorProps {
   selectedCountryIso2?: string;
