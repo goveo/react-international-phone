@@ -38,6 +38,9 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           onSelect?.(country);
         }}
         selectedCountryIso2={selectedCountryIso2}
+        onClickOutside={() => {
+          setShowDropdown(false);
+        }}
       />
     </>
   );
