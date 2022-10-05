@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { CountryName } from '../types';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { CountryName, ParsedCountry } from '../types';
 import {
   applyMask,
   getCountry,
@@ -18,10 +18,11 @@ export interface UsePhoneConfig {
   historySaveDebounceMS?: number;
   country?: CountryName; // no default value
   inputRef?: React.RefObject<HTMLInputElement>; // no default value
+  onCountryGuess?: (country: ParsedCountry) => void;
 }
 
 const defaultPhoneConfig: Required<
-  Omit<UsePhoneConfig, 'inputRef' | 'country'>
+  Omit<UsePhoneConfig, 'inputRef' | 'country' | 'onCountryGuess'>
 > = {
   prefix: '+',
   maskChar: '.',
@@ -39,10 +40,12 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     maxLength,
     historySaveDebounceMS,
     inputRef,
+    onCountryGuess,
   } = {
     ...defaultPhoneConfig,
     ...config,
   };
+  const timer = useTimer();
 
   const [phone, setPhone, undo, redo] = useHistoryState(value);
 
@@ -55,18 +58,25 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     return getCountry(country, 'name');
   }, [country]);
 
-  // Force country dial code (if country provided)
-  useEffect(() => {
-    if (passedCountry) {
-      const dialCodeWithPrefix = `${prefix}${passedCountry.dialCode}${
-        insertSpaceAfterDialCode ? ' ' : ''
-      }`;
-      if (phone.startsWith(dialCodeWithPrefix)) return;
-      setPhone(dialCodeWithPrefix, { overrideLastHistoryItem: true });
-    }
+  // Set dial code to phone's beginning
+  const setDialCode = useCallback(() => {
+    if (!passedCountry) return;
+
+    const dialCodeWithPrefix = `${prefix}${passedCountry.dialCode}${
+      insertSpaceAfterDialCode ? ' ' : ''
+    }`;
+    if (phone.startsWith(dialCodeWithPrefix)) return;
+    setPhone(dialCodeWithPrefix, { overrideLastHistoryItem: true });
   }, [insertSpaceAfterDialCode, passedCountry, phone, prefix, setPhone]);
 
-  const timer = useTimer();
+  const onCountryChange = useCallback(() => {
+    setDialCode();
+  }, [setDialCode]);
+
+  useEffect(() => {
+    onCountryChange();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country]);
 
   // Handle undo/redo events
   useEffect(() => {
@@ -98,7 +108,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     let phoneValue = e.target.value;
 
-    const currentCountry = guessCountryByPartialNumber(phoneValue);
+    const guessedCountry = guessCountryByPartialNumber(phoneValue);
 
     if (!phoneValue) {
       return setPhone(phoneValue);
@@ -119,20 +129,20 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       phoneValue = `${prefix}${phoneValue}`;
     }
 
-    if (currentCountry && currentCountry.format) {
+    if (guessedCountry && guessedCountry.format) {
       phoneValue = applyMask({
         value: phoneValue,
-        mask: currentCountry.format,
+        mask: guessedCountry.format,
         maskSymbol: maskChar,
-        offset: currentCountry.dialCode.length + prefix.length,
+        offset: guessedCountry.dialCode.length + prefix.length,
         trimNonMaskCharsLeftover: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
       });
     }
 
-    if (insertSpaceAfterDialCode && currentCountry) {
+    if (insertSpaceAfterDialCode && guessedCountry) {
       phoneValue = insertChar({
         value: phoneValue,
-        position: prefix.length + currentCountry.dialCode.length,
+        position: prefix.length + guessedCountry.dialCode.length,
         char: ' ',
       });
     }
@@ -143,6 +153,10 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const overrideLastHistoryItem = msAfterLastChange
       ? msAfterLastChange < historySaveDebounceMS
       : false;
+
+    if (guessedCountry && guessedCountry?.name !== country) {
+      onCountryGuess?.(guessedCountry);
+    }
 
     setPhone(phoneValue, { overrideLastHistoryItem });
   };

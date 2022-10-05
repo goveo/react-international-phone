@@ -26,6 +26,9 @@ export const PhoneInput: React.FC<PhoneInputProps> = () => {
   const { phone, handlePhoneValueChange } = usePhone('', {
     inputRef,
     country: selectedCountry,
+    onCountryGuess: (country) => {
+      setSelectedCountry(country.name);
+    },
   });
 
   return (
