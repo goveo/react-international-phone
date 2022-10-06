@@ -16,14 +16,24 @@ export const guessCountryByPartialNumber = (
     return undefined;
   }
 
-  let _currentCountry: ParsedCountry | undefined;
-  const updateCurrentCountry = (country: ParsedCountry) => {
-    const sameDialCode = country.dialCode === _currentCountry?.dialCode;
+  let result = { country: undefined, isFullMatch: false } as {
+    country: ParsedCountry | undefined;
+    isFullMatch: boolean;
+  };
+
+  const updateResult = ({
+    country,
+    isFullMatch,
+  }: {
+    country: ParsedCountry;
+    isFullMatch: boolean;
+  }) => {
+    const sameDialCode = country.dialCode === result.country?.dialCode;
     const newPriorityValueLower =
-      (country.priority ?? 0) < (_currentCountry?.priority ?? 0);
+      (country.priority ?? 0) < (result.country?.priority ?? 0);
 
     if (!sameDialCode || newPriorityValueLower) {
-      _currentCountry = country;
+      result = { country, isFullMatch };
     }
   };
 
@@ -31,37 +41,35 @@ export const guessCountryByPartialNumber = (
     const parsedCountry = parseCountry(c);
     const { dialCode } = parsedCountry;
 
-    const dialCodeAsNumber = Number(dialCode);
-
     // full match with dialCode
     if (phone.startsWith(dialCode)) {
-      // make sure that we found longest dialCode match
-      const isNewDialCodeLonger = _currentCountry
-        ? dialCode.length >= _currentCountry.dialCode.length
+      // make sure that we found the largest full dialCode
+      const isNewDialCodeLonger = result.country
+        ? Number(dialCode) >= Number(result.country.dialCode)
         : true;
 
-      const isFullMatch = dialCode === phone;
-
-      if (isNewDialCodeLonger || isFullMatch) {
-        updateCurrentCountry(parsedCountry);
+      if (isNewDialCodeLonger || dialCode === phone || !result.isFullMatch) {
+        updateResult({ country: parsedCountry, isFullMatch: true });
       }
     }
+
+    // ignore particle matches if full match was found
+    if (result.isFullMatch) continue;
 
     // particle match with dialCode
     if (phone.length < dialCode.length) {
       if (dialCode.startsWith(phone)) {
-        // make sure that we found shorter dialCode match
-        const isNewDialCodeShorter = _currentCountry
-          ? dialCodeAsNumber <= Number(_currentCountry.dialCode)
+        // make sure that we found smallest number dial code
+        const isNewCodeLess = result.country
+          ? Number(dialCode) <= Number(result.country.dialCode)
           : true;
 
-        if (isNewDialCodeShorter) {
-          updateCurrentCountry(parsedCountry);
+        if (isNewCodeLess) {
+          updateResult({ country: parsedCountry, isFullMatch: false });
         }
       }
-      continue;
     }
   }
 
-  return _currentCountry;
+  return result.country;
 };

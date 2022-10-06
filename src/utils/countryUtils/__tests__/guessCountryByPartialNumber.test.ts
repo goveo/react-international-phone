@@ -31,10 +31,18 @@ describe('guessCountryByPartialNumber', () => {
     expect(shouldFindGreece).toHaveProperty('dialCode', '30');
   });
 
-  test('should find longest country code match', () => {
-    const shouldFindBahamas = guessCountryByPartialNumber('+124');
-    expect(shouldFindBahamas).not.toHaveProperty('dialCode', '1');
-    expect(shouldFindBahamas).toHaveProperty('dialCode', '1242');
+  test('should find smallest number particle dial code', () => {
+    const shouldFindGreece = guessCountryByPartialNumber('+3');
+    expect(shouldFindGreece).toHaveProperty('dialCode', '30');
+
+    const shouldFindPeru = guessCountryByPartialNumber('+5');
+    expect(shouldFindPeru).toHaveProperty('dialCode', '51');
+
+    const shouldFindJapan = guessCountryByPartialNumber('+8');
+    expect(shouldFindJapan).toHaveProperty('dialCode', '81');
+
+    const shouldFindPortugal = guessCountryByPartialNumber('+35');
+    expect(shouldFindPortugal).toHaveProperty('dialCode', '351');
   });
 
   test('should respect priority value', () => {
@@ -55,7 +63,11 @@ describe('guessCountryByPartialNumber', () => {
   });
 
   test('should return full match if present', () => {
-    const shouldFindUS = guessCountryByPartialNumber('+1');
-    expect(shouldFindUS).toHaveProperty('dialCode', '1');
+    expect(guessCountryByPartialNumber('+1')).toHaveProperty('dialCode', '1');
+    expect(guessCountryByPartialNumber('+12')).toHaveProperty('dialCode', '1');
+    expect(guessCountryByPartialNumber('+1242')).toHaveProperty(
+      'dialCode',
+      '1242',
+    );
   });
 });
