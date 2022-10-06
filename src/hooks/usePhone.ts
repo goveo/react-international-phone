@@ -109,7 +109,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
    * 3. Apply country mask
    * 4. Insert space after dial code
    */
-  const handlePhoneValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoneValueChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ): string => {
     e.preventDefault();
 
     // Didn't find out how to properly type it
@@ -120,7 +122,8 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     let phoneValue = e.target.value;
 
     if (!phoneValue) {
-      return setPhone(phoneValue);
+      setPhone(phoneValue);
+      return phoneValue;
     }
 
     // should pass prefix input
@@ -129,7 +132,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     }
 
     if (phoneValue.length > maxLength) {
-      return;
+      return phone; // don't update state
     }
 
     const shouldStartWithPrefix = true;
@@ -175,6 +178,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     }
 
     setPhone(phoneValue, { overrideLastHistoryItem });
+    return phoneValue;
   };
 
   return {
