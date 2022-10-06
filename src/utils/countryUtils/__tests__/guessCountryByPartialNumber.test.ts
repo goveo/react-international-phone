@@ -53,4 +53,9 @@ describe('guessCountryByPartialNumber', () => {
     expect(guessCountryByPartialNumber('')).toBeUndefined();
     expect(guessCountryByPartialNumber('+')).toBeUndefined();
   });
+
+  test('should return full match if present', () => {
+    const shouldFindUS = guessCountryByPartialNumber('+1');
+    expect(shouldFindUS).toHaveProperty('dialCode', '1');
+  });
 });

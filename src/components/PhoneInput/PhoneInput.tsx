@@ -4,7 +4,7 @@ import React, { useMemo, useRef, useState } from 'react';
 
 import { usePhone, UsePhoneConfig } from '../../hooks/usePhone';
 import { CountryName } from '../../types';
-import { getCountry } from '../../utils';
+import { getCountry, removeNonDigits } from '../../utils';
 import { CountrySelector } from '../CountrySelector/CountrySelector';
 
 interface PhoneInputProps extends UsePhoneConfig {
@@ -26,8 +26,10 @@ export const PhoneInput: React.FC<PhoneInputProps> = () => {
   const { phone, handlePhoneValueChange } = usePhone('', {
     inputRef,
     country: selectedCountry,
-    onCountryGuess: (country) => {
-      setSelectedCountry(country.name);
+    onCountryGuess: ({ country, isFullMatch }) => {
+      if (isFullMatch) {
+        setSelectedCountry(country.name);
+      }
     },
   });
 

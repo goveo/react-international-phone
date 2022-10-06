@@ -33,6 +33,20 @@ export const guessCountryByPartialNumber = (
 
     const dialCodeAsNumber = Number(dialCode);
 
+    // full match with dialCode
+    if (phone.startsWith(dialCode)) {
+      // make sure that we found longest dialCode match
+      const isNewDialCodeLonger = _currentCountry
+        ? dialCode.length >= _currentCountry.dialCode.length
+        : true;
+
+      const isFullMatch = dialCode === phone;
+
+      if (isNewDialCodeLonger || isFullMatch) {
+        updateCurrentCountry(parsedCountry);
+      }
+    }
+
     // particle match with dialCode
     if (phone.length < dialCode.length) {
       if (dialCode.startsWith(phone)) {
@@ -46,18 +60,6 @@ export const guessCountryByPartialNumber = (
         }
       }
       continue;
-    }
-
-    // full match with dialCode
-    if (phone.startsWith(dialCode)) {
-      // make sure that we found longest dialCode match
-      const isNewDialCodeLonger = _currentCountry
-        ? dialCode.length >= _currentCountry.dialCode.length
-        : true;
-
-      if (isNewDialCodeLonger) {
-        updateCurrentCountry(parsedCountry);
-      }
     }
   }
 

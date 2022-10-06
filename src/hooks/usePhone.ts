@@ -19,7 +19,10 @@ export interface UsePhoneConfig {
   historySaveDebounceMS?: number;
   country?: CountryName; // no default value
   inputRef?: React.RefObject<HTMLInputElement>; // no default value
-  onCountryGuess?: (country: ParsedCountry) => void;
+  onCountryGuess?: (data: {
+    country: ParsedCountry;
+    isFullMatch: boolean;
+  }) => void;
 }
 
 const defaultPhoneConfig: Required<
@@ -99,6 +102,13 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     };
   }, [inputRef, undo, redo]);
 
+  /**
+   * Phone value creation flow:
+   * 1. Remove non digit chars from provided value
+   * 2. Add prefix to value
+   * 3. Apply country mask
+   * 4. Insert space after dial code
+   */
   const handlePhoneValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -108,8 +118,6 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const isDeletion = inputType.toLocaleLowerCase().includes('delete');
 
     let phoneValue = e.target.value;
-
-    const guessedCountry = guessCountryByPartialNumber(phoneValue);
 
     if (!phoneValue) {
       return setPhone(phoneValue);
@@ -130,6 +138,8 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       phoneValue = `${prefix}${phoneValue}`;
     }
 
+    const guessedCountry = guessCountryByPartialNumber(phoneValue);
+
     if (guessedCountry && guessedCountry.format) {
       phoneValue = applyMask({
         value: phoneValue,
@@ -148,7 +158,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       });
     }
 
-    phoneValue = phoneValue.trim();
+    if (isDeletion) {
+      phoneValue = phoneValue.trim();
+    }
 
     const msAfterLastChange = timer.check();
     const overrideLastHistoryItem = msAfterLastChange
@@ -156,7 +168,10 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       : false;
 
     if (guessedCountry && guessedCountry?.name !== country) {
-      onCountryGuess?.(guessedCountry);
+      onCountryGuess?.({
+        country: guessedCountry,
+        isFullMatch: removeNonDigits(phoneValue) === guessedCountry.dialCode,
+      });
     }
 
     setPhone(phoneValue, { overrideLastHistoryItem });
