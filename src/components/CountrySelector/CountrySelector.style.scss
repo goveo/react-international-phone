@@ -1,16 +1,15 @@
-@import '../../style/base.scss';
+@import '../../style/base';
 
 .country-selector-button {
   display: flex;
-  justify-content: center;
   align-items: center;
-
+  justify-content: center;
   width: 40px;
   height: $height;
   margin: 0;
   padding: 0;
-  border: 1px solid $border-color;
   background-color: $background-color;
-  user-select: none;
+  border: 1px solid $border-color;
   cursor: pointer;
+  user-select: none;
 }

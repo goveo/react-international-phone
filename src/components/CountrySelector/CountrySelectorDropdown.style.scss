@@ -1,29 +1,29 @@
-@import '../../style/base.scss';
+@import '../../style/base';
 
 .country-selector-dropdown {
   position: absolute;
+  top: 50px;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  list-style: none;
-  box-shadow: $shadow-color;
-  background-color: $background-color;
   width: 300px;
   max-height: 200px;
-  overflow-y: scroll;
-  padding: 4px 0;
   margin: 0;
-  top: 50px;
+  padding: 4px 0;
+  overflow-y: scroll;
+  list-style: none;
+  background-color: $background-color;
+  box-shadow: $shadow-color;
 
   &__list-item {
     display: flex;
-    align-items: center;
     gap: 8px;
+    align-items: center;
     padding: 2px 8px;
 
     &:hover {
-      cursor: pointer;
       background-color: $dropdown-item-selected-color;
+      cursor: pointer;
     }
 
     &--selected {
@@ -36,7 +36,7 @@
   }
 
   &__list-item-dial-code {
-    font-size: 14px;
     color: gray;
+    font-size: 14px;
   }
 }
