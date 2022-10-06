@@ -3,7 +3,7 @@ import './PhoneInput.style.scss';
 import React, { useMemo, useRef, useState } from 'react';
 
 import { usePhone, UsePhoneConfig } from '../../hooks/usePhone';
-import { CountryName } from '../../types';
+import { CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
 import { CountrySelector } from '../CountrySelector/CountrySelector';
 
@@ -15,12 +15,12 @@ export const PhoneInput: React.FC<PhoneInputProps> = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [selectedCountry, setSelectedCountry] = useState<
-    CountryName | undefined
+    CountryIso2 | undefined
   >();
 
   const fullCountry = useMemo(() => {
     if (!selectedCountry) return undefined;
-    return getCountry(selectedCountry, 'name');
+    return getCountry(selectedCountry, 'iso2');
   }, [selectedCountry]);
 
   const { phone, handlePhoneValueChange } = usePhone('', {
@@ -28,7 +28,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = () => {
     country: selectedCountry,
     onCountryGuess: ({ country, isFullMatch }) => {
       if (isFullMatch) {
-        setSelectedCountry(country.name);
+        setSelectedCountry(country.iso2);
       }
     },
   });
@@ -36,8 +36,8 @@ export const PhoneInput: React.FC<PhoneInputProps> = () => {
   return (
     <div className="phone-input-container">
       <CountrySelector
-        onSelect={(country) => setSelectedCountry(country.name)}
-        selectedCountryIso2={fullCountry?.iso2}
+        onSelect={(country) => setSelectedCountry(country.iso2)}
+        selectedCountry={fullCountry?.iso2}
       />
 
       <input

@@ -1,7 +1,9 @@
 import './CountrySelector.style.scss';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
+import { CountryIso2 } from '../../types';
+import { getCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 import {
   CountrySelectorDropdown,
@@ -9,26 +11,34 @@ import {
 } from './CountrySelectorDropdown';
 
 interface CountrySelectorProps {
-  selectedCountryIso2?: string;
+  selectedCountry?: CountryIso2;
   onSelect?: CountrySelectorDropdownProps['onSelect'];
 }
 
 export const CountrySelector: React.FC<CountrySelectorProps> = ({
-  selectedCountryIso2,
+  selectedCountry,
   onSelect,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const fullSelectedCountry = useMemo(() => {
+    if (!selectedCountry) return undefined;
+    return getCountry(selectedCountry, 'iso2');
+  }, [selectedCountry]);
+
   return (
     <>
       <button
+        title={fullSelectedCountry?.name}
         onClick={() => setShowDropdown(true)}
         className={['country-selector-button'].join(' ')}
       >
-        <FlagEmoji
-          iso2={selectedCountryIso2 || ''}
-          className="country-selector-button__flag-emoji"
-        />
+        {selectedCountry && (
+          <FlagEmoji
+            iso2={selectedCountry}
+            className="country-selector-button__flag-emoji"
+          />
+        )}
       </button>
 
       <CountrySelectorDropdown
@@ -37,7 +47,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           setShowDropdown(false);
           onSelect?.(country);
         }}
-        selectedCountryIso2={selectedCountryIso2}
+        selectedCountry={selectedCountry}
         onClickOutside={() => {
           setShowDropdown(false);
         }}

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { CountryName, ParsedCountry } from '../types';
+import { CountryIso2, ParsedCountry } from '../types';
 import {
   applyMask,
   getCountry,
@@ -17,7 +17,7 @@ export interface UsePhoneConfig {
   insertSpaceAfterDialCode?: boolean;
   maxLength?: number;
   historySaveDebounceMS?: number;
-  country?: CountryName; // no default value
+  country?: CountryIso2; // no default value
   inputRef?: React.RefObject<HTMLInputElement>; // no default value
   onCountryGuess?: (data: {
     country: ParsedCountry;
@@ -59,7 +59,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   const passedCountry = useMemo(() => {
     if (!country) return;
-    return getCountry(country, 'name');
+    return getCountry(country, 'iso2');
   }, [country]);
 
   // Set dial code to phone's beginning

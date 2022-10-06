@@ -4,14 +4,14 @@ import React, { useCallback, useRef } from 'react';
 
 import { countries } from '../../data/countryData';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
-import { ParsedCountry } from '../../types';
+import { CountryIso2, ParsedCountry } from '../../types';
 import { parseCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 
 export interface CountrySelectorDropdownProps {
   show: boolean;
   dialCodePrefix?: string;
-  selectedCountryIso2?: string;
+  selectedCountry?: CountryIso2;
   onSelect?: (country: ParsedCountry) => void;
   onClickOutside?: () => void;
 }
@@ -21,7 +21,7 @@ export const CountrySelectorDropdown: React.FC<
 > = ({
   show = false,
   dialCodePrefix = '+',
-  selectedCountryIso2,
+  selectedCountry,
   onSelect,
   onClickOutside,
 }) => {
@@ -51,7 +51,7 @@ export const CountrySelectorDropdown: React.FC<
     >
       {countries.map((c) => {
         const country = parseCountry(c);
-        const isSelected = country.iso2 === selectedCountryIso2;
+        const isSelected = country.iso2 === selectedCountry;
 
         return (
           <li
