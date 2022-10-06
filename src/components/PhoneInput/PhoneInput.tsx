@@ -4,7 +4,7 @@ import React, { useMemo, useRef, useState } from 'react';
 
 import { usePhone, UsePhoneConfig } from '../../hooks/usePhone';
 import { CountryName } from '../../types';
-import { getCountry, removeNonDigits } from '../../utils';
+import { getCountry } from '../../utils';
 import { CountrySelector } from '../CountrySelector/CountrySelector';
 
 interface PhoneInputProps extends UsePhoneConfig {
@@ -34,7 +34,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = () => {
   });
 
   return (
-    <div className="phone-input">
+    <div className="phone-input-container">
       <CountrySelector
         onSelect={(country) => setSelectedCountry(country.name)}
         selectedCountryIso2={fullCountry?.iso2}
@@ -45,6 +45,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = () => {
         value={phone}
         type="tel"
         ref={inputRef}
+        className="phone-input"
       />
     </div>
   );

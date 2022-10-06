@@ -1,13 +1,16 @@
+@import '../../style/base.scss';
+
 .country-selector-button {
   display: flex;
   justify-content: center;
   align-items: center;
 
-  min-width: 30px;
+  width: 40px;
+  height: $height;
   margin: 0;
   padding: 0;
-  border: 1px solid gainsboro;
-  background-color: ghostwhite;
+  border: 1px solid $border-color;
+  background-color: $background-color;
   user-select: none;
   cursor: pointer;
 }

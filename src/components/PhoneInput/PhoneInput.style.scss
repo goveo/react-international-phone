@@ -1,4 +1,25 @@
-.phone-input {
-  display: flex;
-  gap: 8px;
+@import '../../style/base.scss';
+
+.phone-input-container {
+  display: inline-flex;
+
+  .country-selector-button {
+    border-radius: $border-radius;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: -1px; // for border overlap
+  }
+
+  .phone-input {
+    height: calc($height - 2px);
+    padding: 0 8px;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    &:focus {
+      outline: none;
+    }
+  }
 }

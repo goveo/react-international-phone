@@ -1,11 +1,13 @@
+@import '../../style/base.scss';
+
 .country-selector-dropdown {
   position: absolute;
   z-index: 1;
   display: flex;
   flex-direction: column;
   list-style: none;
-  box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.25);
-  background-color: white;
+  box-shadow: $shadow-color;
+  background-color: $background-color;
   width: 300px;
   max-height: 200px;
   overflow-y: scroll;
@@ -21,11 +23,11 @@
 
     &:hover {
       cursor: pointer;
-      background-color: whitesmoke;
+      background-color: $dropdown-item-selected-color;
     }
 
     &--selected {
-      background-color: whitesmoke;
+      background-color: $dropdown-item-selected-color;
     }
   }
 
