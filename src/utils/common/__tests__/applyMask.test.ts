@@ -90,6 +90,15 @@ describe('applyMask', () => {
         offset: 5,
       }),
     ).toBe('+1234(5678)');
+
+    expect(
+      applyMask({
+        value: '+38',
+        mask: '(..) ... .. ..',
+        maskSymbol: '.',
+        offset: 4,
+      }),
+    ).toBe('+38');
   });
 
   test('should handle trimNonMaskCharsLeftover option', () => {

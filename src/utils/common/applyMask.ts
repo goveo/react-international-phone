@@ -31,6 +31,8 @@ export const applyMask = ({
   offset = 0,
   trimNonMaskCharsLeftover = false,
 }: ApplyMaskArgs): string => {
+  if (value.length < offset) return value;
+
   const savedValuePart = value.slice(0, offset);
   const valueToMask = value.slice(offset);
 
