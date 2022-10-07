@@ -1,16 +1,26 @@
 /* eslint-disable no-undef */
 const path = require('path');
 
+const getPath = (...pathArray) => {
+  return path.join(__dirname, ...pathArray);
+};
+
 module.exports = {
-  mode: 'none',
+  mode: 'production',
   entry: {
-    app: path.join(
-      __dirname,
-      'src',
-      'components',
-      'PhoneInput',
-      'PhoneInput.tsx',
-    ),
+    PhoneInput: {
+      import: getPath('src', 'components', 'PhoneInput', 'PhoneInput.tsx'),
+      dependOn: ['usePhoneInput'],
+    },
+    usePhoneInput: {
+      import: getPath('src', 'hooks', 'usePhoneInput.ts'),
+      dependOn: ['usePhone'],
+    },
+    usePhone: {
+      import: getPath('src', 'hooks', 'usePhone.ts'),
+      dependOn: ['formatPhone'],
+    },
+    formatPhone: getPath('src', 'utils', 'phoneUtils', 'formatPhone.ts'),
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
@@ -38,7 +48,8 @@ module.exports = {
     ],
   },
   output: {
-    filename: 'index.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'build'),
+    clean: true,
   },
 };
