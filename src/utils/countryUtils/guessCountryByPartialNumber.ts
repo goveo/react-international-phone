@@ -5,18 +5,19 @@ import { parseCountry } from './parseCountry';
 
 export const guessCountryByPartialNumber = (
   partialPhone: string,
-): CountryGuessResult | undefined => {
+): CountryGuessResult => {
+  const emptyResult = { country: undefined, isFullMatch: false };
   if (!partialPhone) {
-    return undefined;
+    return emptyResult;
   }
 
   const phone = removeNonDigits(partialPhone);
 
   if (!phone) {
-    return undefined;
+    return emptyResult;
   }
 
-  let result: CountryGuessResult = { country: undefined, isFullMatch: false };
+  let result: CountryGuessResult = emptyResult;
 
   const updateResult = ({
     country,
