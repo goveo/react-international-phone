@@ -8,13 +8,17 @@ import { CountrySelector } from '../CountrySelector/CountrySelector';
 interface PhoneInputProps extends UsePhoneInputConfig {
   phone?: string;
   disableDropdown?: boolean;
+  placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   onChange?: (phone: string) => void;
 }
 
 export const PhoneInput: React.FC<PhoneInputProps> = ({
-  onChange,
   phone: initialValue = '',
   disableDropdown,
+  placeholder,
+  inputProps,
+  onChange,
   ...usePhoneInputConfig
 }) => {
   const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
@@ -37,6 +41,8 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
         type="tel"
         ref={inputRef}
         className="phone-input"
+        placeholder={placeholder}
+        {...inputProps}
       />
     </div>
   );

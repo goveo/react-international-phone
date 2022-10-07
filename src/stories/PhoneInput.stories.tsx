@@ -1,4 +1,4 @@
-import { boolean, select, withKnobs } from '@storybook/addon-knobs';
+import { boolean, select, text, withKnobs } from '@storybook/addon-knobs';
 import React from 'react';
 
 import { PhoneInput as PhoneInputComponent } from '../components/PhoneInput/PhoneInput';
@@ -19,11 +19,13 @@ export const Base = () => {
     }),
     'us',
   );
+  const placeholder = text('Placeholder', 'Phone number');
 
   return (
     <PhoneInputComponent
       disableDropdown={disableDropdown}
       initialCountry={initialCountry}
+      placeholder={placeholder}
     />
   );
 };
