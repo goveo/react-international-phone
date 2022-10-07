@@ -1,11 +1,11 @@
 import { countries } from '../../data/countryData';
-import { ParsedCountry } from '../../types';
+import { CountryGuessResult, ParsedCountry } from '../../types';
 import { removeNonDigits } from '../common';
 import { parseCountry } from './parseCountry';
 
 export const guessCountryByPartialNumber = (
   partialPhone: string,
-): ParsedCountry | undefined => {
+): CountryGuessResult | undefined => {
   if (!partialPhone) {
     return undefined;
   }
@@ -16,10 +16,7 @@ export const guessCountryByPartialNumber = (
     return undefined;
   }
 
-  let result = { country: undefined, isFullMatch: false } as {
-    country: ParsedCountry | undefined;
-    isFullMatch: boolean;
-  };
+  let result: CountryGuessResult = { country: undefined, isFullMatch: false };
 
   const updateResult = ({
     country,
@@ -71,5 +68,5 @@ export const guessCountryByPartialNumber = (
     }
   }
 
-  return result.country;
+  return result;
 };

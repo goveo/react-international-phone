@@ -254,3 +254,12 @@ export interface ParsedCountry {
   format: CountryData[4];
   priority: CountryData[5];
 }
+
+export interface CountryGuessResult {
+  country: ParsedCountry | undefined;
+  isFullMatch: boolean;
+}
+
+export type RequiredType<T> = {
+  [K in keyof T]: NonNullable<T[K]>;
+};
