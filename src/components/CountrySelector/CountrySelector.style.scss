@@ -1,10 +1,13 @@
 @import '../../style/base';
 
+$dropdown-arrow-size: 4px;
+$dropdown-arrow-color: #777;
+
 .country-selector-button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
   height: $height;
   margin: 0;
   padding: 0;
@@ -12,4 +15,24 @@
   border: 1px solid $border-color;
   cursor: pointer;
   user-select: none;
+
+  &:hover {
+    background-color: $dropdown-item-selected-color;
+  }
+
+  &__flag-emoji {
+    padding: 0 4px;
+  }
+
+  &__dropdown-arrow {
+    margin-right: 4px;
+    border-top: $dropdown-arrow-size solid $dropdown-arrow-color;
+    border-right: $dropdown-arrow-size solid transparent;
+    border-left: $dropdown-arrow-size solid transparent;
+    transition: all 100ms ease-out;
+
+    &--active {
+      transform: rotateX(180deg);
+    }
+  }
 }

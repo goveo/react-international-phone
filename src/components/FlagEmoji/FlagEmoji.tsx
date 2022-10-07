@@ -42,7 +42,7 @@ const getFlagCodepointByIso2 = (iso2: string) => {
 };
 
 interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
-  iso2: ParsedCountry['iso2'];
+  iso2?: ParsedCountry['iso2'];
   size?: CSSProperties['width'];
 }
 
@@ -52,7 +52,8 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   ...restProps
 }) => {
   if (!iso2) {
-    return <span {...restProps}></span>;
+    // render empty image to save place for flag
+    return <img width={size} height={size} {...restProps} />;
   }
 
   const flagCodepoint = getFlagCodepointByIso2(iso2);

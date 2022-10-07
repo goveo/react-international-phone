@@ -31,14 +31,24 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       <button
         title={fullSelectedCountry?.name}
         onClick={() => setShowDropdown(true)}
-        className={['country-selector-button'].join(' ')}
+        className={[
+          'country-selector-button',
+          showDropdown ? 'country-selector-button--active' : '',
+        ].join(' ')}
       >
-        {selectedCountry && (
-          <FlagEmoji
-            iso2={selectedCountry}
-            className="country-selector-button__flag-emoji"
-          />
-        )}
+        <FlagEmoji
+          iso2={selectedCountry}
+          className="country-selector-button__flag-emoji"
+          style={{ visibility: selectedCountry ? 'visible' : 'hidden' }}
+        />
+        <div
+          className={[
+            'country-selector-button__dropdown-arrow',
+            showDropdown
+              ? 'country-selector-button__dropdown-arrow--active'
+              : '',
+          ].join(' ')}
+        />
       </button>
 
       <CountrySelectorDropdown

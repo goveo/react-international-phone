@@ -1,7 +1,7 @@
 @import '../../style/base';
 
 .phone-input-container {
-  display: inline-flex;
+  display: flex;
 
   .country-selector-button {
     margin-right: -1px; /* for border overlap */
