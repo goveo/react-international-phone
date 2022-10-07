@@ -1,10 +1,14 @@
-import { storiesOf } from '@storybook/react';
+import { boolean, withKnobs } from '@storybook/addon-knobs';
 import React from 'react';
 
-import { PhoneInput } from '../components/PhoneInput/PhoneInput';
+import { PhoneInput as PhoneInputComponent } from '../components/PhoneInput/PhoneInput';
 
-const stories = storiesOf('App Test', module);
+export default {
+  title: 'PhoneInput',
+  decorators: [withKnobs],
+};
 
-stories.add('App', () => {
-  return <PhoneInput />;
-});
+export const Base = () => {
+  const disableDropdown = boolean('Disable dropdown', false);
+  return <PhoneInputComponent disableDropdown={disableDropdown} />;
+};

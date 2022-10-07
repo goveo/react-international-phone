@@ -13,11 +13,13 @@ import {
 interface CountrySelectorProps {
   selectedCountry?: CountryIso2;
   onSelect?: CountrySelectorDropdownProps['onSelect'];
+  disableDropdown?: boolean;
 }
 
 export const CountrySelector: React.FC<CountrySelectorProps> = ({
   selectedCountry,
   onSelect,
+  disableDropdown,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -34,21 +36,25 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         className={[
           'country-selector-button',
           showDropdown ? 'country-selector-button--active' : '',
+          disableDropdown ? 'country-selector-button--disabled' : '',
         ].join(' ')}
+        disabled={disableDropdown}
       >
         <FlagEmoji
           iso2={selectedCountry}
           className="country-selector-button__flag-emoji"
           style={{ visibility: selectedCountry ? 'visible' : 'hidden' }}
         />
-        <div
-          className={[
-            'country-selector-button__dropdown-arrow',
-            showDropdown
-              ? 'country-selector-button__dropdown-arrow--active'
-              : '',
-          ].join(' ')}
-        />
+        {!disableDropdown && (
+          <div
+            className={[
+              'country-selector-button__dropdown-arrow',
+              showDropdown
+                ? 'country-selector-button__dropdown-arrow--active'
+                : '',
+            ].join(' ')}
+          />
+        )}
       </button>
 
       <CountrySelectorDropdown

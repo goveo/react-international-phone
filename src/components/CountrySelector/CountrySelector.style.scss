@@ -20,6 +20,14 @@ $dropdown-arrow-color: #777;
     background-color: $dropdown-item-selected-color;
   }
 
+  &--disabled {
+    cursor: auto;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
   &__flag-emoji {
     padding: 0 4px;
   }
