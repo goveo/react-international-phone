@@ -3,7 +3,9 @@ import { useRef, useState } from 'react';
 import { CountryIso2 } from '../types';
 import { usePhone, UsePhoneConfig } from './usePhone';
 
-export type UsePhoneInputConfig = UsePhoneConfig;
+export interface UsePhoneInputConfig extends Omit<UsePhoneConfig, 'country'> {
+  initialCountry?: CountryIso2;
+}
 
 export const usePhoneInput = (
   initialValue = '',
@@ -12,7 +14,7 @@ export const usePhoneInput = (
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [country, setCountry] = useState<CountryIso2 | undefined>(
-    config?.country,
+    config?.initialCountry,
   );
 
   const { phone, handlePhoneValueChange } = usePhone(initialValue, {
