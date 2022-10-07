@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { CountryGuessResult, CountryIso2, RequiredType } from '../types';
 import {
-  applyMask,
+  formatPhone,
   getCountry,
   guessCountryByPartialNumber,
-  insertChar,
   removeNonDigits,
 } from '../utils';
 import { useHistoryState } from './useHistoryState';
@@ -15,7 +14,6 @@ export interface UsePhoneConfig {
   prefix?: string;
   maskChar?: string;
   insertSpaceAfterDialCode?: boolean;
-  maxLength?: number;
   historySaveDebounceMS?: number;
   country?: CountryIso2; // no default value
   inputRef?: React.RefObject<HTMLInputElement>; // no default value
@@ -28,7 +26,6 @@ const defaultPhoneConfig: Required<
   prefix: '+',
   maskChar: '.',
   insertSpaceAfterDialCode: true,
-  maxLength: 15,
   historySaveDebounceMS: 200,
 };
 
@@ -38,7 +35,6 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     prefix,
     maskChar,
     insertSpaceAfterDialCode,
-    maxLength,
     historySaveDebounceMS,
     inputRef,
     onCountryGuess,
@@ -99,66 +95,6 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     };
   }, [inputRef, undo, redo]);
 
-  /**
-   * Phone value creation flow:
-   * 1. Remove non digit chars from provided value
-   * 2. Add prefix to value
-   * 3. Apply country mask
-   * 4. Insert space after dial code
-   */
-  const formatPhone = (
-    value: string,
-    config: { isDeletion: boolean },
-  ): { phone: string; countryGuessResult?: CountryGuessResult } => {
-    let phoneValue = value;
-
-    if (!phoneValue) {
-      return { phone: value };
-    }
-
-    // should pass prefix input
-    if (phoneValue !== prefix) {
-      phoneValue = removeNonDigits(phoneValue);
-    }
-
-    if (phoneValue.length > maxLength) {
-      return { phone: value };
-    }
-
-    const shouldStartWithPrefix = true;
-
-    if (shouldStartWithPrefix && phoneValue[0] !== prefix) {
-      phoneValue = `${prefix}${phoneValue}`;
-    }
-
-    const countryGuessResult = guessCountryByPartialNumber(phoneValue);
-    const guessedCountry = countryGuessResult?.country;
-
-    if (guessedCountry && guessedCountry.format) {
-      phoneValue = applyMask({
-        value: phoneValue,
-        mask: guessedCountry.format,
-        maskSymbol: maskChar,
-        offset: guessedCountry.dialCode.length + prefix.length,
-        trimNonMaskCharsLeftover: config.isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
-      });
-    }
-
-    if (insertSpaceAfterDialCode && guessedCountry) {
-      phoneValue = insertChar({
-        value: phoneValue,
-        position: prefix.length + guessedCountry.dialCode.length,
-        char: ' ',
-      });
-    }
-
-    if (config.isDeletion) {
-      phoneValue = phoneValue.trim();
-    }
-
-    return { phone: phoneValue, countryGuessResult };
-  };
-
   const handlePhoneValueChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ): string => {
@@ -169,16 +105,26 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const inputType: string = (e.nativeEvent as any).inputType;
     const isDeletion = inputType.toLocaleLowerCase().includes('delete');
 
-    const { phone, countryGuessResult } = formatPhone(e.target.value, {
-      isDeletion,
+    const value = e.target.value;
+
+    // FIXME: should not guess country on every change
+    const countryGuessResult = guessCountryByPartialNumber(value);
+    const guessedCountry = countryGuessResult?.country;
+
+    const phone = formatPhone(e.target.value, {
+      prefix,
+      mask: guessedCountry?.format,
+      maskChar,
+      dialCode: guessedCountry?.dialCode,
+      // trim values if user deleting chars (delete mask's whitespace and brackets)
+      trimNonDigitsEnd: isDeletion,
+      charAfterDialCode: ' ',
     });
 
-    const msAfterLastChange = timer.check();
-    const overrideLastHistoryItem = msAfterLastChange
-      ? msAfterLastChange < historySaveDebounceMS
-      : false;
+    const historySaveDebounceTimePassed =
+      (timer.check() ?? -1) < historySaveDebounceMS;
 
-    setPhone(phone, { overrideLastHistoryItem });
+    setPhone(phone, { overrideLastHistoryItem: historySaveDebounceTimePassed });
 
     if (
       countryGuessResult?.country &&
