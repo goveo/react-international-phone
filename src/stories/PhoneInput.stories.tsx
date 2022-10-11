@@ -25,6 +25,7 @@ export const Base = () => {
     'Insert space after dial code',
     true,
   );
+  const disableCountryGuess = boolean('Disable country guess', false);
 
   return (
     <PhoneInputComponent
@@ -33,6 +34,7 @@ export const Base = () => {
       placeholder={placeholder}
       defaultMask={defaultMask}
       insertSpaceAfterDialCode={insertSpaceAfterDialCode}
+      disableCountryGuess={disableCountryGuess}
     />
   );
 };

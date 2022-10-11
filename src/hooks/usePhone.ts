@@ -16,6 +16,7 @@ export interface UsePhoneConfig {
   maskChar?: string;
   insertSpaceAfterDialCode?: boolean;
   historySaveDebounceMS?: number;
+  disableCountryGuess?: boolean;
   country?: CountryIso2;
   inputRef?: React.RefObject<HTMLInputElement>;
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
@@ -30,6 +31,7 @@ const defaultPhoneConfig: Required<
   maskChar: '.',
   insertSpaceAfterDialCode: true,
   historySaveDebounceMS: 200,
+  disableCountryGuess: false,
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
@@ -40,6 +42,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     maskChar,
     insertSpaceAfterDialCode,
     historySaveDebounceMS,
+    disableCountryGuess,
     inputRef,
     onCountryGuess,
   } = {
@@ -111,15 +114,19 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     const value = e.target.value;
 
-    // FIXME: should not guess country on every change
-    const countryGuessResult = guessCountryByPartialNumber(value);
-    const guessedCountry = countryGuessResult?.country;
+    const countryGuessResult = disableCountryGuess
+      ? undefined
+      : guessCountryByPartialNumber(value); // FIXME: should not guess country on every change
+
+    const formatCountry = disableCountryGuess
+      ? passedCountry
+      : countryGuessResult?.country;
 
     const phone = formatPhone(e.target.value, {
       prefix,
-      mask: guessedCountry?.format ?? defaultMask,
+      mask: formatCountry?.format ?? defaultMask,
       maskChar,
-      dialCode: guessedCountry?.dialCode,
+      dialCode: formatCountry?.dialCode,
       // trim values if user deleting chars (delete mask's whitespace and brackets)
       trimNonDigitsEnd: isDeletion,
       charAfterDialCode: insertSpaceAfterDialCode ? ' ' : '',
@@ -131,6 +138,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     setPhone(phone, { overrideLastHistoryItem: historySaveDebounceTimePassed });
 
     if (
+      !disableCountryGuess &&
       countryGuessResult?.country &&
       countryGuessResult.country.name !== country
     ) {

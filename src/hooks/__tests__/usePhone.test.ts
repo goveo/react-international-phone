@@ -63,4 +63,18 @@ describe('usePhone', () => {
     const { result } = renderHook(() => usePhone('', { country: 'us' }));
     expect(result.current.phone).toBe('+1 ');
   });
+
+  it('Should not guess country when disableCountryGuess is true', () => {
+    const { result } = renderHook(() =>
+      usePhone('', { country: 'us', disableCountryGuess: true }),
+    );
+    expect(result.current.phone).toBe('+1 ');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+987' }),
+      );
+    });
+    expect(result.current.phone).toBe('+9 (87');
+  });
 });
