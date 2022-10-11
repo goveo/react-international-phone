@@ -1,26 +1,10 @@
-/* eslint-disable no-undef */
-const path = require('path');
+import path from 'path';
+import type { Configuration } from 'webpack';
 
-const getPath = (...pathArray) => {
-  return path.join(__dirname, ...pathArray);
-};
-
-module.exports = {
+export default <Configuration>{
   mode: 'production',
   entry: {
-    PhoneInput: {
-      import: getPath('src', 'components', 'PhoneInput', 'PhoneInput.tsx'),
-      dependOn: ['usePhoneInput'],
-    },
-    usePhoneInput: {
-      import: getPath('src', 'hooks', 'usePhoneInput.ts'),
-      dependOn: ['usePhone'],
-    },
-    usePhone: {
-      import: getPath('src', 'hooks', 'usePhone.ts'),
-      dependOn: ['formatPhone'],
-    },
-    formatPhone: getPath('src', 'utils', 'phoneUtils', 'formatPhone.ts'),
+    index: path.join(__dirname, 'src', 'index.ts'),
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
@@ -51,5 +35,10 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'build'),
     clean: true,
+    libraryTarget: 'umd',
+    library: 'react-international-phone',
+  },
+  externals: {
+    react: 'react',
   },
 };

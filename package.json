@@ -4,7 +4,11 @@
   "description": "International phone component for React",
   "private": true,
   "author": "Yurii Brusentsov <yuriybrusentsov@gmail.com>",
-  "main": "index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "webpack",
     "test": "jest --coverage",
@@ -20,8 +24,7 @@
     "url": "git+https://github.com/goveo/react-international-phone.git"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@storybook/addon-knobs": "^6.0.28",
@@ -49,8 +52,6 @@
     "postcss": "^8.4.17",
     "postcss-scss": "^4.0.5",
     "prettier": "^2.7.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "sass": "^1.55.0",
     "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
@@ -64,6 +65,7 @@
     "stylelint-scss": "^4.3.0",
     "ts-jest": "^29.0.3",
     "ts-loader": "^8.4.0",
+    "ts-node": "^10.9.1",
     "typescript": "^4.0.5",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
