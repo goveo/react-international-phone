@@ -13,6 +13,7 @@
   .phone-input {
     height: calc($height - 2px);
     padding: 0 8px;
+    color: $text-color;
     border: 1px solid $border-color;
     border-radius: $border-radius;
     border-top-left-radius: 0;
