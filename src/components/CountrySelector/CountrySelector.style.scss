@@ -6,13 +6,13 @@ $dropdown-arrow-color: #777;
 .country-selector-button {
   position: relative;
   display: flex;
+  height: $height;
   align-items: center;
   justify-content: center;
-  height: $height;
-  margin: 0;
   padding: 0;
-  background-color: $background-color;
   border: 1px solid $border-color;
+  margin: 0;
+  background-color: $background-color;
   cursor: pointer;
   user-select: none;
 
@@ -33,10 +33,10 @@ $dropdown-arrow-color: #777;
   }
 
   &__dropdown-arrow {
-    margin-right: 4px;
     border-top: $dropdown-arrow-size solid $dropdown-arrow-color;
     border-right: $dropdown-arrow-size solid transparent;
     border-left: $dropdown-arrow-size solid transparent;
+    margin-right: 4px;
     transition: all 100ms ease-out;
 
     &--active {

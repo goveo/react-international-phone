@@ -2,25 +2,25 @@
 
 .country-selector-dropdown {
   position: absolute;
-  top: 50px;
   z-index: 1;
+  top: 50px;
   display: flex;
-  flex-direction: column;
   width: 300px;
   max-height: 200px;
-  margin: 0;
+  flex-direction: column;
   padding: 4px 0;
-  overflow-y: scroll;
-  color: $text-color;
-  list-style: none;
+  margin: 0;
   background-color: $background-color;
   box-shadow: $shadow-color;
+  color: $text-color;
+  list-style: none;
+  overflow-y: scroll;
 
   &__list-item {
     display: flex;
-    gap: 8px;
     align-items: center;
     padding: 2px 8px;
+    gap: 8px;
 
     &:hover {
       background-color: $dropdown-item-selected-color;
