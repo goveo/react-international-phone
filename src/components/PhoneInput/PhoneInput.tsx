@@ -3,11 +3,14 @@ import './PhoneInput.style.scss';
 import React from 'react';
 
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
-import { CountrySelector } from '../CountrySelector/CountrySelector';
+import {
+  CountrySelector,
+  CountrySelectorProps,
+} from '../CountrySelector/CountrySelector';
 
 interface PhoneInputProps extends UsePhoneInputConfig {
   phone?: string;
-  disableDropdown?: boolean;
+  disableDropdown?: CountrySelectorProps['disableDropdown'];
   placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   onChange?: (phone: string) => void;

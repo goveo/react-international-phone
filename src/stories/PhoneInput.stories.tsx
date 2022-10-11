@@ -20,12 +20,19 @@ export const Base = () => {
     'us',
   );
   const placeholder = text('Placeholder', 'Phone number');
+  const defaultMask = text('Default mask', '............');
+  const insertSpaceAfterDialCode = boolean(
+    'Insert space after dial code',
+    true,
+  );
 
   return (
     <PhoneInputComponent
       disableDropdown={disableDropdown}
       initialCountry={initialCountry}
       placeholder={placeholder}
+      defaultMask={defaultMask}
+      insertSpaceAfterDialCode={insertSpaceAfterDialCode}
     />
   );
 };

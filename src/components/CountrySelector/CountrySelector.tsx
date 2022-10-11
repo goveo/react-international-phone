@@ -10,7 +10,7 @@ import {
   CountrySelectorDropdownProps,
 } from './CountrySelectorDropdown';
 
-interface CountrySelectorProps {
+export interface CountrySelectorProps {
   selectedCountry?: CountryIso2;
   onSelect?: CountrySelectorDropdownProps['onSelect'];
   disableDropdown?: boolean;

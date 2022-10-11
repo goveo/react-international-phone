@@ -12,18 +12,21 @@ import { useTimer } from './useTimer';
 
 export interface UsePhoneConfig {
   prefix?: string;
+  defaultMask?: string;
   maskChar?: string;
   insertSpaceAfterDialCode?: boolean;
   historySaveDebounceMS?: number;
-  country?: CountryIso2; // no default value
-  inputRef?: React.RefObject<HTMLInputElement>; // no default value
+  country?: CountryIso2;
+  inputRef?: React.RefObject<HTMLInputElement>;
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
 }
 
+// On change: make sure to update these values in stories
 const defaultPhoneConfig: Required<
-  Omit<UsePhoneConfig, 'inputRef' | 'country' | 'onCountryGuess'>
+  Omit<UsePhoneConfig, 'inputRef' | 'country' | 'onCountryGuess'> // omit props with no default value
 > = {
   prefix: '+',
+  defaultMask: '............', // 12 chars
   maskChar: '.',
   insertSpaceAfterDialCode: true,
   historySaveDebounceMS: 200,
@@ -33,6 +36,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   const {
     country,
     prefix,
+    defaultMask,
     maskChar,
     insertSpaceAfterDialCode,
     historySaveDebounceMS,
@@ -113,12 +117,12 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     const phone = formatPhone(e.target.value, {
       prefix,
-      mask: guessedCountry?.format,
+      mask: guessedCountry?.format ?? defaultMask,
       maskChar,
       dialCode: guessedCountry?.dialCode,
       // trim values if user deleting chars (delete mask's whitespace and brackets)
       trimNonDigitsEnd: isDeletion,
-      charAfterDialCode: ' ',
+      charAfterDialCode: insertSpaceAfterDialCode ? ' ' : '',
     });
 
     const historySaveDebounceTimePassed =
