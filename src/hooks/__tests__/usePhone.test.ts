@@ -17,9 +17,13 @@ const createChangeEvent = (options: {
 
 describe('usePhone', () => {
   it('Should set initial value', () => {
-    const initialValue = '+1 (444) 444-4444';
-    const { result } = renderHook(() => usePhone(initialValue));
-    expect(result.current.phone).toBe(initialValue);
+    const { result: fullPhone } = renderHook(() =>
+      usePhone('+1 (444) 444-4444'),
+    );
+    expect(fullPhone.current.phone).toBe('+1 (444) 444-4444');
+
+    const { result: notFullPhone } = renderHook(() => usePhone('+1 (444)'));
+    expect(notFullPhone.current.phone).toBe('+1 (444) ');
   });
 
   it('Should format phone with handlePhoneValueChange', () => {
@@ -59,16 +63,17 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('');
   });
 
-  it('Should set prefix dialCode if country provided', () => {
-    const { result } = renderHook(() => usePhone('', { country: 'us' }));
-    expect(result.current.phone).toBe('+1 ');
-  });
+  // FIXME: provide additional prop for this functionality
+  // it('Should set prefix dialCode if country provided', () => {
+  //   const { result } = renderHook(() => usePhone('', { country: 'us' }));
+  //   expect(result.current.phone).toBe('+1 ');
+  // });
 
   it('Should not guess country when disableCountryGuess is true', () => {
     const { result } = renderHook(() =>
-      usePhone('', { country: 'us', disableCountryGuess: true }),
+      usePhone('+123', { country: 'us', disableCountryGuess: true }),
     );
-    expect(result.current.phone).toBe('+1 ');
+    expect(result.current.phone).toBe('+1 (23');
 
     act(() => {
       result.current.handlePhoneValueChange(
