@@ -1,5 +1,3 @@
-import { describe, expect, test } from '@jest/globals';
-
 import { removeNonDigits } from '../removeNonDigits';
 
 describe('removeNonDigits', () => {

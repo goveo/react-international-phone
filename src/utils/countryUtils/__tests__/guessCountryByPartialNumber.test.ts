@@ -1,5 +1,3 @@
-import { describe, expect, test } from '@jest/globals';
-
 import { ParsedCountry } from '../../../types';
 import { guessCountryByPartialNumber } from '../guessCountryByPartialNumber';
 

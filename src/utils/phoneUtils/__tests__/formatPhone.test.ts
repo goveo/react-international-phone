@@ -1,5 +1,3 @@
-import { describe, expect, test } from '@jest/globals';
-
 import { formatPhone, FormatPhoneConfig } from '../formatPhone';
 
 const defaultConfig: FormatPhoneConfig = {

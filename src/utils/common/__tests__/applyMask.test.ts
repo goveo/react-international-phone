@@ -1,5 +1,3 @@
-import { describe, expect, test } from '@jest/globals';
-
 import { applyMask } from '../applyMask';
 
 describe('applyMask', () => {
