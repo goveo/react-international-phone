@@ -1,40 +1,40 @@
-import { boolean, select, text, withKnobs } from '@storybook/addon-knobs';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
 
-import { PhoneInput as PhoneInputComponent } from '../components/PhoneInput/PhoneInput';
+import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { countries } from '../data/countryData';
 import { parseCountry } from '../utils';
 
 export default {
   title: 'PhoneInput',
-  decorators: [withKnobs],
+  component: PhoneInput,
+} as ComponentMeta<typeof PhoneInput>;
+
+const Template: ComponentStory<typeof PhoneInput> = (args) => (
+  <PhoneInput {...args} />
+);
+
+export const Base = Template.bind({});
+
+Base.argTypes = {
+  initialCountry: {
+    options: countries.map((c) => parseCountry(c).iso2),
+    control: {
+      type: 'select',
+      labels: countries.reduce((acc: Record<string, string>, c) => {
+        const { name, iso2 } = parseCountry(c);
+        acc[iso2] = `${name} (${iso2})`;
+        return acc;
+      }, {}),
+    },
+  },
 };
 
-export const Base = () => {
-  const disableDropdown = boolean('Disable dropdown', false);
-  const initialCountry = select(
-    'Initial country',
-    countries.map((c) => {
-      return parseCountry(c).iso2;
-    }),
-    'us',
-  );
-  const placeholder = text('Placeholder', 'Phone number');
-  const defaultMask = text('Default mask', '............');
-  const insertSpaceAfterDialCode = boolean(
-    'Insert space after dial code',
-    true,
-  );
-  const disableCountryGuess = boolean('Disable country guess', false);
-
-  return (
-    <PhoneInputComponent
-      disableDropdown={disableDropdown}
-      initialCountry={initialCountry}
-      placeholder={placeholder}
-      defaultMask={defaultMask}
-      insertSpaceAfterDialCode={insertSpaceAfterDialCode}
-      disableCountryGuess={disableCountryGuess}
-    />
-  );
+Base.args = {
+  disableDropdown: false,
+  initialCountry: 'us',
+  placeholder: 'Phone number',
+  defaultMask: '............',
+  insertSpaceAfterDialCode: true,
+  disableCountryGuess: false,
 };

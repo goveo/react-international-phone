@@ -8,7 +8,7 @@ import {
   CountrySelectorProps,
 } from '../CountrySelector/CountrySelector';
 
-interface PhoneInputProps extends UsePhoneInputConfig {
+export interface PhoneInputProps extends UsePhoneInputConfig {
   phone?: string;
   disableDropdown?: CountrySelectorProps['disableDropdown'];
   placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
