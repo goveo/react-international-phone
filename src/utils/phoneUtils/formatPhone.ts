@@ -6,6 +6,7 @@ export interface FormatPhoneConfig {
   mask?: string;
   maskChar: string;
   dialCode?: string;
+  forceDialCode?: boolean;
   trimNonDigitsEnd: boolean;
 }
 
@@ -28,6 +29,14 @@ export const formatPhone = (
 
   // 1. Remove non digit chars from provided value
   phoneValue = removeNonDigits(phoneValue);
+
+  if (
+    config.forceDialCode &&
+    config.dialCode &&
+    !phoneValue.startsWith(config.dialCode)
+  ) {
+    phoneValue = `${config.dialCode}${phoneValue}`;
+  }
 
   // 2. Add prefix to value
   phoneValue = `${config.prefix}${phoneValue}`;

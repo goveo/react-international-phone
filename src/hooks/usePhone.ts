@@ -24,6 +24,7 @@ export interface UsePhoneConfig {
   historySaveDebounceMS?: number;
   disableCountryGuess?: boolean;
   disableDialCodePrefill?: boolean;
+  forceDialCode?: boolean;
   country?: CountryIso2;
   inputRef?: React.RefObject<HTMLInputElement>;
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
@@ -40,6 +41,7 @@ const defaultPhoneConfig: Required<
   historySaveDebounceMS: 200,
   disableCountryGuess: false,
   disableDialCodePrefill: false,
+  forceDialCode: false,
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
@@ -52,12 +54,15 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     historySaveDebounceMS,
     disableCountryGuess,
     disableDialCodePrefill,
+    forceDialCode,
     inputRef,
     onCountryGuess,
   } = {
     ...defaultPhoneConfig,
     ...config,
   };
+  const charAfterDialCode = insertSpaceAfterDialCode ? ' ' : '';
+
   const timer = useTimer();
 
   const passedCountry = useMemo(() => {
@@ -70,14 +75,19 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   const formatPhoneValue = (
     value: string,
     { trimNonDigitsEnd, insertDialCodeOnEmpty }: FormatPhoneValueFuncOptions,
-  ): { phone: string; countryGuessResult: CountryGuessResult | undefined } => {
-    if (insertDialCodeOnEmpty && removeNonDigits(value).length === 0) {
-      if (!passedCountry) return { phone: '', countryGuessResult: undefined };
+  ): { phone: string; countryGuessResult?: CountryGuessResult | undefined } => {
+    const rawValue = removeNonDigits(value);
+
+    const shouldRenderDialCode =
+      (insertDialCodeOnEmpty && rawValue.length === 0) ||
+      (forceDialCode &&
+        rawValue.length <= (passedCountry?.dialCode?.length ?? 0));
+
+    if (shouldRenderDialCode) {
       return {
-        phone: `${prefix}${passedCountry.dialCode}${
-          insertSpaceAfterDialCode ? ' ' : ''
-        }`,
-        countryGuessResult: undefined,
+        phone: passedCountry
+          ? `${prefix}${passedCountry.dialCode}${charAfterDialCode}`
+          : '',
       };
     }
 
@@ -96,7 +106,8 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       dialCode: formatCountry?.dialCode,
       // trim values if user deleting chars (delete mask's whitespace and brackets)
       trimNonDigitsEnd: !!trimNonDigitsEnd,
-      charAfterDialCode: insertSpaceAfterDialCode ? ' ' : '',
+      charAfterDialCode,
+      forceDialCode,
     });
 
     return { phone, countryGuessResult };
@@ -151,9 +162,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       passedCountry.dialCode
     ) {
       // country was updated with country-selector (not from input)
-      const dialCodeWithPrefix = `${prefix}${passedCountry.dialCode}${
-        insertSpaceAfterDialCode ? ' ' : ''
-      }`;
+      const dialCodeWithPrefix = `${prefix}${passedCountry.dialCode}${charAfterDialCode}`;
       return setPhone(dialCodeWithPrefix, { overrideLastHistoryItem: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

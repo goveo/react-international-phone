@@ -38,4 +38,5 @@ Base.args = {
   insertSpaceAfterDialCode: true,
   disableCountryGuess: false,
   disableDialCodePrefill: false,
+  forceDialCode: false,
 };

@@ -87,4 +87,15 @@ describe('formatPhone', () => {
   test('should not format empty value', () => {
     expect(formatPhone('', defaultConfig)).toBe('');
   });
+
+  test('should insert dialCode in the result value if forceDialCode is true', () => {
+    const config = {
+      ...defaultConfig,
+      dialCode: '499',
+      mask: '(...) ... ... ...',
+      forceDialCode: true,
+    };
+    expect(formatPhone('380', config)).toBe('+499 (380) ');
+    expect(formatPhone('499', config)).toBe('+499 (');
+  });
 });
