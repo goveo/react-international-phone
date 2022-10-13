@@ -11,6 +11,11 @@ import { useHistoryState } from './useHistoryState';
 import { usePrevious } from './usePrevious';
 import { useTimer } from './useTimer';
 
+interface FormatPhoneValueFuncOptions {
+  trimNonDigitsEnd?: boolean;
+  insertDialCodeOnEmpty?: boolean;
+}
+
 export interface UsePhoneConfig {
   prefix?: string;
   defaultMask?: string;
@@ -64,10 +69,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   const formatPhoneValue = (
     value: string,
-    { trimNonDigitsEnd, insertDialCodeOnEmpty } = {
-      trimNonDigitsEnd: false,
-      insertDialCodeOnEmpty: false,
-    },
+    { trimNonDigitsEnd, insertDialCodeOnEmpty }: FormatPhoneValueFuncOptions,
   ): { phone: string; countryGuessResult: CountryGuessResult | undefined } => {
     if (insertDialCodeOnEmpty && removeNonDigits(value).length === 0) {
       if (!passedCountry) return { phone: '', countryGuessResult: undefined };
@@ -93,19 +95,28 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       maskChar,
       dialCode: formatCountry?.dialCode,
       // trim values if user deleting chars (delete mask's whitespace and brackets)
-      trimNonDigitsEnd: trimNonDigitsEnd,
+      trimNonDigitsEnd: !!trimNonDigitsEnd,
       charAfterDialCode: insertSpaceAfterDialCode ? ' ' : '',
     });
 
     return { phone, countryGuessResult };
   };
 
-  const [phone, setPhone, undo, redo] = useHistoryState(
-    formatPhoneValue(value, {
-      trimNonDigitsEnd: false,
-      insertDialCodeOnEmpty: !disableDialCodePrefill,
-    }).phone,
-  );
+  const [phone, setPhone, undo, redo] = useHistoryState('');
+
+  // set initial phone value
+  useEffect(() => {
+    setPhone(
+      formatPhoneValue(value, {
+        trimNonDigitsEnd: false,
+        insertDialCodeOnEmpty: !disableDialCodePrefill,
+      }).phone,
+      {
+        overrideLastHistoryItem: true,
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const rawPhone = useMemo(() => {
     return removeNonDigits(phone);
@@ -133,16 +144,18 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   // on country change
   useEffect(() => {
-    if (!passedCountry) return;
+    if (!passedCountry || !prevPassedCountry) return; // initial render
 
-    // switched country to another value
-    if (prevPassedCountry) {
+    if (
+      guessCountryByPartialNumber(rawPhone).country?.dialCode !==
+      passedCountry.dialCode
+    ) {
+      // country was updated with country-selector (not from input)
       const dialCodeWithPrefix = `${prefix}${passedCountry.dialCode}${
         insertSpaceAfterDialCode ? ' ' : ''
       }`;
       return setPhone(dialCodeWithPrefix, { overrideLastHistoryItem: true });
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
