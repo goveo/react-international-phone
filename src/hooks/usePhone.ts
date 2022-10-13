@@ -18,6 +18,7 @@ export interface UsePhoneConfig {
   insertSpaceAfterDialCode?: boolean;
   historySaveDebounceMS?: number;
   disableCountryGuess?: boolean;
+  disableDialCodePrefill?: boolean;
   country?: CountryIso2;
   inputRef?: React.RefObject<HTMLInputElement>;
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
@@ -33,6 +34,7 @@ const defaultPhoneConfig: Required<
   insertSpaceAfterDialCode: true,
   historySaveDebounceMS: 200,
   disableCountryGuess: false,
+  disableDialCodePrefill: false,
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
@@ -44,6 +46,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     insertSpaceAfterDialCode,
     historySaveDebounceMS,
     disableCountryGuess,
+    disableDialCodePrefill,
     inputRef,
     onCountryGuess,
   } = {
@@ -61,10 +64,21 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   const formatPhoneValue = (
     value: string,
-    { trimNonDigitsEnd } = {
+    { trimNonDigitsEnd, insertDialCodeOnEmpty } = {
       trimNonDigitsEnd: false,
+      insertDialCodeOnEmpty: false,
     },
   ): { phone: string; countryGuessResult: CountryGuessResult | undefined } => {
+    if (insertDialCodeOnEmpty && removeNonDigits(value).length === 0) {
+      if (!passedCountry) return { phone: '', countryGuessResult: undefined };
+      return {
+        phone: `${prefix}${passedCountry.dialCode}${
+          insertSpaceAfterDialCode ? ' ' : ''
+        }`,
+        countryGuessResult: undefined,
+      };
+    }
+
     const countryGuessResult = disableCountryGuess
       ? undefined
       : guessCountryByPartialNumber(value); // FIXME: should not guess country on every change
@@ -87,7 +101,10 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   };
 
   const [phone, setPhone, undo, redo] = useHistoryState(
-    formatPhoneValue(value).phone,
+    formatPhoneValue(value, {
+      trimNonDigitsEnd: false,
+      insertDialCodeOnEmpty: !disableDialCodePrefill,
+    }).phone,
   );
 
   const rawPhone = useMemo(() => {
@@ -141,12 +158,13 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     const value = e.target.value;
 
-    const historySaveDebounceTimePassed =
-      (timer.check() ?? -1) < historySaveDebounceMS;
-
     const { phone, countryGuessResult } = formatPhoneValue(value, {
       trimNonDigitsEnd: isDeletion,
+      insertDialCodeOnEmpty: false,
     });
+
+    const historySaveDebounceTimePassed =
+      (timer.check() ?? -1) < historySaveDebounceMS;
 
     setPhone(phone, { overrideLastHistoryItem: historySaveDebounceTimePassed });
 

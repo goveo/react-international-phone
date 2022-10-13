@@ -63,11 +63,30 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('');
   });
 
-  // FIXME: provide additional prop for this functionality
-  // it('Should set prefix dialCode if country provided', () => {
-  //   const { result } = renderHook(() => usePhone('', { country: 'us' }));
-  //   expect(result.current.phone).toBe('+1 ');
-  // });
+  it('Should not prefill init value with dialCode if disableDialCodePrefill is true', () => {
+    const { result: resultWithoutPrefill } = renderHook(() =>
+      usePhone('', { country: 'us', disableDialCodePrefill: true }),
+    );
+    expect(resultWithoutPrefill.current.phone).toBe('');
+    act(() => {
+      resultWithoutPrefill.current.handlePhoneValueChange(
+        createChangeEvent({ value: '' }),
+      );
+    });
+    expect(resultWithoutPrefill.current.phone).toBe('');
+
+    const { result: resultWithPrefill } = renderHook(() =>
+      usePhone('', { country: 'us', disableDialCodePrefill: false }),
+    );
+    expect(resultWithPrefill.current.phone).toBe('+1 ');
+
+    act(() => {
+      resultWithPrefill.current.handlePhoneValueChange(
+        createChangeEvent({ value: '' }),
+      );
+    });
+    expect(resultWithPrefill.current.phone).toBe('');
+  });
 
   it('Should not guess country when disableCountryGuess is true', () => {
     const { result } = renderHook(() =>

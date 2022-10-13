@@ -37,4 +37,5 @@ Base.args = {
   defaultMask: '............',
   insertSpaceAfterDialCode: true,
   disableCountryGuess: false,
+  disableDialCodePrefill: false,
 };
