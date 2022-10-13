@@ -76,21 +76,6 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     value: string,
     { trimNonDigitsEnd, insertDialCodeOnEmpty }: FormatPhoneValueFuncOptions,
   ): { phone: string; countryGuessResult?: CountryGuessResult | undefined } => {
-    const rawValue = removeNonDigits(value);
-
-    const shouldRenderDialCode =
-      (insertDialCodeOnEmpty && rawValue.length === 0) ||
-      (forceDialCode &&
-        rawValue.length <= (passedCountry?.dialCode?.length ?? 0));
-
-    if (shouldRenderDialCode) {
-      return {
-        phone: passedCountry
-          ? `${prefix}${passedCountry.dialCode}${charAfterDialCode}`
-          : '',
-      };
-    }
-
     const countryGuessResult = disableCountryGuess
       ? undefined
       : guessCountryByPartialNumber(value); // FIXME: should not guess country on every change
@@ -99,16 +84,19 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       ? passedCountry
       : countryGuessResult?.country ?? passedCountry;
 
-    const phone = formatPhone(value, {
-      prefix,
-      mask: formatCountry?.format ?? defaultMask,
-      maskChar,
-      dialCode: formatCountry?.dialCode,
-      // trim values if user deleting chars (delete mask's whitespace and brackets)
-      trimNonDigitsEnd: !!trimNonDigitsEnd,
-      charAfterDialCode,
-      forceDialCode,
-    });
+    const phone = formatCountry
+      ? formatPhone(value, {
+          prefix,
+          mask: formatCountry?.format ?? defaultMask,
+          maskChar,
+          dialCode: formatCountry?.dialCode,
+          // trim values if user deleting chars (delete mask's whitespace and brackets)
+          trimNonDigitsEnd: !!trimNonDigitsEnd,
+          charAfterDialCode,
+          forceDialCode,
+          insertDialCodeOnEmpty,
+        })
+      : value;
 
     return { phone, countryGuessResult };
   };
