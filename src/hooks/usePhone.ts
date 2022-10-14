@@ -25,6 +25,14 @@ export interface UsePhoneConfig {
   disableCountryGuess?: boolean;
   disableDialCodePrefill?: boolean;
   forceDialCode?: boolean;
+  /**
+   * @description
+   * Phone value will not include passed *dialCode* and *prefix* if set to *true*.
+   * @ignore
+   * - *disableCountryGuess* value will be ignored and set to *true*.
+   * - *forceDialCode* value will be ignored and set to *false*.
+   */
+  disableDialCodeAndPrefix?: boolean;
   country?: CountryIso2;
   inputRef?: React.RefObject<HTMLInputElement>;
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
@@ -42,6 +50,7 @@ const defaultPhoneConfig: Required<
   disableCountryGuess: false,
   disableDialCodePrefill: false,
   forceDialCode: false,
+  disableDialCodeAndPrefix: false,
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
@@ -55,6 +64,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     disableCountryGuess,
     disableDialCodePrefill,
     forceDialCode,
+    disableDialCodeAndPrefix,
     inputRef,
     onCountryGuess,
   } = {
@@ -62,6 +72,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     ...config,
   };
   const charAfterDialCode = insertSpaceAfterDialCode ? ' ' : '';
+  const shouldGuessCountry = disableDialCodeAndPrefix
+    ? false
+    : !disableCountryGuess;
 
   const timer = useTimer();
 
@@ -76,13 +89,13 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     value: string,
     { trimNonDigitsEnd, insertDialCodeOnEmpty }: FormatPhoneValueFuncOptions,
   ): { phone: string; countryGuessResult?: CountryGuessResult | undefined } => {
-    const countryGuessResult = disableCountryGuess
-      ? undefined
-      : guessCountryByPartialNumber(value); // FIXME: should not guess country on every change
+    const countryGuessResult = shouldGuessCountry
+      ? guessCountryByPartialNumber(value) // FIXME: should not guess country on every change
+      : undefined;
 
-    const formatCountry = disableCountryGuess
-      ? passedCountry
-      : countryGuessResult?.country ?? passedCountry;
+    const formatCountry = shouldGuessCountry
+      ? countryGuessResult?.country ?? passedCountry
+      : passedCountry;
 
     const phone = formatCountry
       ? formatPhone(value, {
@@ -90,11 +103,11 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
           mask: formatCountry?.format ?? defaultMask,
           maskChar,
           dialCode: formatCountry?.dialCode,
-          // trim values if user deleting chars (delete mask's whitespace and brackets)
-          trimNonDigitsEnd: !!trimNonDigitsEnd,
+          trimNonDigitsEnd,
           charAfterDialCode,
           forceDialCode,
           insertDialCodeOnEmpty,
+          disableDialCodeAndPrefix,
         })
       : value;
 
@@ -150,8 +163,10 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       passedCountry.dialCode
     ) {
       // country was updated with country-selector (not from input)
-      const dialCodeWithPrefix = `${prefix}${passedCountry.dialCode}${charAfterDialCode}`;
-      return setPhone(dialCodeWithPrefix, { overrideLastHistoryItem: true });
+      const phoneValue = disableDialCodeAndPrefix
+        ? ''
+        : `${prefix}${passedCountry.dialCode}${charAfterDialCode}`;
+      return setPhone(phoneValue);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
@@ -169,7 +184,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const value = e.target.value;
 
     const { phone, countryGuessResult } = formatPhoneValue(value, {
-      trimNonDigitsEnd: isDeletion,
+      trimNonDigitsEnd: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
       insertDialCodeOnEmpty: false,
     });
 
@@ -179,7 +194,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     setPhone(phone, { overrideLastHistoryItem: historySaveDebounceTimePassed });
 
     if (
-      !disableCountryGuess &&
+      shouldGuessCountry &&
       countryGuessResult?.country &&
       countryGuessResult.country.name !== country
     ) {

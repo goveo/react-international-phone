@@ -39,4 +39,5 @@ Base.args = {
   disableCountryGuess: false,
   disableDialCodePrefill: false,
   forceDialCode: false,
+  disableDialCodeAndPrefix: false,
 };

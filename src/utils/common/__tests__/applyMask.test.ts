@@ -14,6 +14,9 @@ describe('applyMask', () => {
     expect(
       applyMask({ value: '12345678', mask: '.. (..) .. ..', maskSymbol: '.' }),
     ).toBe('12 (34) 56 78');
+    expect(applyMask({ value: '1234', mask: '(..) ..', maskSymbol: '.' })).toBe(
+      '(12) 34',
+    );
   });
 
   test('should trim values that bigger than mask', () => {

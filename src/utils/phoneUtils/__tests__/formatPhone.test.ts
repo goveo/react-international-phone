@@ -98,4 +98,23 @@ describe('formatPhone', () => {
     expect(formatPhone('380', config)).toBe('+499 (380) ');
     expect(formatPhone('499', config)).toBe('+499 (');
   });
+
+  test('should hide dial code if disableDialCodeAndPrefix is true', () => {
+    const config = {
+      ...defaultConfig,
+      dialCode: '499',
+      mask: '(...) ... ... ...',
+      disableDialCodeAndPrefix: true,
+    };
+    expect(formatPhone('380', config)).toBe('(380) ');
+    expect(formatPhone('499', config)).toBe('(499) ');
+
+    expect(
+      formatPhone('+380 (99) 111 22 33', {
+        ...defaultConfig,
+        dialCode: '380',
+        disableDialCodeAndPrefix: true,
+      }),
+    ).toBe('(38) 099 11 12');
+  });
 });
