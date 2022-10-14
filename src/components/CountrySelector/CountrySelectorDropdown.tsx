@@ -1,6 +1,6 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { countries } from '../../data/countryData';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
@@ -14,6 +14,7 @@ export interface CountrySelectorDropdownProps {
   selectedCountry?: CountryIso2;
   onSelect?: (country: ParsedCountry) => void;
   onClickOutside?: () => void;
+  onEscapePress?: () => void;
 }
 
 export const CountrySelectorDropdown: React.FC<
@@ -24,6 +25,7 @@ export const CountrySelectorDropdown: React.FC<
   selectedCountry,
   onSelect,
   onClickOutside,
+  onEscapePress,
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -41,6 +43,21 @@ export const CountrySelectorDropdown: React.FC<
   }, [onClickOutside]);
 
   useOnClickOutside({ ref: listRef, onClickOutside: handleClickOutside });
+
+  // Close dropdown on escape press
+  useEffect(() => {
+    const callback = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onEscapePress?.();
+      }
+    };
+    const ref = listRef.current;
+    ref?.addEventListener('keydown', callback);
+    return () => {
+      ref?.removeEventListener('keydown', callback);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ul

@@ -39,6 +39,8 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           disableDropdown ? 'country-selector-button--disabled' : '',
         ].join(' ')}
         disabled={disableDropdown}
+        aria-haspopup="listbox"
+        aria-expanded={disableDropdown}
       >
         <FlagEmoji
           iso2={selectedCountry}
@@ -65,6 +67,9 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         }}
         selectedCountry={selectedCountry}
         onClickOutside={() => {
+          setShowDropdown(false);
+        }}
+        onEscapePress={() => {
           setShowDropdown(false);
         }}
       />
