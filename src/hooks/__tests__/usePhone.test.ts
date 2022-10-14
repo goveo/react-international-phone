@@ -63,7 +63,73 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('');
   });
 
-  it('Should not prefill init value with dialCode if disableDialCodePrefill is true', () => {
+  it('Should handle insertSpaceAfterDialCode config prop', () => {
+    // with enabled insertSpaceAfterDialCode
+    const { result: resultWithSpace } = renderHook(() =>
+      usePhone('', { country: 'us', insertSpaceAfterDialCode: true }),
+    );
+    act(() => {
+      resultWithSpace.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+1' }),
+      );
+    });
+    expect(resultWithSpace.current.phone).toBe('+1 (');
+
+    act(() => {
+      resultWithSpace.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+38099' }),
+      );
+    });
+    expect(resultWithSpace.current.phone).toBe('+380 (99) ');
+
+    act(() => {
+      resultWithSpace.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+380991112233' }),
+      );
+    });
+    expect(resultWithSpace.current.phone).toBe('+380 (99) 111 22 33');
+
+    // with disabled insertSpaceAfterDialCode
+    const { result: resultWithoutSpace } = renderHook(() =>
+      usePhone('', { country: 'us', insertSpaceAfterDialCode: false }),
+    );
+    act(() => {
+      resultWithoutSpace.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+1' }),
+      );
+    });
+    expect(resultWithoutSpace.current.phone).toBe('+1(');
+
+    act(() => {
+      resultWithoutSpace.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+38099' }),
+      );
+    });
+    expect(resultWithoutSpace.current.phone).toBe('+380(99) ');
+
+    act(() => {
+      resultWithoutSpace.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+380991112233' }),
+      );
+    });
+    expect(resultWithoutSpace.current.phone).toBe('+380(99) 111 22 33');
+  });
+
+  it('Should handle disableCountryGuess config prop', () => {
+    const { result } = renderHook(() =>
+      usePhone('+123', { country: 'us', disableCountryGuess: true }),
+    );
+    expect(result.current.phone).toBe('+1 (23');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+987' }),
+      );
+    });
+    expect(result.current.phone).toBe('+9 (87');
+  });
+
+  it('Should handle disableDialCodePrefill config prop', () => {
     const { result: resultWithoutPrefill } = renderHook(() =>
       usePhone('', { country: 'us', disableDialCodePrefill: true }),
     );
@@ -88,17 +154,86 @@ describe('usePhone', () => {
     expect(resultWithPrefill.current.phone).toBe('');
   });
 
-  it('Should not guess country when disableCountryGuess is true', () => {
+  it('Should handle forceDialCode config prop', () => {
     const { result } = renderHook(() =>
-      usePhone('+123', { country: 'us', disableCountryGuess: true }),
+      usePhone('', { country: 'us', forceDialCode: true }),
     );
-    expect(result.current.phone).toBe('+1 (23');
+    expect(result.current.phone).toBe('+1 ');
 
     act(() => {
       result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+987' }),
+        createChangeEvent({ value: '+1234' }),
       );
     });
-    expect(result.current.phone).toBe('+9 (87');
+    expect(result.current.phone).toBe('+1 (234) ');
+
+    act(() => {
+      result.current.handlePhoneValueChange(createChangeEvent({ value: '' }));
+    });
+    expect(result.current.phone).toBe('+1 ');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+38099' }),
+      );
+    });
+    expect(result.current.phone).toBe('+380 (99) ');
+  });
+
+  it('Should handle disableDialCodeAndPrefix config prop', () => {
+    const { result } = renderHook(() =>
+      usePhone('+12345', { country: 'us', disableDialCodeAndPrefix: true }),
+    );
+    expect(result.current.phone).toBe('(123) 45');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+1 (123) 456-7890' }),
+      );
+    });
+    expect(result.current.phone).toBe('(112) 345-6789');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+380 (99) 456-7890' }),
+      );
+    });
+    expect(result.current.phone).toBe('(380) 994-5678');
+  });
+
+  it('disableDialCodeAndPrefix should ignore disableCountryGuess and forceDialCode', () => {
+    // forceDialCode
+    const { result: withForceDialCode } = renderHook(() =>
+      usePhone('+12345', {
+        country: 'us',
+        disableDialCodeAndPrefix: true,
+        forceDialCode: true,
+      }),
+    );
+    expect(withForceDialCode.current.phone).toBe('(123) 45');
+
+    act(() => {
+      withForceDialCode.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+1 (123) 456-7890' }),
+      );
+    });
+    expect(withForceDialCode.current.phone).toBe('(112) 345-6789');
+
+    // disableCountryGuess
+    const { result: withDisableCountryGuess } = renderHook(() =>
+      usePhone('+12345', {
+        country: 'us',
+        disableDialCodeAndPrefix: true,
+        disableCountryGuess: true,
+      }),
+    );
+    expect(withDisableCountryGuess.current.phone).toBe('(123) 45');
+
+    act(() => {
+      withDisableCountryGuess.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+1 (123) 456-7890' }),
+      );
+    });
+    expect(withDisableCountryGuess.current.phone).toBe('(112) 345-6789');
   });
 });

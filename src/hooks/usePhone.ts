@@ -16,10 +16,11 @@ interface FormatPhoneValueFuncOptions {
   insertDialCodeOnEmpty?: boolean;
 }
 
+const MASK_CHAR = '.';
+
 export interface UsePhoneConfig {
   prefix?: string;
   defaultMask?: string;
-  maskChar?: string;
   insertSpaceAfterDialCode?: boolean;
   historySaveDebounceMS?: number;
   disableCountryGuess?: boolean;
@@ -44,7 +45,6 @@ const defaultPhoneConfig: Required<
 > = {
   prefix: '+',
   defaultMask: '............', // 12 chars
-  maskChar: '.',
   insertSpaceAfterDialCode: true,
   historySaveDebounceMS: 200,
   disableCountryGuess: false,
@@ -58,7 +58,6 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     country,
     prefix,
     defaultMask,
-    maskChar,
     insertSpaceAfterDialCode,
     historySaveDebounceMS,
     disableCountryGuess,
@@ -101,7 +100,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       ? formatPhone(value, {
           prefix,
           mask: formatCountry?.format ?? defaultMask,
-          maskChar,
+          maskChar: MASK_CHAR,
           dialCode: formatCountry?.dialCode,
           trimNonDigitsEnd,
           charAfterDialCode,
