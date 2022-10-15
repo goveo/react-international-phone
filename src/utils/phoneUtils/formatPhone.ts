@@ -56,22 +56,38 @@ export const formatPhone = (
 
   const onlyDigits = removeNonDigits(phoneValue);
 
+  const handleResult = (result: string) => {
+    if (config.trimNonDigitsEnd) {
+      return result.trim();
+    }
+    return result;
+  };
+
   if (!phoneValue) {
     if (
       (shouldInsertDialCodeOnEmpty && !phoneValue.length) ||
       (shouldForceDialCode && onlyDigits.length <= config.dialCode.length)
     ) {
-      return `${config.prefix}${config.dialCode}${config.charAfterDialCode}`;
+      return handleResult(
+        `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
+      );
     }
 
-    return phoneValue;
+    return handleResult(phoneValue);
   }
 
   // 1. Remove non digit chars from provided value
   phoneValue = onlyDigits;
 
-  if (shouldForceDialCode && !phoneValue.startsWith(config.dialCode)) {
-    phoneValue = `${config.dialCode}${phoneValue}`;
+  if (shouldForceDialCode) {
+    if (config.dialCode.startsWith(phoneValue)) {
+      return handleResult(
+        `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
+      );
+    }
+    if (!phoneValue.startsWith(config.dialCode)) {
+      phoneValue = `${config.dialCode}${phoneValue}`;
+    }
   }
 
   if (!config.disableDialCodeAndPrefix) {
@@ -99,9 +115,5 @@ export const formatPhone = (
     });
   }
 
-  if (config.trimNonDigitsEnd) {
-    phoneValue = phoneValue.trim();
-  }
-
-  return phoneValue;
+  return handleResult(phoneValue);
 };

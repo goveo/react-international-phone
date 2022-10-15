@@ -54,7 +54,7 @@ describe('formatPhone', () => {
     ).toBe('+380-(12) 345 67 89');
   });
 
-  test('should trim non digits chars from end of result', () => {
+  test('should trim non digits chars from end of result if trimNonDigitsEnd is true', () => {
     expect(
       formatPhone('38012', {
         ...defaultConfig,
@@ -96,7 +96,10 @@ describe('formatPhone', () => {
       forceDialCode: true,
     };
     expect(formatPhone('380', config)).toBe('+499 (380) ');
-    expect(formatPhone('499', config)).toBe('+499 (');
+    expect(formatPhone('499', config)).toBe('+499 ');
+    expect(formatPhone('49', config)).toBe('+499 ');
+    expect(formatPhone('4', config)).toBe('+499 ');
+    expect(formatPhone('', config)).toBe('+499 ');
   });
 
   test('should hide dial code if disableDialCodeAndPrefix is true', () => {
