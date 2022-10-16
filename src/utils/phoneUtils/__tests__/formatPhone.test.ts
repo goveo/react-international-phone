@@ -24,6 +24,28 @@ describe('formatPhone', () => {
     );
   });
 
+  test('should handle not full phones', () => {
+    expect(formatPhone('38099', defaultConfig)).toBe('+380 (99) ');
+    expect(formatPhone('3809', defaultConfig)).toBe('+380 (9');
+    expect(formatPhone('380', defaultConfig)).toBe('+380 ');
+    expect(formatPhone('38', defaultConfig)).toBe('+38');
+    expect(formatPhone('3', defaultConfig)).toBe('+3');
+  });
+
+  test('should handle empty of wrong value', () => {
+    expect(formatPhone('', defaultConfig)).toBe('');
+    expect(formatPhone('+', defaultConfig)).toBe('+');
+    expect(formatPhone('-', defaultConfig)).toBe('+');
+    expect(formatPhone('test', defaultConfig)).toBe('+');
+  });
+
+  test('should apply mask if provided phone of another country', () => {
+    expect(formatPhone('+1 (234) 567-8900', defaultConfig)).toBe(
+      '+123 (45) 678 90 0',
+    );
+    expect(formatPhone('+389 (123)', defaultConfig)).toBe('+389 (12) 3');
+  });
+
   test('should support different prefixes', () => {
     expect(formatPhone('+380123456789', { ...defaultConfig, prefix: '' })).toBe(
       '380 (12) 345 67 89',
@@ -74,7 +96,7 @@ describe('formatPhone', () => {
         ...defaultConfig,
         trimNonDigitsEnd: false,
       }),
-    ).toBe('+380 (');
+    ).toBe('+380 ');
 
     expect(
       formatPhone('380', {
@@ -82,10 +104,6 @@ describe('formatPhone', () => {
         trimNonDigitsEnd: true,
       }),
     ).toBe('+380');
-  });
-
-  test('should not format empty value', () => {
-    expect(formatPhone('', defaultConfig)).toBe('');
   });
 
   test('should insert dialCode in the result value if forceDialCode is true', () => {

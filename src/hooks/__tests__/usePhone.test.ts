@@ -73,7 +73,7 @@ describe('usePhone', () => {
         createChangeEvent({ value: '+1' }),
       );
     });
-    expect(resultWithSpace.current.phone).toBe('+1 (');
+    expect(resultWithSpace.current.phone).toBe('+1 ');
 
     act(() => {
       resultWithSpace.current.handlePhoneValueChange(
@@ -98,7 +98,7 @@ describe('usePhone', () => {
         createChangeEvent({ value: '+1' }),
       );
     });
-    expect(resultWithoutSpace.current.phone).toBe('+1(');
+    expect(resultWithoutSpace.current.phone).toBe('+1');
 
     act(() => {
       resultWithoutSpace.current.handlePhoneValueChange(
@@ -127,6 +127,20 @@ describe('usePhone', () => {
       );
     });
     expect(result.current.phone).toBe('+9 (87');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+98765432100' }),
+      );
+    });
+    expect(result.current.phone).toBe('+9 (876) 543-2100');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+3876543210' }),
+      );
+    });
+    expect(result.current.phone).toBe('+3 (876) 543-210');
   });
 
   it('Should handle disableDialCodePrefill config prop', () => {
@@ -178,6 +192,13 @@ describe('usePhone', () => {
       );
     });
     expect(result.current.phone).toBe('+380 (99) ');
+
+    act(() => {
+      result.current.handlePhoneValueChange(
+        createChangeEvent({ value: '+38' }),
+      );
+    });
+    expect(result.current.phone).toBe('+380 ');
   });
 
   it('Should handle disableDialCodeAndPrefix config prop', () => {

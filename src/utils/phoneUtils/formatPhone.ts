@@ -1,4 +1,4 @@
-import { applyMask, insertChar, removeNonDigits } from '../common';
+import { applyMask, removeNonDigits } from '../common';
 
 export interface FormatPhoneConfig {
   prefix: string;
@@ -10,36 +10,29 @@ export interface FormatPhoneConfig {
    */
   charAfterDialCode?: string;
   /**
-   * Ignore validation of dial code
-   * Passed value will always be set after hardcoded dial code
+   * Force dial code setting to result value
    */
   forceDialCode?: boolean;
+  /**
+   * Insert prefix and dial code if provided empty value
+   */
+  insertDialCodeOnEmpty?: boolean;
   /**
    * @description
    * Result will not include passed *dialCode* and *prefix* if set to *true*.
    * Passed value will not process dial code if it's included in provided value.
    * Result will be the same as with *forceDialCode* option but without prefix and dial code on start
    *
-   * provided *forceDialCode* value will be ignored and set to *false*
+   * @ignore provided *forceDialCode* value will be ignored and set to *false*
+   * @ignore provided *insertDialCodeOnEmpty* value will be ignored and set to *true*
    */
   disableDialCodeAndPrefix?: boolean;
   /**
    * Trim all non-digit values from the end of the result
    */
   trimNonDigitsEnd?: boolean;
-  /**
-   * Insert prefix and dial code if provided empty value
-   */
-  insertDialCodeOnEmpty?: boolean;
 }
 
-/**
- * Phone formatting flow:
- * 1. Remove non digit chars from provided value
- * 2. Add prefix to value
- * 3. Apply country mask
- * 4. Insert char after dial code
- */
 export const formatPhone = (
   phone: string,
   config: FormatPhoneConfig,
@@ -54,8 +47,6 @@ export const formatPhone = (
 
   let phoneValue = phone;
 
-  const onlyDigits = removeNonDigits(phoneValue);
-
   const handleResult = (result: string) => {
     if (config.trimNonDigitsEnd) {
       return result.trim();
@@ -63,10 +54,11 @@ export const formatPhone = (
     return result;
   };
 
+  // Passed empty value
   if (!phoneValue) {
     if (
       (shouldInsertDialCodeOnEmpty && !phoneValue.length) ||
-      (shouldForceDialCode && onlyDigits.length <= config.dialCode.length)
+      shouldForceDialCode
     ) {
       return handleResult(
         `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
@@ -76,44 +68,71 @@ export const formatPhone = (
     return handleResult(phoneValue);
   }
 
-  // 1. Remove non digit chars from provided value
-  phoneValue = onlyDigits;
+  // Remove non digit chars from provided value
+  phoneValue = removeNonDigits(phoneValue);
 
-  if (shouldForceDialCode) {
-    if (config.dialCode.startsWith(phoneValue)) {
+  // Passed only full dial code
+  if (phoneValue === config.dialCode && !config.disableDialCodeAndPrefix) {
+    return handleResult(
+      `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
+    );
+  }
+
+  // Passed only partial dial code
+  if (
+    config.dialCode.startsWith(phoneValue) &&
+    !config.disableDialCodeAndPrefix
+  ) {
+    if (shouldForceDialCode) {
       return handleResult(
         `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
       );
     }
-    if (!phoneValue.startsWith(config.dialCode)) {
-      phoneValue = `${config.dialCode}${phoneValue}`;
+    return handleResult(`${config.prefix}${phoneValue}`);
+  }
+
+  const slicePhone = () => {
+    let mainPartStartIndex = config.dialCode.length;
+    if (shouldForceDialCode && !phoneValue.startsWith(config.dialCode)) {
+      mainPartStartIndex = 0;
     }
+    if (config.disableDialCodeAndPrefix) {
+      mainPartStartIndex = 0;
+    }
+
+    const phoneLeftSide = phoneValue.slice(0, mainPartStartIndex);
+    const phoneRightSide = phoneValue.slice(mainPartStartIndex);
+
+    return {
+      phoneLeftSide,
+      phoneRightSide,
+    };
+  };
+
+  // slice phone to dialCode and rest value
+  // "+12345" (us) -> leftSide: "+1"; rightSide: "2345"
+  // leftSide: prefix + dialCode + charAfterDialCode
+  // rightSide: rest of phone (that should apply mask)
+  let { phoneLeftSide, phoneRightSide } = slicePhone();
+
+  // Handle left side of phone
+  if (shouldForceDialCode && !phoneLeftSide) {
+    phoneLeftSide = `${config.prefix}${config.dialCode}${config.charAfterDialCode}`;
+  } else {
+    phoneLeftSide = `${config.prefix}${phoneLeftSide}${config.charAfterDialCode}`;
   }
 
-  if (!config.disableDialCodeAndPrefix) {
-    // 2. Add prefix to value
-    phoneValue = `${config.prefix}${phoneValue}`;
-  }
-
-  // 3. Apply country mask
-  phoneValue = applyMask({
-    value: phoneValue,
+  // Handle right side of phone
+  phoneRightSide = applyMask({
+    value: phoneRightSide,
     mask: config.mask,
     maskSymbol: config.maskChar,
-    offset: config.disableDialCodeAndPrefix
-      ? 0
-      : config.dialCode.length + config.prefix.length,
     trimNonMaskCharsLeftover: config.trimNonDigitsEnd,
   });
 
-  if (config.charAfterDialCode && !config.disableDialCodeAndPrefix) {
-    // 4. Insert char after dial code
-    phoneValue = insertChar({
-      value: phoneValue,
-      position: config.prefix.length + config.dialCode.length,
-      char: config.charAfterDialCode,
-    });
+  if (config.disableDialCodeAndPrefix) {
+    phoneLeftSide = '';
   }
 
-  return handleResult(phoneValue);
+  return handleResult(`${phoneLeftSide}${phoneRightSide}`);
 };
