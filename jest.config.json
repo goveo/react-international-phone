@@ -5,5 +5,16 @@
   },
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
   "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
-  "testEnvironment": "jsdom"
+  "testEnvironment": "jsdom",
+  "moduleNameMapper": {
+    "\\.(scss|sass|css)$": "identity-obj-proxy"
+  },
+  "collectCoverageFrom": [
+    "<rootDir>/src/components/**/*.{ts,tsx}",
+    "<rootDir>/src/hooks/**/*.{ts,tsx}",
+    "<rootDir>/src/utils/**/*.{ts,tsx}",
+    "!**/node_modules/**",
+    "!**/*stories.{ts,tsx}"
+  ],
+  "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"]
 }
