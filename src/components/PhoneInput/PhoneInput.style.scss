@@ -1,6 +1,6 @@
 @import '../../style/base';
 
-.phone-input-container {
+.react-phone-input-container {
   display: flex;
 
   .country-selector-button {
@@ -10,7 +10,7 @@
     border-top-right-radius: 0;
   }
 
-  .phone-input {
+  .react-phone-input {
     height: calc($height - 2px);
     padding: 0 8px;
     border: 1px solid $border-color;
@@ -21,6 +21,11 @@
 
     &:focus {
       outline: none;
+    }
+
+    &--disabled {
+      background-color: $disabled-background-color;
+      color: $disabled-text-color;
     }
   }
 }

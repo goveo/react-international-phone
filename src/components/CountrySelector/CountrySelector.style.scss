@@ -2,6 +2,7 @@
 
 $dropdown-arrow-size: 4px;
 $dropdown-arrow-color: #777;
+$disabled-dropdown-arrow-color: #999;
 
 .country-selector-button {
   position: relative;
@@ -20,7 +21,7 @@ $dropdown-arrow-color: #777;
     background-color: $dropdown-item-selected-color;
   }
 
-  &--disabled {
+  &--hide-dropdown {
     cursor: auto;
 
     &:hover {
@@ -30,6 +31,10 @@ $dropdown-arrow-color: #777;
 
   &__flag-emoji {
     padding: 0 4px;
+
+    &--disabled {
+      opacity: 0.75;
+    }
   }
 
   &__dropdown-arrow {
@@ -42,5 +47,19 @@ $dropdown-arrow-color: #777;
     &--active {
       transform: rotateX(180deg);
     }
+
+    &--disabled {
+      border-top-color: $disabled-dropdown-arrow-color;
+    }
+  }
+
+  &--disabled {
+    background-color: $disabled-background-color;
+
+    &:hover {
+      background-color: $disabled-background-color;
+    }
+
+    cursor: auto;
   }
 }

@@ -31,7 +31,8 @@ Base.argTypes = {
 };
 
 Base.args = {
-  disableDropdown: false,
+  disabled: false,
+  hideDropdown: false,
   initialCountry: 'us',
   placeholder: 'Phone number',
   defaultMask: '............',

@@ -10,16 +10,18 @@ import {
 
 export interface PhoneInputProps extends UsePhoneInputConfig {
   phone?: string;
-  disableDropdown?: CountrySelectorProps['disableDropdown'];
+  hideDropdown?: CountrySelectorProps['hideDropdown'];
   placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
+  disabled?: boolean;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   onChange?: (phone: string) => void;
 }
 
 export const PhoneInput: React.FC<PhoneInputProps> = ({
   phone: initialValue = '',
-  disableDropdown,
+  hideDropdown,
   placeholder,
+  disabled,
   inputProps,
   onChange,
   ...usePhoneInputConfig
@@ -28,11 +30,12 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     usePhoneInput(initialValue, usePhoneInputConfig);
 
   return (
-    <div className="phone-input-container">
+    <div className="react-phone-input-container">
       <CountrySelector
         onSelect={(country) => setCountry(country.iso2)}
         selectedCountry={country}
-        disableDropdown={disableDropdown}
+        disabled={disabled}
+        hideDropdown={hideDropdown}
       />
 
       <input
@@ -43,8 +46,12 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
         value={phone}
         type="tel"
         ref={inputRef}
-        className="phone-input"
+        className={[
+          'react-phone-input',
+          disabled ? 'react-phone-input--disabled' : '',
+        ].join(' ')}
         placeholder={placeholder}
+        disabled={disabled}
         {...inputProps}
       />
     </div>

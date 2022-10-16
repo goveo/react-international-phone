@@ -13,13 +13,15 @@ import {
 export interface CountrySelectorProps {
   selectedCountry?: CountryIso2;
   onSelect?: CountrySelectorDropdownProps['onSelect'];
-  disableDropdown?: boolean;
+  disabled?: boolean;
+  hideDropdown?: boolean;
 }
 
 export const CountrySelector: React.FC<CountrySelectorProps> = ({
   selectedCountry,
   onSelect,
-  disableDropdown,
+  disabled,
+  hideDropdown,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -36,21 +38,28 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         className={[
           'country-selector-button',
           showDropdown ? 'country-selector-button--active' : '',
-          disableDropdown ? 'country-selector-button--disabled' : '',
+          disabled ? 'country-selector-button--disabled' : '',
+          hideDropdown ? 'country-selector-button--hide-dropdown' : '',
         ].join(' ')}
-        disabled={disableDropdown}
+        disabled={hideDropdown || disabled}
         aria-haspopup="listbox"
-        aria-expanded={disableDropdown}
+        aria-expanded={hideDropdown}
       >
         <FlagEmoji
           iso2={selectedCountry}
-          className="country-selector-button__flag-emoji"
+          className={[
+            'country-selector-button__flag-emoji',
+            disabled ? 'country-selector-button__flag-emoji--disabled' : '',
+          ].join(' ')}
           style={{ visibility: selectedCountry ? 'visible' : 'hidden' }}
         />
-        {!disableDropdown && (
+        {!hideDropdown && (
           <div
             className={[
               'country-selector-button__dropdown-arrow',
+              disabled
+                ? 'country-selector-button__dropdown-arrow--disabled'
+                : '',
               showDropdown
                 ? 'country-selector-button__dropdown-arrow--active'
                 : '',
