@@ -7,6 +7,7 @@ import {
   guessCountryByPartialNumber,
   removeNonDigits,
 } from '../utils';
+import { getCursorPosition } from '../utils/phoneUtils/getCursorPosition';
 import { useHistoryState } from './useHistoryState';
 import { usePrevious } from './usePrevious';
 import { useTimer } from './useTimer';
@@ -182,7 +183,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     const value = e.target.value;
 
-    const { phone, countryGuessResult } = formatPhoneValue(value, {
+    const { phone: phoneValue, countryGuessResult } = formatPhoneValue(value, {
       trimNonDigitsEnd: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
       insertDialCodeOnEmpty: false,
     });
@@ -190,7 +191,27 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const historySaveDebounceTimePassed =
       (timer.check() ?? -1) < historySaveDebounceMS;
 
-    setPhone(phone, { overrideLastHistoryItem: historySaveDebounceTimePassed });
+    setPhone(phoneValue, {
+      overrideLastHistoryItem: historySaveDebounceTimePassed,
+    });
+
+    if (inputRef?.current) {
+      const cursorPosition = getCursorPosition({
+        cursorPositionAfterInput:
+          inputRef.current.selectionStart ?? phone.length,
+        phoneBeforeInput: phone,
+        phoneAfterInput: value,
+        phoneAfterFormatted: phoneValue,
+      });
+
+      /**
+       * HACK: should set cursor on the next tick to make sure that the phone value is updated
+       * useTimeout with 0ms provides issues when two keys are pressed same time
+       */
+      Promise.resolve().then(() => {
+        inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
+      });
+    }
 
     if (
       shouldGuessCountry &&
@@ -200,7 +221,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       onCountryGuess?.(countryGuessResult as RequiredType<CountryGuessResult>);
     }
 
-    return phone;
+    return phoneValue;
   };
 
   return {
