@@ -13,6 +13,7 @@
     "<rootDir>/src/components/**/*.{ts,tsx}",
     "<rootDir>/src/hooks/**/*.{ts,tsx}",
     "<rootDir>/src/utils/**/*.{ts,tsx}",
+    "<rootDir>/src/style/**/*.{ts,tsx}",
     "!**/node_modules/**",
     "!**/*stories.{ts,tsx}"
   ],

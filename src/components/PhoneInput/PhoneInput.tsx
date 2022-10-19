@@ -3,6 +3,7 @@ import './PhoneInput.style.scss';
 import React from 'react';
 
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
+import { buildClassNames } from '../../style/buildClassNames';
 import {
   CountrySelector,
   CountrySelectorProps,
@@ -30,7 +31,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     usePhoneInput(initialValue, usePhoneInputConfig);
 
   return (
-    <div className="react-phone-input-container">
+    <div className={buildClassNames('input-container')}>
       <CountrySelector
         onSelect={(country) => setCountry(country.iso2)}
         selectedCountry={country}
@@ -46,10 +47,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
         value={phone}
         type="tel"
         ref={inputRef}
-        className={[
-          'react-phone-input',
-          disabled ? 'react-phone-input--disabled' : '',
-        ].join(' ')}
+        className={buildClassNames('input', disabled && 'input--disabled')}
         placeholder={placeholder}
         disabled={disabled}
         {...inputProps}

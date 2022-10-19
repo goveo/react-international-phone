@@ -1,16 +1,16 @@
 @import '../../style/base';
 
-.react-phone-input-container {
+.react-international-phone-input-container {
   display: flex;
 
-  .country-selector-button {
+  .react-international-phone-country-selector-button {
     border-radius: $border-radius;
     margin-right: -1px; /* for border overlap */
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
   }
 
-  .react-phone-input {
+  .react-international-phone-input {
     height: calc($height - 2px);
     padding: 0 8px;
     border: 1px solid $border-color;

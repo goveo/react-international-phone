@@ -4,6 +4,7 @@ import React, { useCallback, useRef } from 'react';
 
 import { countries } from '../../data/countryData';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
+import { buildClassNames } from '../../style/buildClassNames';
 import { CountryIso2, ParsedCountry } from '../../types';
 import { parseCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
@@ -51,7 +52,7 @@ export const CountrySelectorDropdown: React.FC<
     <ul
       ref={listRef}
       role="listbox"
-      className="country-selector-dropdown"
+      className={buildClassNames('country-selector-dropdown')}
       style={{ visibility: show ? 'visible' : 'hidden' }}
     >
       {countries.map((c) => {
@@ -63,12 +64,10 @@ export const CountrySelectorDropdown: React.FC<
             key={country.iso2}
             tabIndex={0}
             role="option"
-            className={[
+            className={buildClassNames(
               'country-selector-dropdown__list-item',
-              isSelected
-                ? 'country-selector-dropdown__list-item--selected'
-                : '',
-            ].join(' ')}
+              isSelected && 'country-selector-dropdown__list-item--selected',
+            )}
             onClick={() => onSelect?.(country)}
             onKeyDown={(e) => {
               handleKeyPress(e, country);
@@ -76,12 +75,22 @@ export const CountrySelectorDropdown: React.FC<
           >
             <FlagEmoji
               iso2={country.iso2}
-              className="country-selector-dropdown__list-item-flag-emoji"
+              className={buildClassNames(
+                'country-selector-dropdown__list-item-flag-emoji',
+              )}
             />
-            <span className="country-selector-dropdown__list-item-country-name">
+            <span
+              className={buildClassNames(
+                'country-selector-dropdown__list-item-country-name',
+              )}
+            >
               {country.name}
             </span>
-            <span className="country-selector-dropdown__list-item-dial-code">
+            <span
+              className={buildClassNames(
+                'country-selector-dropdown__list-item-dial-code',
+              )}
+            >
               {dialCodePrefix}
               {country.dialCode}
             </span>

@@ -2,6 +2,7 @@ import './CountrySelector.style.scss';
 
 import React, { useMemo, useState } from 'react';
 
+import { buildClassNames } from '../../style/buildClassNames';
 import { CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
@@ -35,35 +36,31 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       <button
         title={fullSelectedCountry?.name}
         onClick={() => setShowDropdown(true)}
-        className={[
+        className={buildClassNames(
           'country-selector-button',
-          showDropdown ? 'country-selector-button--active' : '',
-          disabled ? 'country-selector-button--disabled' : '',
-          hideDropdown ? 'country-selector-button--hide-dropdown' : '',
-        ].join(' ')}
+          showDropdown && 'country-selector-button--active',
+          disabled && 'country-selector-button--disabled',
+          hideDropdown && 'country-selector-button--hide-dropdown',
+        )}
         disabled={hideDropdown || disabled}
         aria-haspopup="listbox"
         aria-expanded={hideDropdown}
       >
         <FlagEmoji
           iso2={selectedCountry}
-          className={[
+          className={buildClassNames(
             'country-selector-button__flag-emoji',
-            disabled ? 'country-selector-button__flag-emoji--disabled' : '',
-          ].join(' ')}
+            disabled && 'country-selector-button__flag-emoji--disabled',
+          )}
           style={{ visibility: selectedCountry ? 'visible' : 'hidden' }}
         />
         {!hideDropdown && (
           <div
-            className={[
+            className={buildClassNames(
               'country-selector-button__dropdown-arrow',
-              disabled
-                ? 'country-selector-button__dropdown-arrow--disabled'
-                : '',
-              showDropdown
-                ? 'country-selector-button__dropdown-arrow--active'
-                : '',
-            ].join(' ')}
+              disabled && 'country-selector-button__dropdown-arrow--disabled',
+              showDropdown && 'country-selector-button__dropdown-arrow--active',
+            )}
           />
         )}
       </button>
