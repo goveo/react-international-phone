@@ -11,6 +11,7 @@ export interface FormatPhoneConfig {
   charAfterDialCode?: string;
   /**
    * Force dial code setting to result value
+   * Will return only dial code if passed value not starts with dial code
    */
   forceDialCode?: boolean;
   /**
@@ -91,11 +92,15 @@ export const formatPhone = (
     return handleResult(`${config.prefix}${phoneValue}`);
   }
 
+  // Passed phone that not started with dial code
+  if (shouldForceDialCode && !phoneValue.startsWith(config.dialCode)) {
+    return handleResult(
+      `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
+    );
+  }
+
   const slicePhone = () => {
     let mainPartStartIndex = config.dialCode.length;
-    if (shouldForceDialCode && !phoneValue.startsWith(config.dialCode)) {
-      mainPartStartIndex = 0;
-    }
     if (config.disableDialCodeAndPrefix) {
       mainPartStartIndex = 0;
     }
@@ -116,11 +121,7 @@ export const formatPhone = (
   let { phoneLeftSide, phoneRightSide } = slicePhone();
 
   // Handle left side of phone
-  if (shouldForceDialCode && !phoneLeftSide) {
-    phoneLeftSide = `${config.prefix}${config.dialCode}${config.charAfterDialCode}`;
-  } else {
-    phoneLeftSide = `${config.prefix}${phoneLeftSide}${config.charAfterDialCode}`;
-  }
+  phoneLeftSide = `${config.prefix}${phoneLeftSide}${config.charAfterDialCode}`;
 
   // Handle right side of phone
   phoneRightSide = applyMask({

@@ -113,7 +113,8 @@ describe('formatPhone', () => {
       mask: '(...) ... ... ...',
       forceDialCode: true,
     };
-    expect(formatPhone('380', config)).toBe('+499 (380) ');
+    expect(formatPhone('380', config)).toBe('+499 ');
+    expect(formatPhone('4999', config)).toBe('+499 (9');
     expect(formatPhone('499', config)).toBe('+499 ');
     expect(formatPhone('49', config)).toBe('+499 ');
     expect(formatPhone('4', config)).toBe('+499 ');

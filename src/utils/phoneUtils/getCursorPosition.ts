@@ -7,6 +7,7 @@ interface GetCursorPositionProps {
   phoneAfterInput: string;
   phoneAfterFormatted: string;
   cursorPositionAfterInput: number;
+  leftOffset?: number;
 }
 
 export const getCursorPosition = ({
@@ -14,7 +15,12 @@ export const getCursorPosition = ({
   phoneAfterInput,
   phoneAfterFormatted,
   cursorPositionAfterInput,
+  leftOffset = 0,
 }: GetCursorPositionProps) => {
+  if (cursorPositionAfterInput < leftOffset) {
+    return leftOffset;
+  }
+
   if (!phoneBeforeInput) {
     return phoneAfterFormatted.length;
   }
@@ -37,7 +43,10 @@ export const getCursorPosition = ({
   }
 
   if (phoneAfterNewCharIndex === null) {
-    return cursorPositionAfterInput;
+    if (cursorPositionAfterInput !== 0) {
+      return cursorPositionAfterInput;
+    }
+    return phoneAfterFormatted.length;
   }
 
   // find "digit index" of new char (only digits count)

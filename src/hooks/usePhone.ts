@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 
-import { CountryGuessResult, CountryIso2, RequiredType } from '../types';
+import {
+  CountryGuessResult,
+  CountryIso2,
+  ParsedCountry,
+  RequiredType,
+} from '../types';
 import {
   formatPhone,
   getCountry,
@@ -88,7 +93,11 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   const formatPhoneValue = (
     value: string,
     { trimNonDigitsEnd, insertDialCodeOnEmpty }: FormatPhoneValueFuncOptions,
-  ): { phone: string; countryGuessResult?: CountryGuessResult | undefined } => {
+  ): {
+    phone: string;
+    countryGuessResult?: CountryGuessResult | undefined;
+    formatCountry?: ParsedCountry | undefined;
+  } => {
     const countryGuessResult = shouldGuessCountry
       ? guessCountryByPartialNumber(value) // FIXME: should not guess country on every change
       : undefined;
@@ -111,7 +120,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
         })
       : value;
 
-    return { phone, countryGuessResult };
+    return { phone, countryGuessResult, formatCountry };
   };
 
   const [phone, setPhone, undo, redo] = useHistoryState('');
@@ -183,7 +192,11 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     const value = e.target.value;
 
-    const { phone: phoneValue, countryGuessResult } = formatPhoneValue(value, {
+    const {
+      phone: phoneValue,
+      countryGuessResult,
+      formatCountry,
+    } = formatPhoneValue(value, {
       trimNonDigitsEnd: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
       insertDialCodeOnEmpty: false,
     });
@@ -202,6 +215,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
         phoneBeforeInput: phone,
         phoneAfterInput: value,
         phoneAfterFormatted: phoneValue,
+        leftOffset: forceDialCode
+          ? prefix.length + (formatCountry?.dialCode?.length ?? 0)
+          : 0,
       });
 
       /**

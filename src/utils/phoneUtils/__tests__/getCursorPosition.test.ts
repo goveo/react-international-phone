@@ -50,6 +50,26 @@ describe('getCursorPosition', () => {
         cursorPositionAfterInput: 5,
       }),
     ).toBe(5);
+
+    // mimic forceDialCode behavior
+    expect(
+      getCursorPosition({
+        phoneBeforeInput: '+1 (234) 567-8901',
+        phoneAfterInput: '',
+        phoneAfterFormatted: '+1',
+        cursorPositionAfterInput: 0,
+      }),
+    ).toBe(2);
+
+    expect(
+      getCursorPosition({
+        phoneBeforeInput: '+380',
+        phoneAfterInput: '+38',
+        phoneAfterFormatted: '+380',
+        cursorPositionAfterInput: 3,
+        leftOffset: 4,
+      }),
+    ).toBe(4);
   });
 
   test('should handle change in full phone', () => {
