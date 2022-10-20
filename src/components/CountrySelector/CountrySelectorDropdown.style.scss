@@ -33,11 +33,11 @@
   }
 
   &__list-item-country-name {
-    font-size: 14px;
+    font-size: $dropdown-font-size;
   }
 
   &__list-item-dial-code {
     color: gray;
-    font-size: 14px;
+    font-size: $dropdown-font-size;
   }
 }

@@ -18,6 +18,8 @@
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
     color: $text-color;
+    font-family: inherit;
+    font-size: $font-size;
 
     &:focus {
       outline: none;

@@ -1,19 +1,22 @@
 import './PhoneInput.style.scss';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
 import { buildClassNames } from '../../style/buildClassNames';
+import { getCountry } from '../../utils';
 import {
   CountrySelector,
   CountrySelectorProps,
 } from '../CountrySelector/CountrySelector';
+import { DialCodePreview } from '../DialCodePreview/DialCodePreview';
 
 export interface PhoneInputProps extends UsePhoneInputConfig {
   phone?: string;
   hideDropdown?: CountrySelectorProps['hideDropdown'];
   placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
   disabled?: boolean;
+  showDisabledDialCodeAndPrefix?: boolean;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   onChange?: (phone: string) => void;
 }
@@ -23,12 +26,18 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   hideDropdown,
   placeholder,
   disabled,
+  showDisabledDialCodeAndPrefix,
   inputProps,
   onChange,
   ...usePhoneInputConfig
 }) => {
   const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
     usePhoneInput(initialValue, usePhoneInputConfig);
+
+  const fullCountry = useMemo(() => {
+    if (!country) return;
+    return getCountry(country, 'iso2');
+  }, [country]);
 
   return (
     <div className={buildClassNames('input-container')}>
@@ -38,6 +47,16 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
         disabled={disabled}
         hideDropdown={hideDropdown}
       />
+
+      {usePhoneInputConfig.disableDialCodeAndPrefix &&
+        showDisabledDialCodeAndPrefix &&
+        fullCountry?.dialCode && (
+          <DialCodePreview
+            dialCode={fullCountry.dialCode}
+            prefix={usePhoneInputConfig.prefix ?? '+'}
+            disabled={disabled}
+          />
+        )}
 
       <input
         onChange={(e) => {
