@@ -108,4 +108,16 @@ describe('guessCountryByPartialNumber', () => {
       getResult({ country: { dialCode: '1242' } }),
     );
   });
+
+  test('should support area codes', () => {
+    expect(guessCountryByPartialNumber('+1201')).toEqual(
+      getResult({ country: { dialCode: '1', iso2: 'us' } }),
+    );
+    expect(guessCountryByPartialNumber('+1204')).toEqual(
+      getResult({ country: { dialCode: '1', iso2: 'ca' } }),
+    );
+    expect(guessCountryByPartialNumber('+7310')).toEqual(
+      getResult({ country: { dialCode: '7', iso2: 'kz' } }),
+    );
+  });
 });

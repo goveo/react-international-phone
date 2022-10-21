@@ -37,7 +37,7 @@ export const guessCountryByPartialNumber = (
 
   for (const c of countries) {
     const parsedCountry = parseCountry(c);
-    const { dialCode } = parsedCountry;
+    const { dialCode, areaCodes } = parsedCountry;
 
     // full match with dialCode
     if (phone.startsWith(dialCode)) {
@@ -45,6 +45,16 @@ export const guessCountryByPartialNumber = (
       const isNewDialCodeLonger = result.country
         ? Number(dialCode) >= Number(result.country.dialCode)
         : true;
+
+      if (areaCodes) {
+        const phoneWithoutDialCode = phone.substring(dialCode.length);
+        for (const areaCode of areaCodes) {
+          if (phoneWithoutDialCode.startsWith(areaCode)) {
+            // found full match with area code
+            return { country: parsedCountry, isFullMatch: true };
+          }
+        }
+      }
 
       if (isNewDialCodeLonger || dialCode === phone || !result.isFullMatch) {
         updateResult({ country: parsedCountry, isFullMatch: true });

@@ -241,10 +241,16 @@ type CountryDataWithOrder = [
   number, // order priority
 ];
 
+type CountryDataAreaCodes = [
+  ...CountryDataWithOrder,
+  string[], // area codes
+];
+
 export type CountryData =
   | BaseCountryData
   | CountryDataWithFormat
-  | CountryDataWithOrder;
+  | CountryDataWithOrder
+  | CountryDataAreaCodes;
 
 export interface ParsedCountry {
   name: CountryData[0];
@@ -253,6 +259,7 @@ export interface ParsedCountry {
   dialCode: CountryData[3];
   format: CountryData[4];
   priority: CountryData[5];
+  areaCodes: CountryData[6];
 }
 
 export interface CountryGuessResult {
