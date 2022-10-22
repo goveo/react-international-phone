@@ -62,6 +62,7 @@ export const CountrySelectorDropdown: React.FC<
         return (
           <li
             key={country.iso2}
+            data-country={country.iso2}
             tabIndex={0}
             role="option"
             className={buildClassNames(

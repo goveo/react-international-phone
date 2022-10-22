@@ -45,6 +45,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         disabled={hideDropdown || disabled}
         aria-haspopup="listbox"
         aria-expanded={hideDropdown}
+        data-country={selectedCountry}
       >
         <FlagEmoji
           iso2={selectedCountry}

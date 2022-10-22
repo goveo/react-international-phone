@@ -187,8 +187,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     // Didn't find out how to properly type it
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const inputType: string = (e.nativeEvent as any).inputType;
-    const isDeletion = inputType.toLocaleLowerCase().includes('delete');
+    const inputType: string | undefined = (e.nativeEvent as any).inputType;
+    const isDeletion =
+      inputType?.toLocaleLowerCase().includes('delete') ?? false;
 
     const value = e.target.value;
 

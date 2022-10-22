@@ -65,6 +65,7 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
       width={size}
       height={size}
       draggable={false}
+      data-country={iso2}
       {...restProps}
     />
   );
