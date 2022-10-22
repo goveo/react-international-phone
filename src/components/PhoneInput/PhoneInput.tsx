@@ -39,6 +39,11 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     return getCountry(country, 'iso2');
   }, [country]);
 
+  const showDialCodePreview =
+    usePhoneInputConfig.disableDialCodeAndPrefix &&
+    showDisabledDialCodeAndPrefix &&
+    fullCountry?.dialCode;
+
   return (
     <div className={buildClassNames('input-container')}>
       <CountrySelector
@@ -48,15 +53,13 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
         hideDropdown={hideDropdown}
       />
 
-      {usePhoneInputConfig.disableDialCodeAndPrefix &&
-        showDisabledDialCodeAndPrefix &&
-        fullCountry?.dialCode && (
-          <DialCodePreview
-            dialCode={fullCountry.dialCode}
-            prefix={usePhoneInputConfig.prefix ?? '+'}
-            disabled={disabled}
-          />
-        )}
+      {showDialCodePreview && (
+        <DialCodePreview
+          dialCode={fullCountry.dialCode}
+          prefix={usePhoneInputConfig.prefix ?? '+'}
+          disabled={disabled}
+        />
+      )}
 
       <input
         onChange={(e) => {
