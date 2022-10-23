@@ -20,6 +20,7 @@ import { useTimer } from './useTimer';
 interface FormatPhoneValueFuncOptions {
   trimNonDigitsEnd?: boolean;
   insertDialCodeOnEmpty?: boolean;
+  forceDisableCountryGuess?: boolean;
 }
 
 const MASK_CHAR = '.';
@@ -92,19 +93,25 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   const formatPhoneValue = (
     value: string,
-    { trimNonDigitsEnd, insertDialCodeOnEmpty }: FormatPhoneValueFuncOptions,
+    {
+      trimNonDigitsEnd,
+      insertDialCodeOnEmpty,
+      forceDisableCountryGuess,
+    }: FormatPhoneValueFuncOptions,
   ): {
     phone: string;
     countryGuessResult?: CountryGuessResult | undefined;
     formatCountry?: ParsedCountry | undefined;
   } => {
-    const countryGuessResult = shouldGuessCountry
-      ? guessCountryByPartialNumber(value) // FIXME: should not guess country on every change
-      : undefined;
+    const countryGuessResult =
+      !forceDisableCountryGuess && shouldGuessCountry
+        ? guessCountryByPartialNumber(value) // FIXME: should not guess country on every change
+        : undefined;
 
-    const formatCountry = shouldGuessCountry
-      ? countryGuessResult?.country ?? passedCountry
-      : passedCountry;
+    const formatCountry =
+      !forceDisableCountryGuess && shouldGuessCountry
+        ? countryGuessResult?.country ?? passedCountry
+        : passedCountry;
 
     const phone = formatCountry
       ? formatPhone(value, {
@@ -200,6 +207,10 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     } = formatPhoneValue(value, {
       trimNonDigitsEnd: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
       insertDialCodeOnEmpty: false,
+      forceDisableCountryGuess:
+        forceDialCode &&
+        isDeletion &&
+        removeNonDigits(value).length < (passedCountry?.dialCode.length ?? 0),
     });
 
     const historySaveDebounceTimePassed =
