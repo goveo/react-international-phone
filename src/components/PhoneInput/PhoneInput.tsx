@@ -63,8 +63,8 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
 
       <input
         onChange={(e) => {
-          handlePhoneValueChange(e);
-          onChange?.(phone);
+          const newPhone = handlePhoneValueChange(e);
+          onChange?.(newPhone);
         }}
         value={phone}
         type="tel"

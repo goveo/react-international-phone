@@ -4,6 +4,34 @@ import React from 'react';
 import { CountryIso2 } from '../../types';
 import { PhoneInput } from './PhoneInput';
 
+const getSystemTimerIncreaseFunc = () => {
+  const currentDate = new Date();
+  let ms = 0;
+  jest.useFakeTimers().setSystemTime(currentDate.setMilliseconds(ms));
+  return (msStep = 1000) => {
+    ms += msStep;
+    jest.useFakeTimers().setSystemTime(currentDate.setMilliseconds(ms));
+  };
+};
+
+const increaseSystemTime = getSystemTimerIncreaseFunc();
+
+const fireChangeEvent = (
+  value: string,
+  {
+    isDeletion,
+    increaseSystemTimeMs,
+  }: { isDeletion?: boolean; increaseSystemTimeMs?: number } = {},
+) => {
+  fireEvent.change(getInput(), {
+    target: { value },
+    nativeEvent: { inputType: isDeletion ? 'delete' : 'another-type' },
+  });
+  if (increaseSystemTimeMs) {
+    increaseSystemTime(increaseSystemTimeMs);
+  }
+};
+
 const getInput = () =>
   screen.getByText(
     (content, element) => element?.tagName.toLowerCase() === 'input',
@@ -57,6 +85,15 @@ describe('PhoneInput', () => {
   test('should set phone value', () => {
     render(<PhoneInput phone="+38099109" initialCountry="ua" />);
     expect(getInput().value).toBe('+380 (99) 109 ');
+  });
+
+  test('should handle onChange call', () => {
+    const onChange = jest.fn();
+    render(<PhoneInput initialCountry="ua" onChange={onChange} />);
+
+    fireEvent.change(getInput(), { target: { value: '38099' } });
+    expect(onChange.mock.calls.length).toBe(1);
+    expect(onChange.mock.calls[0][0]).toBe('+380 (99) ');
   });
 
   test('should set flag to country selector', () => {
@@ -211,7 +248,7 @@ describe('PhoneInput', () => {
     expect(getInput().value).toBe('(380) 99');
   });
 
-  test('should handle showDisabledDialCodeAndPrefix	', () => {
+  test('should handle showDisabledDialCodeAndPrefix', () => {
     const { rerender } = render(
       <PhoneInput initialCountry="us" disableDialCodeAndPrefix />,
     );
@@ -227,5 +264,81 @@ describe('PhoneInput', () => {
     );
     expect(getDialCodePreview()).toBeVisible();
     expect(getDialCodePreview()?.textContent).toBe('+1');
+  });
+
+  test('should support undo on ctrl+z', () => {
+    render(<PhoneInput initialCountry="us" phone="+1234" />);
+    increaseSystemTime();
+
+    fireChangeEvent('1234567890');
+    fireEvent.keyDown(getInput(), {
+      key: 'Z',
+      code: 'KeyZ',
+      ctrlKey: true,
+      shiftKey: false,
+    });
+
+    expect(getInput().value).toBe('+1 (234) ');
+
+    fireChangeEvent('123456');
+    fireChangeEvent('12345678');
+
+    fireEvent.keyDown(getInput(), {
+      key: 'Z',
+      code: 'KeyZ',
+      ctrlKey: true,
+      shiftKey: false,
+    });
+    expect(getInput().value).toBe('+1 (234) 56');
+
+    fireEvent.keyDown(getInput(), {
+      key: 'Z',
+      code: 'KeyZ',
+      ctrlKey: true,
+      shiftKey: false,
+    });
+    expect(getInput().value).toBe('+1 (234) ');
+
+    // not valid event
+    fireEvent.keyDown(getInput(), {
+      key: 'Z',
+      code: 'KeyZ',
+      ctrlKey: false,
+      shiftKey: false,
+    });
+    expect(getInput().value).toBe('+1 (234) ');
+  });
+
+  test('should support redo on ctrl+shift+z', () => {
+    render(<PhoneInput initialCountry="us" phone="+1234" />);
+    increaseSystemTime();
+
+    fireChangeEvent('1234567890');
+    fireChangeEvent('12345678');
+
+    fireEvent.keyDown(getInput(), {
+      key: 'Z',
+      code: 'KeyZ',
+      ctrlKey: true,
+      shiftKey: false,
+    });
+    expect(getInput().value).toBe('+1 (234) 567-890');
+
+    fireEvent.keyDown(getInput(), {
+      key: 'Z',
+      code: 'KeyZ',
+      ctrlKey: true,
+      shiftKey: true,
+    });
+    expect(getInput().value).toBe('+1 (234) 567-8');
+
+    // not valid event
+    fireEvent.keyDown(getInput(), {
+      key: 'Z',
+      code: 'KeyZ',
+      ctrlKey: false,
+      shiftKey: true,
+    });
+    expect(getInput().value).toBe('+1 (234) 567-8');
   });
 });

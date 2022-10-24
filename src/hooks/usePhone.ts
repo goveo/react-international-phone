@@ -213,11 +213,13 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
         removeNonDigits(value).length < (passedCountry?.dialCode.length ?? 0),
     });
 
-    const historySaveDebounceTimePassed =
-      (timer.check() ?? -1) < historySaveDebounceMS;
+    const timePassedSinceLastChange = timer.check();
+    const historySaveDebounceTimePassed = timePassedSinceLastChange
+      ? timePassedSinceLastChange > historySaveDebounceMS
+      : true;
 
     setPhone(phoneValue, {
-      overrideLastHistoryItem: historySaveDebounceTimePassed,
+      overrideLastHistoryItem: !historySaveDebounceTimePassed,
     });
 
     if (inputRef?.current) {
