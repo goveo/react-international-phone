@@ -4,6 +4,10 @@ import { CountryIso2 } from '../types';
 import { usePhone, UsePhoneConfig } from './usePhone';
 
 export interface UsePhoneInputConfig extends Omit<UsePhoneConfig, 'country'> {
+  /**
+   * @description Initial country value (iso2).
+   * @default undefined
+   */
   initialCountry?: CountryIso2;
 }
 

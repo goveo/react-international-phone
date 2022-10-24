@@ -26,23 +26,85 @@ interface FormatPhoneValueFuncOptions {
 const MASK_CHAR = '.';
 
 export interface UsePhoneConfig {
+  /**
+   * @description Prefix for phone value.
+   * @default "+"
+   */
   prefix?: string;
+
+  /**
+   * @description This mask will apply on countries that does not have specified mask.
+   * @default "............" // 12 chars
+   */
   defaultMask?: string;
+
+  /**
+   * @description Add space after country dial code if set to *true*.
+   * @default true
+   */
   insertSpaceAfterDialCode?: boolean;
-  historySaveDebounceMS?: number;
-  disableCountryGuess?: boolean;
-  disableDialCodePrefill?: boolean;
-  forceDialCode?: boolean;
+
   /**
    * @description
-   * Phone value will not include passed *dialCode* and *prefix* if set to *true*.
+   * Save value to history if there were not any changes in provided milliseconds timeslot.
+   * Undo/redo (ctrl+z/ctrl+shift+z) works only with values that are saved in history.
+   * @default 200
+   */
+  historySaveDebounceMS?: number;
+
+  /**
+   * @description Disable country guess on value change.
+   * @ignore
+   * *onCountryGuess* callback would not be called
+   * @default false
+   */
+  disableCountryGuess?: boolean;
+
+  /**
+   * @description
+   * Disable dial code prefill on initialization.
+   * Dial code prefill works only when "empty" phone value have been provided.
+   * @default false
+   */
+  disableDialCodePrefill?: boolean;
+
+  /**
+   * @description
+   * Always display the dial code.
+   * Dial code can't be removed/changed by keyboard events, but it can be changed by pasting another country phone value.
+   * @default false
+   */
+  forceDialCode?: boolean;
+
+  /**
+   * @description Phone value will not include passed *dialCode* and *prefix* if set to *true*.
    * @ignore
    * - *disableCountryGuess* value will be ignored and set to *true*.
    * - *forceDialCode* value will be ignored and set to *false*.
+   * @default false
    */
   disableDialCodeAndPrefix?: boolean;
+
+  /**
+   * @description Selected country (iso2)
+   * @default undefined
+   */
   country?: CountryIso2;
+
+  /**
+   * @description
+   * Input's ref.
+   * Allows handling redo/undo using keyboard events.
+   * Allows handling input cursor position.
+   * @default undefined
+   */
   inputRef?: React.RefObject<HTMLInputElement>;
+
+  /**
+   * @description Callback that calls on country guess
+   * @params country guess result (includes *country* and *isFullMatch*)
+   * @default undefined
+   */
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
 }
 

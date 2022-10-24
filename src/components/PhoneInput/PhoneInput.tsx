@@ -12,12 +12,49 @@ import {
 import { DialCodePreview } from '../DialCodePreview/DialCodePreview';
 
 export interface PhoneInputProps extends UsePhoneInputConfig {
+  /**
+   * @description Initial phone value.
+   * @default ""
+   */
   phone?: string;
+
+  /**
+   * @description Hide the dropdown icon. Make country selection not accessible.
+   * @default false
+   */
   hideDropdown?: CountrySelectorProps['hideDropdown'];
+
+  /**
+   * @description Input's placeholder
+   * @default false
+   */
   placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
+
+  /**
+   * @description Disable phone input and country selector.
+   * @default false
+   */
   disabled?: boolean;
+
+  /**
+   * @description
+   * Show prefix and dial code between country selector and phone input.
+   * Works only when *disableDialCodeAndPrefix* is *true*
+   * @default false
+   */
   showDisabledDialCodeAndPrefix?: boolean;
+
+  /**
+   * @description Default input component props
+   * @default undefined
+   */
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+
+  /**
+   * @description Callback that calls on phone change
+   * @params *phone* - new phone value
+   * @default undefined
+   */
   onChange?: (phone: string) => void;
 }
 
