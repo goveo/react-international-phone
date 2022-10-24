@@ -63,6 +63,7 @@ DisabledPrefill.argTypes = {
 DisabledPrefill.args = {
   initialCountry: 'pl',
   disableDialCodePrefill: true,
+  placeholder: 'Phone number',
 };
 
 export const DisabledCountryGuess = Template.bind({});

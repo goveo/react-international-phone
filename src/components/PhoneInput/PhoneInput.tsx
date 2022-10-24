@@ -26,7 +26,7 @@ export interface PhoneInputProps extends UsePhoneInputConfig {
 
   /**
    * @description Input's placeholder
-   * @default false
+   * @default undefined
    */
   placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
 
