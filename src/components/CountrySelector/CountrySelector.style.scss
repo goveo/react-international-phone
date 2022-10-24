@@ -4,8 +4,11 @@ $dropdown-arrow-size: 4px;
 $dropdown-arrow-color: #777;
 $disabled-dropdown-arrow-color: #999;
 
-.react-international-phone-country-selector-button {
+.react-international-phone-country-selector {
   position: relative;
+}
+
+.react-international-phone-country-selector-button {
   display: flex;
   height: $height;
   align-items: center;

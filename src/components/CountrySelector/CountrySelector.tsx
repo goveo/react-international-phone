@@ -32,7 +32,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   }, [selectedCountry]);
 
   return (
-    <>
+    <div className={buildClassNames('country-selector')}>
       <button
         title={fullSelectedCountry?.name}
         onClick={() => setShowDropdown(true)}
@@ -80,6 +80,6 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           setShowDropdown(false);
         }}
       />
-    </>
+    </div>
   );
 };
