@@ -15,7 +15,8 @@
     "<rootDir>/src/utils/**/*.{ts,tsx}",
     "<rootDir>/src/style/**/*.{ts,tsx}",
     "!**/node_modules/**",
-    "!**/*stories.{ts,tsx}"
+    "!**/*stories.{ts,tsx}",
+    "!<rootDir>/src/utils/test-utils.ts"
   ],
   "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"]
 }
