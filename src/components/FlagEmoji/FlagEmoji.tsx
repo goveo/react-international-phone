@@ -5,11 +5,6 @@ import React, { CSSProperties } from 'react';
 
 import { ParsedCountry } from '../../types';
 
-const protocol =
-  typeof location !== 'undefined' && location.protocol === 'http:'
-    ? 'http:'
-    : 'https:';
-
 const incrementCodepoint = (codePoint: string, incrementBy: number): string => {
   const decimal = parseInt(codePoint, 16);
   return Number(decimal + incrementBy).toString(16);
@@ -33,22 +28,20 @@ const codepoints: Record<string, string> = alphabet
  * For example: '🇺🇦' -> U+1F1FA (U letter), U+1F1E6 (A letter)
  * For Twemoji we need to pass codepoints in format `1f1fa-1f1e6`
  */
-const getFlagCodepointByIso2 = (iso2: string) => {
-  if (iso2.length !== 2) {
-    console.error('Wrong iso2 code');
-    return undefined;
-  }
+const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
   return [codepoints[iso2[0]], codepoints[iso2[1]]].join('-');
 };
 
 interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
   iso2?: ParsedCountry['iso2'];
   size?: CSSProperties['width'];
+  protocol?: 'http:' | 'https:';
 }
 
 export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   iso2,
   size = '24px',
+  protocol = window?.location?.protocol ?? 'https:',
   ...restProps
 }) => {
   if (!iso2) {
