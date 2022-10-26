@@ -92,6 +92,18 @@ describe('PhoneInput', () => {
     rerender(<PhoneInput initialCountry="ua" disabled />);
     expect(getCountrySelector()).toHaveProperty('disabled', true);
     expect(getInput()).toHaveProperty('disabled', true);
+
+    rerender(
+      <PhoneInput
+        initialCountry="ua"
+        disabled
+        showDisabledDialCodeAndPrefix
+        disableDialCodeAndPrefix
+      />,
+    );
+    expect(getCountrySelector()).toHaveProperty('disabled', true);
+    expect(getInput()).toHaveProperty('disabled', true);
+    expect(getDialCodePreview()?.className).toMatch(/disabled/);
   });
 
   test('should hide dropdown icon when hideDropdown is true', () => {
