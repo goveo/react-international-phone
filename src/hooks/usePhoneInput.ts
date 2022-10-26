@@ -6,22 +6,28 @@ import { usePhone, UsePhoneConfig } from './usePhone';
 export interface UsePhoneInputConfig extends Omit<UsePhoneConfig, 'country'> {
   /**
    * @description Initial country value (iso2).
-   * @default undefined
    */
-  initialCountry?: CountryIso2;
+  initialCountry: CountryIso2;
+
+  /**
+   * @description Initial phone value
+   * @default ""
+   */
+  initialPhone?: string;
 }
 
-export const usePhoneInput = (
-  initialValue = '',
-  config?: UsePhoneInputConfig,
-) => {
+export const usePhoneInput = ({
+  initialCountry,
+  initialPhone = '',
+  ...config
+}: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [country, setCountry] = useState<CountryIso2 | undefined>(
-    config?.initialCountry,
+    initialCountry,
   );
 
-  const { phone, handlePhoneValueChange } = usePhone(initialValue, {
+  const { phone, handlePhoneValueChange } = usePhone(initialPhone, {
     inputRef,
     country,
     onCountryGuess: ({ country, isFullMatch }) => {

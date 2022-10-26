@@ -121,10 +121,22 @@ describe('PhoneInput', () => {
   });
 
   test('should render placeholder', () => {
-    const { rerender } = render(<PhoneInput placeholder="Phone input" />);
+    const { rerender } = render(
+      <PhoneInput
+        initialCountry="us"
+        disableDialCodePrefill
+        placeholder="Phone input"
+      />,
+    );
     expect(getInput()).toHaveProperty('placeholder', 'Phone input');
 
-    rerender(<PhoneInput placeholder="Test placeholder" />);
+    rerender(
+      <PhoneInput
+        initialCountry="us"
+        disableDialCodePrefill
+        placeholder="Test placeholder"
+      />,
+    );
     expect(getInput()).toHaveProperty('placeholder', 'Test placeholder');
   });
 
