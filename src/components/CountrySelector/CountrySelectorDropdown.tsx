@@ -21,7 +21,7 @@ export interface CountrySelectorDropdownProps {
 export const CountrySelectorDropdown: React.FC<
   CountrySelectorDropdownProps
 > = ({
-  show = false,
+  show,
   dialCodePrefix = '+',
   selectedCountry,
   onSelect,

@@ -68,3 +68,11 @@ export const getDialCodePreview = () => {
     return null;
   }
 };
+
+export const getCountryFlag = (country: CountryIso2) =>
+  screen.getByText((content, element) => {
+    return (
+      element?.tagName.toLowerCase() === 'img' &&
+      element.getAttribute('data-country') === country
+    );
+  }) as HTMLLIElement;
