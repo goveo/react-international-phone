@@ -32,7 +32,7 @@ export const fireChangeEvent = (
 
 describe('PhoneInput', () => {
   test('should set phone value', () => {
-    render(<PhoneInput phone="+38099109" initialCountry="ua" />);
+    render(<PhoneInput initialPhone="+38099109" initialCountry="ua" />);
     expect(getInput().value).toBe('+380 (99) 109 ');
   });
 
@@ -46,7 +46,7 @@ describe('PhoneInput', () => {
   });
 
   test('should set flag to country selector', () => {
-    render(<PhoneInput phone="+380" initialCountry="ua" />);
+    render(<PhoneInput initialPhone="+380" initialCountry="ua" />);
     expect(getCountrySelector()).toHaveAttribute('title', 'Ukraine');
   });
 
@@ -177,7 +177,11 @@ describe('PhoneInput', () => {
 
   test('should handle forceDialCode', () => {
     render(
-      <PhoneInput phone="12345678900" initialCountry="us" forceDialCode />,
+      <PhoneInput
+        initialPhone="12345678900"
+        initialCountry="us"
+        forceDialCode
+      />,
     );
     expect(getInput().value).toBe('+1 (234) 567-8900');
 
@@ -240,7 +244,7 @@ describe('PhoneInput', () => {
   });
 
   test('should support undo on ctrl+z', () => {
-    render(<PhoneInput initialCountry="us" phone="+1234" />);
+    render(<PhoneInput initialCountry="us" initialPhone="+1234" />);
     increaseSystemTime();
 
     fireChangeEvent('1234567890');
@@ -283,7 +287,7 @@ describe('PhoneInput', () => {
   });
 
   test('should support redo on ctrl+shift+z', () => {
-    render(<PhoneInput initialCountry="us" phone="+1234" />);
+    render(<PhoneInput initialCountry="us" initialPhone="+1234" />);
     increaseSystemTime();
 
     fireChangeEvent('1234567890');

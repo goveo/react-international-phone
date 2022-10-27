@@ -13,12 +13,6 @@ import { DialCodePreview } from '../DialCodePreview/DialCodePreview';
 
 export interface PhoneInputProps extends UsePhoneInputConfig {
   /**
-   * @description Initial phone value.
-   * @default ""
-   */
-  phone?: string;
-
-  /**
    * @description Hide the dropdown icon. Make country selection not accessible.
    * @default false
    */
@@ -59,7 +53,6 @@ export interface PhoneInputProps extends UsePhoneInputConfig {
 }
 
 export const PhoneInput: React.FC<PhoneInputProps> = ({
-  phone: initialValue = '',
   hideDropdown,
   placeholder,
   disabled,
@@ -69,7 +62,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   ...usePhoneInputConfig
 }) => {
   const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
-    usePhoneInput({ initialPhone: initialValue, ...usePhoneInputConfig });
+    usePhoneInput({ ...usePhoneInputConfig });
 
   const fullCountry = useMemo(() => {
     if (!country) return;
