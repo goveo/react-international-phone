@@ -63,10 +63,10 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('');
   });
 
-  it('Should handle insertSpaceAfterDialCode config prop', () => {
-    // with enabled insertSpaceAfterDialCode
+  it('Should handle hideSpaceAfterDialCode config prop', () => {
+    // with disabled hideSpaceAfterDialCode
     const { result: resultWithSpace } = renderHook(() =>
-      usePhone('', { country: 'us', insertSpaceAfterDialCode: true }),
+      usePhone('', { country: 'us', hideSpaceAfterDialCode: false }),
     );
     act(() => {
       resultWithSpace.current.handlePhoneValueChange(
@@ -89,9 +89,9 @@ describe('usePhone', () => {
     });
     expect(resultWithSpace.current.phone).toBe('+380 (99) 111 22 33');
 
-    // with disabled insertSpaceAfterDialCode
+    // with enabled hideSpaceAfterDialCode
     const { result: resultWithoutSpace } = renderHook(() =>
-      usePhone('', { country: 'us', insertSpaceAfterDialCode: false }),
+      usePhone('', { country: 'us', hideSpaceAfterDialCode: true }),
     );
     act(() => {
       resultWithoutSpace.current.handlePhoneValueChange(
