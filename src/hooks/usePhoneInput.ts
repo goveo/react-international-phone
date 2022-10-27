@@ -3,7 +3,8 @@ import { useRef, useState } from 'react';
 import { CountryIso2 } from '../types';
 import { usePhone, UsePhoneConfig } from './usePhone';
 
-export interface UsePhoneInputConfig extends Omit<UsePhoneConfig, 'country'> {
+export interface UsePhoneInputConfig
+  extends Omit<UsePhoneConfig, 'country' | 'inputRef' | 'onCountryGuess'> {
   /**
    * @description Initial country value (iso2).
    */
