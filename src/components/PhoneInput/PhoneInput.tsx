@@ -8,10 +8,27 @@ import { getCountry } from '../../utils';
 import {
   CountrySelector,
   CountrySelectorProps,
+  CountrySelectorStyleProps,
 } from '../CountrySelector/CountrySelector';
-import { DialCodePreview } from '../DialCodePreview/DialCodePreview';
+import {
+  DialCodePreview,
+  DialCodePreviewStyleProps,
+} from '../DialCodePreview/DialCodePreview';
 
-export interface PhoneInputProps extends UsePhoneInputConfig {
+export interface PhoneInputStyleProps {
+  style?: React.CSSProperties;
+  className?: string;
+
+  inputStyle?: React.CSSProperties;
+  inputClassName?: string;
+
+  countrySelectorStyleProps?: CountrySelectorStyleProps;
+  dialCodePreviewStyleProps?: DialCodePreviewStyleProps;
+}
+
+export interface PhoneInputProps
+  extends PhoneInputStyleProps,
+    UsePhoneInputConfig {
   /**
    * @description Hide the dropdown icon. Make country selection not accessible.
    * @default false
@@ -59,6 +76,14 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   showDisabledDialCodeAndPrefix,
   inputProps,
   onChange,
+
+  style,
+  className,
+  inputStyle,
+  inputClassName,
+  countrySelectorStyleProps,
+  dialCodePreviewStyleProps,
+
   ...usePhoneInputConfig
 }) => {
   const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
@@ -75,12 +100,19 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     fullCountry?.dialCode;
 
   return (
-    <div className={buildClassNames('input-container')}>
+    <div
+      className={buildClassNames({
+        addPrefix: ['input-container'],
+        rawClassNames: [className],
+      })}
+      style={style}
+    >
       <CountrySelector
         onSelect={(country) => setCountry(country.iso2)}
         selectedCountry={country}
         disabled={disabled}
         hideDropdown={hideDropdown}
+        {...countrySelectorStyleProps}
       />
 
       {showDialCodePreview && (
@@ -88,6 +120,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
           dialCode={fullCountry.dialCode}
           prefix={usePhoneInputConfig.prefix ?? '+'}
           disabled={disabled}
+          {...dialCodePreviewStyleProps}
         />
       )}
 
@@ -99,9 +132,13 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
         value={phone}
         type="tel"
         ref={inputRef}
-        className={buildClassNames('input', disabled && 'input--disabled')}
+        className={buildClassNames({
+          addPrefix: ['input', disabled && 'input--disabled'],
+          rawClassNames: [inputClassName],
+        })}
         placeholder={placeholder}
         disabled={disabled}
+        style={inputStyle}
         {...inputProps}
       />
     </div>

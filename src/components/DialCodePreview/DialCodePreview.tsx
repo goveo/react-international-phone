@@ -4,7 +4,12 @@ import React from 'react';
 
 import { buildClassNames } from '../../style/buildClassNames';
 
-interface DialCodePreviewProps {
+export interface DialCodePreviewStyleProps {
+  style?: React.CSSProperties;
+  className?: string;
+}
+
+export interface DialCodePreviewProps extends DialCodePreviewStyleProps {
   dialCode: string;
   prefix: string;
   disabled?: boolean;
@@ -14,13 +19,19 @@ export const DialCodePreview: React.FC<DialCodePreviewProps> = ({
   dialCode,
   prefix,
   disabled,
+  style,
+  className,
 }) => {
   return (
     <div
-      className={buildClassNames(
-        'dial-code-preview',
-        disabled && 'dial-code-preview--disabled',
-      )}
+      className={buildClassNames({
+        addPrefix: [
+          'dial-code-preview',
+          disabled && 'dial-code-preview--disabled',
+        ],
+        rawClassNames: [className],
+      })}
+      style={style}
     >{`${prefix}${dialCode}`}</div>
   );
 };

@@ -9,7 +9,25 @@ import { CountryIso2, ParsedCountry } from '../../types';
 import { parseCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 
-export interface CountrySelectorDropdownProps {
+export interface CountrySelectorDropdownStyleProps {
+  style?: React.CSSProperties;
+  className?: string;
+
+  listItemStyle?: React.CSSProperties;
+  listItemClassName?: string;
+
+  listItemFlagStyle?: React.CSSProperties;
+  listItemFlagClassName?: string;
+
+  listItemCountryNameStyle?: React.CSSProperties;
+  listItemCountryNameClassName?: string;
+
+  listItemDialCodeStyle?: React.CSSProperties;
+  listItemDialCodeClassName?: string;
+}
+
+export interface CountrySelectorDropdownProps
+  extends CountrySelectorDropdownStyleProps {
   show: boolean;
   dialCodePrefix?: string;
   selectedCountry?: CountryIso2;
@@ -27,6 +45,7 @@ export const CountrySelectorDropdown: React.FC<
   onSelect,
   onClickOutside,
   onEscapePress,
+  ...styleProps
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -52,8 +71,11 @@ export const CountrySelectorDropdown: React.FC<
     <ul
       ref={listRef}
       role="listbox"
-      className={buildClassNames('country-selector-dropdown')}
-      style={{ visibility: show ? 'visible' : 'hidden' }}
+      className={buildClassNames({
+        addPrefix: ['country-selector-dropdown'],
+        rawClassNames: [styleProps.className],
+      })}
+      style={{ visibility: show ? 'visible' : 'hidden', ...styleProps.style }}
     >
       {countries.map((c) => {
         const country = parseCountry(c);
@@ -65,32 +87,44 @@ export const CountrySelectorDropdown: React.FC<
             data-country={country.iso2}
             tabIndex={0}
             role="option"
-            className={buildClassNames(
-              'country-selector-dropdown__list-item',
-              isSelected && 'country-selector-dropdown__list-item--selected',
-            )}
+            className={buildClassNames({
+              addPrefix: [
+                'country-selector-dropdown__list-item',
+                isSelected && 'country-selector-dropdown__list-item--selected',
+              ],
+              rawClassNames: [styleProps.listItemClassName],
+            })}
             onClick={() => onSelect?.(country)}
             onKeyDown={(e) => {
               handleKeyPress(e, country);
             }}
+            style={styleProps.listItemStyle}
           >
             <FlagEmoji
               iso2={country.iso2}
-              className={buildClassNames(
-                'country-selector-dropdown__list-item-flag-emoji',
-              )}
+              className={buildClassNames({
+                addPrefix: ['country-selector-dropdown__list-item-flag-emoji'],
+                rawClassNames: [styleProps.listItemFlagClassName],
+              })}
+              style={styleProps.listItemFlagStyle}
             />
             <span
-              className={buildClassNames(
-                'country-selector-dropdown__list-item-country-name',
-              )}
+              className={buildClassNames({
+                addPrefix: [
+                  'country-selector-dropdown__list-item-country-name',
+                ],
+                rawClassNames: [styleProps.listItemCountryNameClassName],
+              })}
+              style={styleProps.listItemCountryNameStyle}
             >
               {country.name}
             </span>
             <span
-              className={buildClassNames(
-                'country-selector-dropdown__list-item-dial-code',
-              )}
+              className={buildClassNames({
+                addPrefix: ['country-selector-dropdown__list-item-dial-code'],
+                rawClassNames: [styleProps.listItemDialCodeClassName],
+              })}
+              style={styleProps.listItemDialCodeStyle}
             >
               {dialCodePrefix}
               {country.dialCode}

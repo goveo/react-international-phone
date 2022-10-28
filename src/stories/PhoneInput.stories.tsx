@@ -43,6 +43,10 @@ Default.args = {
   forceDialCode: false,
   disableDialCodeAndPrefix: false,
   showDisabledDialCodeAndPrefix: false,
+  style: {},
+  inputStyle: {},
+  countrySelectorStyleProps: {},
+  dialCodePreviewStyleProps: {},
 };
 
 export const ForcedDialCode = Template.bind({});
