@@ -1,7 +1,13 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "react",
+    "react-hooks",
+    "simple-import-sort"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -23,7 +29,7 @@
     "keyword-spacing": ["error"],
     "key-spacing": ["error"],
     "eol-last": ["error"],
-    "quotes": ["error", "double", "avoid-escape"],
+    "quotes": ["error", "single", "avoid-escape"],
     "switch-colon-spacing": ["error", { "after": true, "before": false }],
     "object-curly-spacing": ["error", "always"],
     "space-infix-ops": ["error", { "int32Hint": false }],
@@ -31,6 +37,8 @@
     "arrow-parens": ["warn"],
     "react/jsx-uses-vars": ["error"],
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   }
 }

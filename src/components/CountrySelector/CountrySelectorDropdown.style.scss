@@ -1,0 +1,43 @@
+@import '../../style/base';
+
+.react-international-phone-country-selector-dropdown {
+  position: absolute;
+  z-index: 1;
+  top: 44px;
+  display: flex;
+  width: 300px;
+  max-height: 200px;
+  flex-direction: column;
+  padding: 4px 0;
+  margin: 0;
+  background-color: $background-color;
+  box-shadow: $shadow-color;
+  color: $text-color;
+  list-style: none;
+  overflow-y: scroll;
+
+  &__list-item {
+    display: flex;
+    align-items: center;
+    padding: 2px 8px;
+    gap: 8px;
+
+    &:hover {
+      background-color: $dropdown-item-selected-color;
+      cursor: pointer;
+    }
+
+    &--selected {
+      background-color: $dropdown-item-selected-color;
+    }
+  }
+
+  &__list-item-country-name {
+    font-size: $dropdown-font-size;
+  }
+
+  &__list-item-dial-code {
+    color: gray;
+    font-size: $dropdown-font-size;
+  }
+}
