@@ -67,3 +67,94 @@ const App = () => {
 | onChange | -        | (phone: string) => void | Callback that calls on phone change |
 
 Input events like **onFocus** and **onBlur** can be passed to the _inputProps_
+
+### Style properties
+
+| Prop                      | Required | Type                                                    | Description                                   | Default value |
+| ------------------------- | -------- | ------------------------------------------------------- | --------------------------------------------- | ------------- |
+| style                     | -        | CSSProperties                                           | Custom styles for **PhoneInput container**    | undefined     |
+| className                 | -        | string                                                  | Custom className for **PhoneInput container** | undefined     |
+| inputStyle                | -        | CSSProperties                                           | Custom styles for **input field**             | undefined     |
+| inputClassName            | -        | string                                                  | Custom className for **input field**          | undefined     |
+| countrySelectorStyleProps | -        | [CountrySelectorStyleProps](#CountrySelectorStyleProps) | Style properties for **country selector**     | undefined     |
+| dialCodePreviewStyleProps | -        | [DialCodePreviewStyleProps](#DialCodePreviewStyleProps) | Style properties for **dial code preview**    | undefined     |
+
+## CountrySelector component
+
+### Properties
+
+| Prop            | Required | Type        | Description                                               | Default value |
+| --------------- | -------- | ----------- | --------------------------------------------------------- | ------------- |
+| selectedCountry | -        | CountryIso2 | Selected country (iso2)                                   | undefined     |
+| disabled        | -        | boolean     | Is CountrySelector disabled                               | undefined     |
+| hideDropdown    | -        | boolean     | Hide dropdown icon and make CountrySelector not clickable | undefined     |
+
+### Events
+
+| Prop     | Required | Type                             | Description                           | Default value |
+| -------- | -------- | -------------------------------- | ------------------------------------- | ------------- |
+| onSelect | -        | (country: ParsedCountry) => void | Callback that calls on country select | undefined     |
+
+### <a name="CountrySelectorStyleProps">Style properties (CountrySelectorStyleProps type)</a>
+
+| Prop                   | Required | Type                                                                    | Description                                             | Default value |
+| ---------------------- | -------- | ----------------------------------------------------------------------- | ------------------------------------------------------- | ------------- |
+| style                  | -        | CSSProperties                                                           | Custom styles for **CountrySelector container**         | undefined     |
+| className              | -        | string                                                                  | Custom className for **CountrySelector container**      | undefined     |
+| buttonStyle            | -        | CSSProperties                                                           | Custom styles for **CountrySelector button**            | undefined     |
+| buttonClassName        | -        | string                                                                  | Custom className for **CountrySelector button**         | undefined     |
+| flagStyle              | -        | dropdownStyleProps                                                      | Custom styles for **CountrySelector flag**              | undefined     |
+| flagClassName          | -        | string                                                                  | Custom className for **CountrySelector flag**           | undefined     |
+| dropdownArrowStyle     | -        | dropdownStyleProps                                                      | Custom styles for **CountrySelector dropdown arrow**    | undefined     |
+| dropdownArrowClassName | -        | string                                                                  | Custom className for **CountrySelector dropdown arrow** | undefined     |
+| dropdownStyleProps     | -        | [CountrySelectorDropdownStyleProps](#CountrySelectorDropdownStyleProps) | Style properties for **CountrySelector dropdown**       | undefined     |
+
+## CountrySelectorDropdown component
+
+### Properties
+
+| Prop            | Required | Type        | Description                         | Default value |
+| --------------- | -------- | ----------- | ----------------------------------- | ------------- |
+| show            | +        | boolean     | Show dropdown                       |               |
+| dialCodePrefix  | -        | string      | Prefix for country code             | "+"           |
+| selectedCountry | -        | CountryIso2 | Selected option country code (iso2) | undefined     |
+
+### Events
+
+| Prop           | Required | Type                             | Description                                      | Default value |
+| -------------- | -------- | -------------------------------- | ------------------------------------------------ | ------------- |
+| onSelect       | -        | (country: ParsedCountry) => void | Callback that calls on option select             | undefined     |
+| onClickOutside | -        | () => void                       | Callback that calls on outside click             | undefined     |
+| onEscapePress  | -        | () => void                       | Callback that calls on escape keyboard key press | undefined     |
+
+### <a name="CountrySelectorDropdownStyleProps">Style properties (CountrySelectorDropdownStyleProps type)</a>
+
+| Prop                         | Required | Type          | Description                                                                  | Default value |
+| ---------------------------- | -------- | ------------- | ---------------------------------------------------------------------------- | ------------- |
+| style                        | -        | CSSProperties | Custom styles for **CountrySelectorDropdown container**                      | undefined     |
+| className                    | -        | string        | Custom className for **CountrySelectorDropdown container**                   | undefined     |
+| listItemStyle                | -        | CSSProperties | Custom styles for **CountrySelectorDropdown list-item container**            | undefined     |
+| listItemClassName            | -        | string        | Custom className for **CountrySelectorDropdown list-item container**         | undefined     |
+| listItemFlagStyle            | -        | CSSProperties | Custom styles for **CountrySelectorDropdown list-item flag**                 | undefined     |
+| listItemFlagClassName        | -        | string        | Custom className for **CountrySelectorDropdown list-item flag**              | undefined     |
+| listItemCountryNameStyle     | -        | CSSProperties | Custom styles for **CountrySelectorDropdown list-item country name**         | undefined     |
+| listItemCountryNameClassName | -        | string        | Custom className for **CountrySelectorDropdown list-item country name**      | undefined     |
+| listItemDialCodeStyle        | -        | CSSProperties | Custom styles for **CountrySelectorDropdown list-item country dial code**    | undefined     |
+| listItemDialCodeClassName    | -        | string        | Custom className for **CountrySelectorDropdown list-item country dial code** | undefined     |
+
+## DialCodePreview component
+
+### Properties
+
+| Prop     | Required | Type    | Description              | Default value |
+| -------- | -------- | ------- | ------------------------ | ------------- |
+| dialCode | +        | string  | Country dial code (iso2) |               |
+| prefix   | +        | string  | Dial code prefix         |               |
+| disabled | -        | boolean | Is component disabled    | undefined     |
+
+### <a name="DialCodePreviewStyleProps">Style properties (DialCodePreviewStyleProps type)</a>
+
+| Prop      | Required | Type          | Description                                        | Default value |
+| --------- | -------- | ------------- | -------------------------------------------------- | ------------- |
+| style     | -        | CSSProperties | Custom styles for **DialCodePreview container**    | undefined     |
+| className | -        | string        | Custom className for **DialCodePreview container** | undefined     |
