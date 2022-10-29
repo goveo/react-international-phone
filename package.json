@@ -28,6 +28,9 @@
     "build": "webpack",
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
+    "storybook-test:chrome": "npx playwright test ./.storybook/browser.test --headed --browser=chromium",
+    "storybook-test:firefox": "npx playwright test ./.storybook/browser.test --headed --browser=firefox",
+    "storybook-test:safari": "npx playwright test ./.storybook/browser.test --headed --browser=webkit",
     "lint": "pnpm lint:ts && pnpm lint:scss",
     "lint:ts": "eslint ./src --ext .ts,.tsx --config .eslintrc --fix",
     "lint:scss": "stylelint \"**/*{.css,.scss}\" --custom-syntax postcss-scss --fix",
@@ -43,6 +46,7 @@
     "react": "^17.0.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.27.1",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^8.0.6",
