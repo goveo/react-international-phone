@@ -1,17 +1,43 @@
-@import '../../style/base';
+@use '../../style/base';
+
+$dial-code-preview-background-color: var(
+  --react-international-phone-dial-code-preview-background-color,
+  base.$background-color
+);
+$dial-code-preview-border-color: var(
+  --react-international-phone-dial-code-preview-border-color,
+  base.$border-color
+);
+$dial-code-preview-text-color: var(
+  --react-international-phone-dial-code-preview-text-color,
+  base.$text-color
+);
+$dial-code-preview-font-size: var(
+  --react-international-phone-dial-code-preview-font-size,
+  base.$font-size
+);
+$dial-code-preview-disabled-background-color: var(
+  --react-international-phone-dial-code-preview-disabled-background-color,
+  base.$disabled-background-color
+);
+$dial-code-preview-disabled-text-color: var(
+  --react-international-phone-dial-code-preview-disabled-text-color,
+  base.$disabled-text-color
+);
 
 .react-international-phone-dial-code-preview {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 8px;
-  border: 1px solid $border-color;
+  border: 1px solid $dial-code-preview-border-color;
   margin-right: -1px; /* for border overlap */
-  color: $text-color;
-  font-size: $font-size;
+  background-color: $dial-code-preview-background-color;
+  color: $dial-code-preview-text-color;
+  font-size: $dial-code-preview-font-size;
 
   &--disabled {
-    background-color: $disabled-background-color;
-    color: $disabled-text-color;
+    background-color: $dial-code-preview-disabled-background-color;
+    color: $dial-code-preview-disabled-text-color;
   }
 }

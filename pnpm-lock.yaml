@@ -46,7 +46,7 @@ specifiers:
   stylelint: ^14.13.0
   stylelint-config-idiomatic-order: ^9.0.0
   stylelint-config-prettier: ^9.0.3
-  stylelint-config-standard: ^28.0.0
+  stylelint-config-standard: ^29.0.0
   stylelint-config-standard-scss: ^5.0.0
   stylelint-order: ^5.0.0
   stylelint-prettier: ^2.0.0
@@ -104,7 +104,7 @@ devDependencies:
   stylelint: 14.13.0
   stylelint-config-idiomatic-order: 9.0.0_stylelint@14.13.0
   stylelint-config-prettier: 9.0.3_stylelint@14.13.0
-  stylelint-config-standard: 28.0.0_stylelint@14.13.0
+  stylelint-config-standard: 29.0.0_stylelint@14.13.0
   stylelint-config-standard-scss: 5.0.0_7mm2245zw6jpoub3zc2ef5m2tq
   stylelint-order: 5.0.0_stylelint@14.13.0
   stylelint-prettier: 2.0.0_iyjc6luk73xil7sritcxq7witi
@@ -13178,10 +13178,10 @@ packages:
       stylelint-config-recommended: 8.0.0_stylelint@14.13.0
     dev: true
 
-  /stylelint-config-standard/28.0.0_stylelint@14.13.0:
-    resolution: {integrity: sha512-q/StuowDdDmFCravzGHAwgS9pjX0bdOQUEBBDIkIWsQuYGgYz/xsO8CM6eepmIQ1fc5bKdDVimlJZ6MoOUcJ5Q==}
+  /stylelint-config-standard/29.0.0_stylelint@14.13.0:
+    resolution: {integrity: sha512-uy8tZLbfq6ZrXy4JKu3W+7lYLgRQBxYTUUB88vPgQ+ZzAxdrvcaSUW9hOMNLYBnwH+9Kkj19M2DHdZ4gKwI7tg==}
     peerDependencies:
-      stylelint: ^14.11.0
+      stylelint: ^14.14.0
     dependencies:
       stylelint: 14.13.0
       stylelint-config-recommended: 9.0.0_stylelint@14.13.0

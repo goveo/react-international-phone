@@ -1,4 +1,39 @@
-@import '../../style/base';
+@use '../../style/base';
+
+$dropdown-item-font-size: var(
+  --react-international-phone-dropdown-item-font-size,
+  14px
+);
+$dropdown-item-text-color: var(
+  --react-international-phone-dropdown-item-text-color,
+  base.$text-color
+);
+$dropdown-item-background-color: var(
+  --react-international-phone-dropdown-item-background-color,
+  base.$background-color
+);
+$dropdown-item-dial-code-color: var(
+  --react-international-phone-dropdown-item-dial-code-color,
+  gray
+);
+
+$selected-dropdown-item-text-color: var(
+  --react-international-phone-selected-dropdown-item-text-color,
+  base.$text-color
+);
+$selected-dropdown-item-background-color: var(
+  --react-international-phone-selected-dropdown-item-background-color,
+  whitesmoke
+);
+$selected-dropdown-item-dial-code-color: var(
+  --react-international-phone-selected-dropdown-item-dial-code-color,
+  $dropdown-item-dial-code-color
+);
+
+$dropdown-shadow: var(
+  --react-international-phone-dropdown-shadow,
+  2px 2px 16px rgb(0 0 0 / 25%)
+);
 
 .react-international-phone-country-selector-dropdown {
   position: absolute;
@@ -10,9 +45,9 @@
   flex-direction: column;
   padding: 4px 0;
   margin: 0;
-  background-color: $background-color;
-  box-shadow: $shadow-color;
-  color: $text-color;
+  background-color: $dropdown-item-background-color;
+  box-shadow: $dropdown-shadow;
+  color: $dropdown-item-text-color;
   list-style: none;
   overflow-y: scroll;
 
@@ -22,22 +57,27 @@
     padding: 2px 8px;
     gap: 8px;
 
+    &-country-name {
+      font-size: $dropdown-item-font-size;
+    }
+
+    &-dial-code {
+      color: $dropdown-item-dial-code-color;
+      font-size: $dropdown-item-font-size;
+    }
+
     &:hover {
-      background-color: $dropdown-item-selected-color;
+      background-color: $selected-dropdown-item-background-color;
       cursor: pointer;
     }
 
     &--selected {
-      background-color: $dropdown-item-selected-color;
+      background-color: $selected-dropdown-item-background-color;
+      color: $selected-dropdown-item-text-color;
+
+      .react-international-phone-country-selector-dropdown__list-item-dial-code {
+        color: $selected-dropdown-item-dial-code-color;
+      }
     }
-  }
-
-  &__list-item-country-name {
-    font-size: $dropdown-font-size;
-  }
-
-  &__list-item-dial-code {
-    color: gray;
-    font-size: $dropdown-font-size;
   }
 }

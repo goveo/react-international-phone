@@ -1,8 +1,34 @@
-@import '../../style/base';
+@use '../../style/base';
 
-$dropdown-arrow-size: 4px;
-$dropdown-arrow-color: #777;
-$disabled-dropdown-arrow-color: #999;
+$country-selector-arrow-size: var(
+  --react-international-phone-country-selector-arrow-size,
+  4px
+);
+$country-selector-arrow-color: var(
+  --react-international-phone-country-selector-arrow-color,
+  #777
+);
+$disabled-country-selector-arrow-color: var(
+  --react-international-phone-disabled-country-selector-arrow-color,
+  #999
+);
+
+$country-selector-border-color: var(
+  --react-international-phone-country-selector-border-color,
+  base.$border-color
+);
+$country-selector-background-color: var(
+  --react-international-phone-country-selector-background-color,
+  base.$background-color
+);
+$country-selector-background-color-hover: var(
+  --react-international-phone-country-selector-background-color-hover,
+  whitesmoke
+);
+$disabled-country-selector-background-color: var(
+  --react-international-phone-disabled-country-selector-background-color,
+  base.$disabled-background-color
+);
 
 .react-international-phone-country-selector {
   position: relative;
@@ -10,18 +36,18 @@ $disabled-dropdown-arrow-color: #999;
 
 .react-international-phone-country-selector-button {
   display: flex;
-  height: $height;
+  height: base.$height;
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid $border-color;
+  border: 1px solid $country-selector-border-color;
   margin: 0;
-  background-color: $background-color;
+  background-color: $country-selector-background-color;
   cursor: pointer;
   user-select: none;
 
   &:hover {
-    background-color: $dropdown-item-selected-color;
+    background-color: $country-selector-background-color-hover;
   }
 
   &--hide-dropdown {
@@ -41,9 +67,9 @@ $disabled-dropdown-arrow-color: #999;
   }
 
   &__dropdown-arrow {
-    border-top: $dropdown-arrow-size solid $dropdown-arrow-color;
-    border-right: $dropdown-arrow-size solid transparent;
-    border-left: $dropdown-arrow-size solid transparent;
+    border-top: $country-selector-arrow-size solid $country-selector-arrow-color;
+    border-right: $country-selector-arrow-size solid transparent;
+    border-left: $country-selector-arrow-size solid transparent;
     margin-right: 4px;
     transition: all 100ms ease-out;
 
@@ -52,15 +78,15 @@ $disabled-dropdown-arrow-color: #999;
     }
 
     &--disabled {
-      border-top-color: $disabled-dropdown-arrow-color;
+      border-top-color: $disabled-country-selector-arrow-color;
     }
   }
 
   &--disabled {
-    background-color: $disabled-background-color;
+    background-color: $disabled-country-selector-background-color;
 
     &:hover {
-      background-color: $disabled-background-color;
+      background-color: $disabled-country-selector-background-color;
     }
 
     cursor: auto;
