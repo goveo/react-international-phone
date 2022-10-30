@@ -6,6 +6,8 @@
 
 ![build-status](https://img.shields.io/github/workflow/status/goveo/react-international-phone/Release)
 
+[Live demo: Storybook](react-international-phone-storybook.vercel.app)
+
 ## Installation
 
 ```sh
