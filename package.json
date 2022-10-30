@@ -28,6 +28,7 @@
     "build": "webpack",
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
+    "storybook:build": "build-storybook",
     "storybook-test:chrome": "npx playwright test ./.storybook/browser.test --headed --browser=chromium",
     "storybook-test:firefox": "npx playwright test ./.storybook/browser.test --headed --browser=firefox",
     "storybook-test:safari": "npx playwright test ./.storybook/browser.test --headed --browser=webkit",
