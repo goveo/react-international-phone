@@ -102,3 +102,22 @@ WithCodePreview.args = {
   disableDialCodeAndPrefix: true,
   showDisabledDialCodeAndPrefix: true,
 };
+
+export const CustomStyles = Template.bind({});
+CustomStyles.argTypes = {
+  initialCountry: initialCountryArgType,
+};
+
+CustomStyles.args = {
+  initialCountry: 'ca',
+  style: {
+    '--react-international-phone-border-radius': 0,
+    '--react-international-phone-border-color': 'gray',
+    '--react-international-phone-background-color': '#282c34',
+    '--react-international-phone-text-color': 'white',
+    '--react-international-phone-selected-dropdown-item-background-color':
+      'black',
+    '--react-international-phone-country-selector-background-color-hover':
+      'black',
+  } as React.CSSProperties,
+};
