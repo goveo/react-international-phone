@@ -6,6 +6,8 @@
 
 ![build-status](https://img.shields.io/github/workflow/status/goveo/react-international-phone/Release)
 
+[Live demo: Storybook](react-international-phone-storybook.vercel.app)
+
 ## Installation
 
 ```sh
@@ -79,6 +81,19 @@ Input events like **onFocus** and **onBlur** can be passed to the _inputProps_
 | countrySelectorStyleProps | -        | [CountrySelectorStyleProps](#CountrySelectorStyleProps) | Style properties for **country selector**     | undefined     |
 | dialCodePreviewStyleProps | -        | [DialCodePreviewStyleProps](#DialCodePreviewStyleProps) | Style properties for **dial code preview**    | undefined     |
 
+### CSS variables
+
+| Variable                                              | Default value |
+| ----------------------------------------------------- | ------------- |
+| --react-international-phone-height                    | 36px          |
+| --react-international-phone-background-color          | white         |
+| --react-international-phone-text-color                | #222          |
+| --react-international-phone-font-size                 | 13px          |
+| --react-international-phone-border-radius             | 4px           |
+| --react-international-phone-border-color              | gainsboro     |
+| --react-international-phone-disabled-background-color | whitesmoke    |
+| --react-international-phone-disabled-text-color       | #666          |
+
 ## CountrySelector component
 
 ### Properties
@@ -108,6 +123,18 @@ Input events like **onFocus** and **onBlur** can be passed to the _inputProps_
 | dropdownArrowStyle     | -        | dropdownStyleProps                                                      | Custom styles for **CountrySelector dropdown arrow**    | undefined     |
 | dropdownArrowClassName | -        | string                                                                  | Custom className for **CountrySelector dropdown arrow** | undefined     |
 | dropdownStyleProps     | -        | [CountrySelectorDropdownStyleProps](#CountrySelectorDropdownStyleProps) | Style properties for **CountrySelector dropdown**       | undefined     |
+
+### CSS variables
+
+| Variable                                                               | Default value                                         |
+| ---------------------------------------------------------------------- | ----------------------------------------------------- |
+| --react-international-phone-country-selector-background-color          | --react-international-phone-background-color          |
+| --react-international-phone-country-selector-background-color-hover    | whitesmoke                                            |
+| --react-international-phone-disabled-country-selector-background-color | --react-international-phone-disabled-background-color |
+| --react-international-phone-country-selector-border-color              | 13px                                                  |
+| --react-international-phone-country-selector-arrow-size                | 4px                                                   |
+| --react-international-phone-country-selector-arrow-color               | #777                                                  |
+| --react-international-phone-disabled-country-selector-arrow-color      | #999                                                  |
 
 ## CountrySelectorDropdown component
 
@@ -142,6 +169,19 @@ Input events like **onFocus** and **onBlur** can be passed to the _inputProps_
 | listItemDialCodeStyle        | -        | CSSProperties | Custom styles for **CountrySelectorDropdown list-item country dial code**    | undefined     |
 | listItemDialCodeClassName    | -        | string        | Custom className for **CountrySelectorDropdown list-item country dial code** | undefined     |
 
+### CSS variables
+
+| Variable                                                            | Default value                                            |
+| ------------------------------------------------------------------- | -------------------------------------------------------- |
+| --react-international-phone-dropdown-item-font-size                 | 14px                                                     |
+| --react-international-phone-dropdown-item-text-color                | --react-international-phone-text-color                   |
+| --react-international-phone-dropdown-item-background-color          | --react-international-phone-background-color             |
+| --react-international-phone-dropdown-item-dial-code-color           | gray                                                     |
+| --react-international-phone-selected-dropdown-item-text-color       | --react-international-phone-text-color                   |
+| --react-international-phone-selected-dropdown-item-background-color | whitesmoke                                               |
+| --react-international-phone-selected-dropdown-item-dial-code-color  | -react-international-phone-dropdown-item-dial-code-color |
+| --react-international-phone-dropdown-shadow                         | 2px 2px 16px rgb(0 0 0 / 25%)                            |
+
 ## DialCodePreview component
 
 ### Properties
@@ -158,3 +198,14 @@ Input events like **onFocus** and **onBlur** can be passed to the _inputProps_
 | --------- | -------- | ------------- | -------------------------------------------------- | ------------- |
 | style     | -        | CSSProperties | Custom styles for **DialCodePreview container**    | undefined     |
 | className | -        | string        | Custom className for **DialCodePreview container** | undefined     |
+
+### CSS variables
+
+| Variable                                                                | Default value                                         |
+| ----------------------------------------------------------------------- | ----------------------------------------------------- |
+| --react-international-phone-dial-code-preview-background-color          | --react-international-phone-background-color          |
+| --react-international-phone-dial-code-preview-border-color              | --react-international-phone-border-color              |
+| --react-international-phone-dial-code-preview-text-color                | --react-international-phone-text-color                |
+| --react-international-phone-dial-code-preview-font-size                 | --react-international-phone-font-size                 |
+| --react-international-phone-dial-code-preview-disabled-background-color | --react-international-phone-disabled-background-color |
+| --react-international-phone-dial-code-preview-disabled-text-color       | --react-international-phone-disabled-text-color       |

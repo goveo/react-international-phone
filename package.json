@@ -18,6 +18,7 @@
   ],
   "private": false,
   "author": "Yurii Brusentsov <yuriybrusentsov@gmail.com>",
+  "license": "MIT",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
@@ -27,6 +28,10 @@
     "build": "webpack",
     "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
+    "storybook:build": "build-storybook",
+    "storybook-test:chrome": "npx playwright test ./.storybook/browser.test --headed --browser=chromium",
+    "storybook-test:firefox": "npx playwright test ./.storybook/browser.test --headed --browser=firefox",
+    "storybook-test:safari": "npx playwright test ./.storybook/browser.test --headed --browser=webkit",
     "lint": "pnpm lint:ts && pnpm lint:scss",
     "lint:ts": "eslint ./src --ext .ts,.tsx --config .eslintrc --fix",
     "lint:scss": "stylelint \"**/*{.css,.scss}\" --custom-syntax postcss-scss --fix",
@@ -42,6 +47,7 @@
     "react": "^17.0.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.27.1",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^8.0.6",
@@ -86,8 +92,8 @@
     "stylelint": "^14.13.0",
     "stylelint-config-idiomatic-order": "^9.0.0",
     "stylelint-config-prettier": "^9.0.3",
-    "stylelint-config-standard": "^28.0.0",
-    "stylelint-config-standard-scss": "^5.0.0",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-config-standard-scss": "^6.0.0",
     "stylelint-order": "^5.0.0",
     "stylelint-prettier": "^2.0.0",
     "stylelint-scss": "^4.3.0",

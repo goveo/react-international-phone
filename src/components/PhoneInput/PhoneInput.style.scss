@@ -1,33 +1,34 @@
-@import '../../style/base';
+@use '../../style/base';
 
 .react-international-phone-input-container {
   display: flex;
 
   .react-international-phone-country-selector-button {
-    border-radius: $border-radius;
+    border-radius: base.$border-radius;
     margin-right: -1px; /* for border overlap */
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
   }
 
   .react-international-phone-input {
-    height: calc($height - 2px);
+    height: calc(base.$height - 2px);
     padding: 0 8px;
-    border: 1px solid $border-color;
-    border-radius: $border-radius;
+    border: 1px solid base.$border-color;
+    border-radius: base.$border-radius;
+    background-color: base.$background-color;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
-    color: $text-color;
+    color: base.$text-color;
     font-family: inherit;
-    font-size: $font-size;
+    font-size: base.$font-size;
 
     &:focus {
       outline: none;
     }
 
     &--disabled {
-      background-color: $disabled-background-color;
-      color: $disabled-text-color;
+      background-color: base.$disabled-background-color;
+      color: base.$disabled-text-color;
     }
   }
 }
