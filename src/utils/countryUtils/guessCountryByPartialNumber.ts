@@ -1,11 +1,14 @@
-import { countries } from '../../data/countryData';
-import { CountryGuessResult, ParsedCountry } from '../../types';
+import { CountryData, CountryGuessResult, ParsedCountry } from '../../types';
 import { removeNonDigits } from '../common';
 import { parseCountry } from './parseCountry';
 
-export const guessCountryByPartialNumber = (
-  partialPhone: string,
-): CountryGuessResult => {
+export const guessCountryByPartialNumber = ({
+  phone: partialPhone,
+  countries,
+}: {
+  phone: string;
+  countries: CountryData[];
+}): CountryGuessResult => {
   const emptyResult = { country: undefined, isFullMatch: false };
   if (!partialPhone) {
     return emptyResult;

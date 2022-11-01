@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 
+import { countries } from '../data/countryData';
 import {
+  CountryData,
   CountryGuessResult,
   CountryIso2,
   ParsedCountry,
@@ -92,6 +94,12 @@ export interface UsePhoneConfig {
   country?: CountryIso2;
 
   /**
+   * @description Array of available countries for guessing
+   * @default countries // full country list
+   */
+  availableCountries?: CountryData[];
+
+  /**
    * @description
    * Input's ref.
    * Allows handling redo/undo using keyboard events.
@@ -120,11 +128,13 @@ const defaultPhoneConfig: Required<
   disableDialCodePrefill: false,
   forceDialCode: false,
   disableDialCodeAndPrefix: false,
+  availableCountries: countries,
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
   const {
     country,
+    availableCountries,
     prefix,
     defaultMask,
     hideSpaceAfterDialCode,
@@ -148,7 +158,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   const passedCountry = useMemo(() => {
     if (!country) return;
-    return getCountry(country, 'iso2');
+    return getCountry({ value: country, field: 'iso2', countries });
   }, [country]);
 
   const prevPassedCountry = usePrevious(passedCountry);
@@ -167,7 +177,10 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   } => {
     const countryGuessResult =
       !forceDisableCountryGuess && shouldGuessCountry
-        ? guessCountryByPartialNumber(value) // FIXME: should not guess country on every change
+        ? guessCountryByPartialNumber({
+            phone: value,
+            countries: availableCountries,
+          }) // FIXME: should not guess country on every change
         : undefined;
 
     const formatCountry =
@@ -178,9 +191,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const phone = formatCountry
       ? formatPhone(value, {
           prefix,
-          mask: formatCountry?.format ?? defaultMask,
+          mask: formatCountry.format ?? defaultMask,
           maskChar: MASK_CHAR,
-          dialCode: formatCountry?.dialCode,
+          dialCode: formatCountry.dialCode,
           trimNonDigitsEnd,
           charAfterDialCode,
           forceDialCode,
@@ -237,8 +250,10 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     if (!passedCountry || !prevPassedCountry) return; // initial render
 
     if (
-      guessCountryByPartialNumber(rawPhone).country?.dialCode !==
-      passedCountry.dialCode
+      guessCountryByPartialNumber({
+        phone: rawPhone,
+        countries: availableCountries,
+      }).country?.dialCode !== passedCountry.dialCode
     ) {
       // country was updated with country-selector (not from input)
       const phoneValue = disableDialCodeAndPrefix

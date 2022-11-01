@@ -1,3 +1,4 @@
+import { countries } from '../../../data/countryData';
 import { ParsedCountry } from '../../../types';
 import { guessCountryByPartialNumber } from '../guessCountryByPartialNumber';
 
@@ -22,29 +23,38 @@ describe('guessCountryByPartialNumber', () => {
   };
 
   test('should guess country by full number', () => {
-    expect(guessCountryByPartialNumber('+380 (99) 999 99 99')).toEqual(
-      getResult({ country: { iso2: 'ua' } }),
-    );
+    expect(
+      guessCountryByPartialNumber({
+        phone: '+380 (99) 999 99 99',
+        countries,
+      }),
+    ).toEqual(getResult({ country: { iso2: 'ua' } }));
 
-    expect(guessCountryByPartialNumber('380999999999')).toEqual(
-      getResult({ country: { iso2: 'ua' } }),
-    );
+    expect(
+      guessCountryByPartialNumber({ phone: '380999999999', countries }),
+    ).toEqual(getResult({ country: { iso2: 'ua' } }));
   });
 
   test('should guess country by partial number', () => {
-    expect(guessCountryByPartialNumber('+380 (99)')).toEqual(
-      getResult({ country: { iso2: 'ua' } }),
-    );
-    expect(guessCountryByPartialNumber('3809')).toEqual(
+    expect(
+      guessCountryByPartialNumber({ phone: '+380 (99)', countries }),
+    ).toEqual(getResult({ country: { iso2: 'ua' } }));
+    expect(guessCountryByPartialNumber({ phone: '3809', countries })).toEqual(
       getResult({ country: { iso2: 'ua' } }),
     );
   });
 
   test('should guess country by partial dial code', () => {
-    const shouldFindUkraine = guessCountryByPartialNumber('+38');
+    const shouldFindUkraine = guessCountryByPartialNumber({
+      phone: '+38',
+      countries,
+    });
     expect(shouldFindUkraine).toEqual(getResult({ country: { iso2: 'ua' } }));
 
-    const shouldFindGreece = guessCountryByPartialNumber('+3');
+    const shouldFindGreece = guessCountryByPartialNumber({
+      phone: '+3',
+      countries,
+    });
     expect(shouldFindGreece).toEqual(getResult({ country: { iso2: 'gr' } }));
     expect(shouldFindGreece).toEqual(
       getResult({ country: { dialCode: '30' } }),
@@ -52,25 +62,40 @@ describe('guessCountryByPartialNumber', () => {
   });
 
   test('should find smallest number particle dial code', () => {
-    const shouldFindGreece = guessCountryByPartialNumber('+3');
+    const shouldFindGreece = guessCountryByPartialNumber({
+      phone: '+3',
+      countries,
+    });
     expect(shouldFindGreece).toEqual(
       getResult({ country: { dialCode: '30' } }),
     );
 
-    const shouldFindPeru = guessCountryByPartialNumber('+5');
+    const shouldFindPeru = guessCountryByPartialNumber({
+      phone: '+5',
+      countries,
+    });
     expect(shouldFindPeru).toEqual(getResult({ country: { dialCode: '51' } }));
 
-    const shouldFindJapan = guessCountryByPartialNumber('+8');
+    const shouldFindJapan = guessCountryByPartialNumber({
+      phone: '+8',
+      countries,
+    });
     expect(shouldFindJapan).toEqual(getResult({ country: { dialCode: '81' } }));
 
-    const shouldFindPortugal = guessCountryByPartialNumber('+35');
+    const shouldFindPortugal = guessCountryByPartialNumber({
+      phone: '+35',
+      countries,
+    });
     expect(shouldFindPortugal).toEqual(
       getResult({ country: { dialCode: '351' } }),
     );
   });
 
   test('should respect priority value', () => {
-    const shouldFindUS = guessCountryByPartialNumber('+1999');
+    const shouldFindUS = guessCountryByPartialNumber({
+      phone: '+1999',
+      countries,
+    });
     expect(shouldFindUS).not.toEqual(
       getResult({ country: { dialCode: '1', name: 'Canada' } }),
     );
@@ -80,43 +105,43 @@ describe('guessCountryByPartialNumber', () => {
   });
 
   test('should return undefined if code is not found', () => {
-    expect(guessCountryByPartialNumber('+999')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+999', countries })).toEqual(
       getResult({ country: undefined }),
     );
-    expect(guessCountryByPartialNumber('+000')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+000', countries })).toEqual(
       getResult({ country: undefined }),
     );
   });
 
   test('should return undefined if passed empty number', () => {
-    expect(guessCountryByPartialNumber('')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '', countries })).toEqual(
       getResult({ country: undefined }),
     );
-    expect(guessCountryByPartialNumber('+')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+', countries })).toEqual(
       getResult({ country: undefined }),
     );
   });
 
   test('should return full match if present', () => {
-    expect(guessCountryByPartialNumber('+1')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+1', countries })).toEqual(
       getResult({ country: { dialCode: '1' } }),
     );
-    expect(guessCountryByPartialNumber('+12')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+12', countries })).toEqual(
       getResult({ country: { dialCode: '1' } }),
     );
-    expect(guessCountryByPartialNumber('+1242')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+1242', countries })).toEqual(
       getResult({ country: { dialCode: '1242' } }),
     );
   });
 
   test('should support area codes', () => {
-    expect(guessCountryByPartialNumber('+1201')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+1201', countries })).toEqual(
       getResult({ country: { dialCode: '1', iso2: 'us' } }),
     );
-    expect(guessCountryByPartialNumber('+1204')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+1204', countries })).toEqual(
       getResult({ country: { dialCode: '1', iso2: 'ca' } }),
     );
-    expect(guessCountryByPartialNumber('+7310')).toEqual(
+    expect(guessCountryByPartialNumber({ phone: '+7310', countries })).toEqual(
       getResult({ country: { dialCode: '7', iso2: 'kz' } }),
     );
   });

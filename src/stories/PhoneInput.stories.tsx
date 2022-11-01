@@ -98,7 +98,7 @@ WithCodePreview.argTypes = {
 };
 
 WithCodePreview.args = {
-  initialCountry: 'fi',
+  initialCountry: 'lv',
   disableDialCodeAndPrefix: true,
   showDisabledDialCodeAndPrefix: true,
 };
@@ -120,4 +120,16 @@ CustomStyles.args = {
     '--react-international-phone-country-selector-background-color-hover':
       'black',
   } as React.CSSProperties,
+};
+
+export const OnlyEuropeCountries = Template.bind({});
+OnlyEuropeCountries.argTypes = {
+  initialCountry: initialCountryArgType,
+};
+
+OnlyEuropeCountries.args = {
+  initialCountry: 'lt',
+  availableCountries: countries.filter((c) =>
+    parseCountry(c).regions.includes('europe'),
+  ),
 };
