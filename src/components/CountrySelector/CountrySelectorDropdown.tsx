@@ -2,10 +2,10 @@ import './CountrySelectorDropdown.style.scss';
 
 import React, { useCallback, useRef } from 'react';
 
-import { countries } from '../../data/countryData';
+import { defaultCountries } from '../../data/countryData';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { buildClassNames } from '../../style/buildClassNames';
-import { CountryIso2, ParsedCountry } from '../../types';
+import { CountryData, CountryIso2, ParsedCountry } from '../../types';
 import { parseCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 
@@ -31,6 +31,7 @@ export interface CountrySelectorDropdownProps
   show: boolean;
   dialCodePrefix?: string;
   selectedCountry?: CountryIso2;
+  countries?: CountryData[];
   onSelect?: (country: ParsedCountry) => void;
   onClickOutside?: () => void;
   onEscapePress?: () => void;
@@ -42,6 +43,7 @@ export const CountrySelectorDropdown: React.FC<
   show,
   dialCodePrefix = '+',
   selectedCountry,
+  countries = defaultCountries,
   onSelect,
   onClickOutside,
   onEscapePress,

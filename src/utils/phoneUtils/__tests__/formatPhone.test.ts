@@ -44,6 +44,9 @@ describe('formatPhone', () => {
       '+123 (45) 678 90 0',
     );
     expect(formatPhone('+389 (123)', defaultConfig)).toBe('+389 (12) 3');
+    expect(formatPhone('+123', defaultConfig)).toBe('+123 (');
+    expect(formatPhone('+12', defaultConfig)).toBe('+12');
+    expect(formatPhone('+1', defaultConfig)).toBe('+1');
   });
 
   test('should support different prefixes', () => {

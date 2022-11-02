@@ -6,7 +6,7 @@
 
 ![build-status](https://img.shields.io/github/workflow/status/goveo/react-international-phone/Release)
 
-[Live demo: Storybook](react-international-phone-storybook.vercel.app)
+[Live demo: Storybook](https://react-international-phone-storybook.vercel.app)
 
 ## Installation
 
@@ -48,6 +48,7 @@ const App = () => {
 | ----------------------------- | -------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | initialCountry                | +        | CountryIso2         | Initial country value (iso2).                                                                                                                                                                                    |                            |
 | initialPhone                  | -        | string              | Initial phone value.                                                                                                                                                                                             | ""                         |
+| countries                     | -        | CountryData[]       | An array of available countries to select (and guess)                                                                                                                                                            | defaultCountries           |
 | hideDropdown                  | -        | boolean             | Hide the dropdown icon. Make country selection not accessible.                                                                                                                                                   | false                      |
 | placeholder                   | -        | string              | Input's placeholder                                                                                                                                                                                              | undefined                  |
 | disabled                      | -        | boolean             | Disable phone input and country selector.                                                                                                                                                                        | false                      |

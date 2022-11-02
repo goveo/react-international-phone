@@ -2,6 +2,7 @@ import './PhoneInput.style.scss';
 
 import React, { useMemo } from 'react';
 
+import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
 import { buildClassNames } from '../../style/buildClassNames';
 import { getCountry } from '../../utils';
@@ -84,15 +85,23 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   countrySelectorStyleProps,
   dialCodePreviewStyleProps,
 
+  countries = defaultCountries,
   ...usePhoneInputConfig
 }) => {
   const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
-    usePhoneInput({ ...usePhoneInputConfig });
+    usePhoneInput({
+      ...usePhoneInputConfig,
+      countries,
+    });
 
   const fullCountry = useMemo(() => {
     if (!country) return;
-    return getCountry(country, 'iso2');
-  }, [country]);
+    return getCountry({
+      value: country,
+      field: 'iso2',
+      countries,
+    });
+  }, [countries, country]);
 
   const showDialCodePreview =
     usePhoneInputConfig.disableDialCodeAndPrefix &&
@@ -110,6 +119,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       <CountrySelector
         onSelect={(country) => setCountry(country.iso2)}
         selectedCountry={country}
+        countries={countries}
         disabled={disabled}
         hideDropdown={hideDropdown}
         {...countrySelectorStyleProps}

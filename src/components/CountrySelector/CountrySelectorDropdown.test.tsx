@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import { countries } from '../../data/countryData';
+import { defaultCountries } from '../../data/countryData';
 import {
   getCountryFlag,
   getCountrySelectorDropdown,
@@ -30,7 +30,7 @@ describe('CountrySelectorDropdown', () => {
     expect(getDropdownOption('pl')).toHaveTextContent('Poland');
     expect(getDropdownOption('pl')).toHaveTextContent('+48');
     expect(getCountrySelectorDropdown().childNodes.length).toBe(
-      countries.length,
+      defaultCountries.length,
     );
   });
 

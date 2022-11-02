@@ -2,7 +2,8 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
 
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
-import { countries } from '../data/countryData';
+import { defaultCountries } from '../data/countryData';
+import { CountryIso2 } from '../types';
 import { parseCountry } from '../utils';
 
 export default {
@@ -15,10 +16,10 @@ const Template: ComponentStory<typeof PhoneInput> = (args) => (
 );
 
 const initialCountryArgType = {
-  options: countries.map((c) => parseCountry(c).iso2),
+  options: defaultCountries.map((c) => parseCountry(c).iso2),
   control: {
     type: 'select',
-    labels: countries.reduce((acc: Record<string, string>, c) => {
+    labels: defaultCountries.reduce((acc: Record<string, string>, c) => {
       const { name, iso2 } = parseCountry(c);
       acc[iso2] = `${name} (${iso2})`;
       return acc;
@@ -98,7 +99,7 @@ WithCodePreview.argTypes = {
 };
 
 WithCodePreview.args = {
-  initialCountry: 'fi',
+  initialCountry: 'lv',
   disableDialCodeAndPrefix: true,
   showDisabledDialCodeAndPrefix: true,
 };
@@ -120,4 +121,30 @@ CustomStyles.args = {
     '--react-international-phone-country-selector-background-color-hover':
       'black',
   } as React.CSSProperties,
+};
+
+export const OnlyEuropeCountries = Template.bind({});
+OnlyEuropeCountries.argTypes = {
+  initialCountry: initialCountryArgType,
+};
+
+OnlyEuropeCountries.args = {
+  initialCountry: 'fi',
+  countries: defaultCountries.filter((c) =>
+    parseCountry(c).regions.includes('europe'),
+  ),
+};
+
+export const OnlyBalticCountries = Template.bind({});
+OnlyBalticCountries.argTypes = {
+  initialCountry: initialCountryArgType,
+};
+
+const balticCountries: CountryIso2[] = ['lt', 'lv', 'ee'];
+
+OnlyBalticCountries.args = {
+  initialCountry: 'lt',
+  countries: defaultCountries.filter((c) => {
+    return balticCountries.includes(parseCountry(c).iso2);
+  }),
 };

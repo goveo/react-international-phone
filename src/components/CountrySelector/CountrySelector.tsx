@@ -2,8 +2,9 @@ import './CountrySelector.style.scss';
 
 import React, { useMemo, useState } from 'react';
 
+import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
-import { CountryIso2 } from '../../types';
+import { CountryData, CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 import {
@@ -33,6 +34,7 @@ export interface CountrySelectorProps extends CountrySelectorStyleProps {
   onSelect?: CountrySelectorDropdownProps['onSelect'];
   disabled?: boolean;
   hideDropdown?: boolean;
+  countries?: CountryData[];
 }
 
 export const CountrySelector: React.FC<CountrySelectorProps> = ({
@@ -40,14 +42,19 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   onSelect,
   disabled,
   hideDropdown,
+  countries = defaultCountries,
   ...styleProps
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const fullSelectedCountry = useMemo(() => {
     if (!selectedCountry) return undefined;
-    return getCountry(selectedCountry, 'iso2');
-  }, [selectedCountry]);
+    return getCountry({
+      value: selectedCountry,
+      field: 'iso2',
+      countries: countries,
+    });
+  }, [countries, selectedCountry]);
 
   return (
     <div
@@ -107,6 +114,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
 
       <CountrySelectorDropdown
         show={showDropdown}
+        countries={countries}
         onSelect={(country) => {
           setShowDropdown(false);
           onSelect?.(country);
