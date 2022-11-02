@@ -2,7 +2,7 @@ import './CountrySelector.style.scss';
 
 import React, { useMemo, useState } from 'react';
 
-import { countries as fullCountyList } from '../../data/countryData';
+import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
@@ -42,7 +42,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   onSelect,
   disabled,
   hideDropdown,
-  countries = fullCountyList,
+  countries = defaultCountries,
   ...styleProps
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);

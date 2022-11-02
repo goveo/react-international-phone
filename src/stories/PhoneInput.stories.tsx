@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
 
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
-import { countries } from '../data/countryData';
+import { defaultCountries } from '../data/countryData';
 import { parseCountry } from '../utils';
 
 export default {
@@ -15,10 +15,10 @@ const Template: ComponentStory<typeof PhoneInput> = (args) => (
 );
 
 const initialCountryArgType = {
-  options: countries.map((c) => parseCountry(c).iso2),
+  options: defaultCountries.map((c) => parseCountry(c).iso2),
   control: {
     type: 'select',
-    labels: countries.reduce((acc: Record<string, string>, c) => {
+    labels: defaultCountries.reduce((acc: Record<string, string>, c) => {
       const { name, iso2 } = parseCountry(c);
       acc[iso2] = `${name} (${iso2})`;
       return acc;
@@ -129,7 +129,7 @@ OnlyEuropeCountries.argTypes = {
 
 OnlyEuropeCountries.args = {
   initialCountry: 'lt',
-  availableCountries: countries.filter((c) =>
+  countries: defaultCountries.filter((c) =>
     parseCountry(c).regions.includes('europe'),
   ),
 };

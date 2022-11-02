@@ -14,7 +14,7 @@ import { CountryData } from '../types';
 //    Area codes (if >1 country with same dial code)
 // ]
 
-export const countries: CountryData[] = [
+export const defaultCountries: CountryData[] = [
   ['Afghanistan', ['asia'], 'af', '93'],
   ['Albania', ['europe'], 'al', '355'],
   ['Algeria', ['africa', 'north-africa'], 'dz', '213'],

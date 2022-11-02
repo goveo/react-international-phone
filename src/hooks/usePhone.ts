@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 
-import { countries } from '../data/countryData';
+import { defaultCountries } from '../data/countryData';
 import {
   CountryData,
   CountryGuessResult,
@@ -95,9 +95,9 @@ export interface UsePhoneConfig {
 
   /**
    * @description Array of available countries for guessing
-   * @default countries // full country list
+   * @default defaultCountries // full country list
    */
-  availableCountries?: CountryData[];
+  countries?: CountryData[];
 
   /**
    * @description
@@ -128,13 +128,13 @@ const defaultPhoneConfig: Required<
   disableDialCodePrefill: false,
   forceDialCode: false,
   disableDialCodeAndPrefix: false,
-  availableCountries: countries,
+  countries: defaultCountries,
 };
 
 export const usePhone = (value: string, config?: UsePhoneConfig) => {
   const {
     country,
-    availableCountries,
+    countries: countryData,
     prefix,
     defaultMask,
     hideSpaceAfterDialCode,
@@ -158,7 +158,11 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
   const passedCountry = useMemo(() => {
     if (!country) return;
-    return getCountry({ value: country, field: 'iso2', countries });
+    return getCountry({
+      value: country,
+      field: 'iso2',
+      countries: defaultCountries,
+    });
   }, [country]);
 
   const prevPassedCountry = usePrevious(passedCountry);
@@ -179,7 +183,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       !forceDisableCountryGuess && shouldGuessCountry
         ? guessCountryByPartialNumber({
             phone: value,
-            countries: availableCountries,
+            countries: countryData,
           }) // FIXME: should not guess country on every change
         : undefined;
 
@@ -252,7 +256,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     if (
       guessCountryByPartialNumber({
         phone: rawPhone,
-        countries: availableCountries,
+        countries: countryData,
       }).country?.dialCode !== passedCountry.dialCode
     ) {
       // country was updated with country-selector (not from input)

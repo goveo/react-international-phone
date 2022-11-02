@@ -2,7 +2,7 @@ import './CountrySelectorDropdown.style.scss';
 
 import React, { useCallback, useRef } from 'react';
 
-import { countries as fullCountyList } from '../../data/countryData';
+import { defaultCountries } from '../../data/countryData';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2, ParsedCountry } from '../../types';
@@ -43,7 +43,7 @@ export const CountrySelectorDropdown: React.FC<
   show,
   dialCodePrefix = '+',
   selectedCountry,
-  countries = fullCountyList,
+  countries = defaultCountries,
   onSelect,
   onClickOutside,
   onEscapePress,

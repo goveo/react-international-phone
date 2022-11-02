@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { countries } from '../data/countryData';
+import { defaultCountries } from '../data/countryData';
 import { CountryIso2 } from '../types';
 import { usePhone, UsePhoneConfig } from './usePhone';
 
@@ -21,7 +21,7 @@ export interface UsePhoneInputConfig
 export const usePhoneInput = ({
   initialCountry,
   initialPhone = '',
-  availableCountries = countries,
+  countries = defaultCountries,
   ...config
 }: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,7 +33,7 @@ export const usePhoneInput = ({
   const { phone, handlePhoneValueChange } = usePhone(initialPhone, {
     inputRef,
     country,
-    availableCountries,
+    countries,
     onCountryGuess: ({ country, isFullMatch }) => {
       if (isFullMatch) {
         setCountry(country.iso2);
