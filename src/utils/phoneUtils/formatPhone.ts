@@ -93,10 +93,16 @@ export const formatPhone = (
   }
 
   // Passed phone that not started with dial code
-  if (shouldForceDialCode && !phoneValue.startsWith(config.dialCode)) {
-    return handleResult(
-      `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
-    );
+  if (!phoneValue.startsWith(config.dialCode)) {
+    if (shouldForceDialCode) {
+      return handleResult(
+        `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
+      );
+    }
+
+    if (phoneValue.length < config.dialCode.length) {
+      return handleResult(`${config.prefix}${phoneValue}`);
+    }
   }
 
   const slicePhone = () => {
