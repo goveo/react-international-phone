@@ -3,6 +3,7 @@ import React from 'react';
 
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { defaultCountries } from '../data/countryData';
+import { CountryIso2 } from '../types';
 import { parseCountry } from '../utils';
 
 export default {
@@ -128,8 +129,22 @@ OnlyEuropeCountries.argTypes = {
 };
 
 OnlyEuropeCountries.args = {
-  initialCountry: 'lt',
+  initialCountry: 'fi',
   countries: defaultCountries.filter((c) =>
     parseCountry(c).regions.includes('europe'),
   ),
+};
+
+export const OnlyBalticCountries = Template.bind({});
+OnlyBalticCountries.argTypes = {
+  initialCountry: initialCountryArgType,
+};
+
+const balticCountries: CountryIso2[] = ['lt', 'lv', 'ee'];
+
+OnlyBalticCountries.args = {
+  initialCountry: 'lt',
+  countries: defaultCountries.filter((c) => {
+    return balticCountries.includes(parseCountry(c).iso2);
+  }),
 };
