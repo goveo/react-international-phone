@@ -37,7 +37,9 @@
     "lint:scss": "stylelint \"**/*{.css,.scss}\" --custom-syntax postcss-scss --fix",
     "format": "prettier --write .",
     "prepare": "husky install",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "docs:dev": "cd packages/docs && pnpm start",
+    "docs:build": "cd packages/docs && pnpm build"
   },
   "repository": {
     "type": "git",
@@ -119,7 +121,7 @@
     ]
   },
   "engines": {
-    "node": "16.x"
+    "node": ">=16.14"
   },
   "publishConfig": {
     "access": "public"

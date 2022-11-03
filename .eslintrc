@@ -14,6 +14,11 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
   "parserOptions": {
     "ecmaVersion": 2018
   },
