@@ -1,19 +1,37 @@
 import Link from '@docusaurus/Link';
+import { useColorMode } from '@docusaurus/theme-common';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import HomepageFeatures from '@site/src/components/HomepageFeatures/HomepageFeatures';
+import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React from 'react';
+import { PhoneInput } from 'react-international-phone';
 
 import styles from './index.module.css';
 
 const HomepageHeader: React.FC = () => {
   const { siteConfig } = useDocusaurusContext();
+  const { colorMode } = useColorMode();
+
   return (
     <header className={clsx('hero hero--primary', styles.banner)}>
       <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <h1 className={styles.title}>{siteConfig.title}</h1>
+        <p className={styles.subtitle}>{siteConfig.tagline}</p>
+        <div
+          className={clsx(
+            styles['phone'],
+            colorMode === 'dark' && styles['phone--dark'],
+            'margin-vert--lg',
+          )}
+        >
+          <PhoneInput
+            initialCountry="ua"
+            inputProps={{
+              autoFocus: true,
+            }}
+          />
+        </div>
         <Link
           className="button button--secondary button--lg"
           to="/docs/getting-started"
@@ -26,12 +44,8 @@ const HomepageHeader: React.FC = () => {
 };
 
 const Home: React.FC = () => {
-  const { siteConfig } = useDocusaurusContext();
   return (
-    <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
-    >
+    <Layout description="International phone input component for React">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

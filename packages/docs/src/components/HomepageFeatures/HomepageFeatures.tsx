@@ -1,3 +1,5 @@
+import Link from '@docusaurus/Link';
+import clsx from 'clsx';
 import React from 'react';
 
 import styles from './styles.module.css';
@@ -8,46 +10,65 @@ interface FeatureItem {
   description: JSX.Element;
 }
 
-const FeatureList: FeatureItem[] = [
+const features: FeatureItem[] = [
   {
     emoji: '😎',
     title: 'Easy to integrate',
-    description: <>HTML input under the hood</>,
+    description: <>Just import and use, no need for the initial setup.</>,
   },
   {
     emoji: '🔍',
     title: 'Country guessing',
-    description: <>Just start typing and component will guess the country</>,
+    description: (
+      <>Just start typing and the component will guess the country.</>
+    ),
   },
   {
     emoji: '🏳️',
-    title: 'Country flag render',
+    title: 'Country flags',
     description: (
-      <>Render flags using [Twemoji](https://twemoji.twitter.com/)</>
+      <>
+        Country flags are rendered using{' '}
+        <Link href="https://twemoji.twitter.com/">Twemoji</Link>.
+      </>
     ),
   },
   {
     emoji: '⌨',
-    title: 'Cursor position handling',
-    description: <>Typing in the middle of input value feels naturally</>,
+    title: 'Caret position handling',
+    description: (
+      <>
+        Typing in the middle of the input, selection and deletion feels
+        naturally.
+      </>
+    ),
   },
   {
     emoji: '✨',
     title: 'Lightweight',
-    description: <>No third-party dependencies</>,
+    description: <>Low bundle size, no third-party dependencies.</>,
+  },
+  {
+    emoji: '🌈',
+    title: 'Easy to customize',
+    description: <>Customize styles and component behavior using props.</>,
   },
 ];
 
 const Feature: React.FC<FeatureItem> = ({ emoji, title, description }) => {
   return (
-    <div className="padding-horiz--md">
-      <p>
-        <span className="text--bold">
-          {emoji} {title}
-        </span>
-        {': '}
-        {description}
-      </p>
+    <div
+      className={clsx(
+        'padding-horiz--md',
+        'margin-vert--md',
+        'col',
+        styles.feature,
+      )}
+    >
+      <h3>
+        {emoji} {title}
+      </h3>
+      <p>{description}</p>
     </div>
   );
 };
@@ -56,10 +77,15 @@ const HomepageFeatures: React.FC = () => {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div>
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
+        <div className="row">
+          <Feature {...features[0]} />
+          <Feature {...features[1]} />
+          <Feature {...features[2]} />
+        </div>
+        <div className="row">
+          <Feature {...features[3]} />
+          <Feature {...features[4]} />
+          <Feature {...features[5]} />
         </div>
       </div>
     </section>

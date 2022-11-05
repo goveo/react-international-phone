@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'react-international-phone',
-  tagline: 'International phone component for react',
+  tagline: 'International phone input component for React',
   url: 'https://react-international-phone-docs.vercel.app',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -70,6 +70,10 @@ const config = {
               {
                 label: 'Getting Started',
                 to: '/docs/getting-started',
+              },
+              {
+                label: 'API',
+                to: '/docs/API/PhoneInput',
               },
             ],
           },

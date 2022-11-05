@@ -39,7 +39,8 @@
     "prepare": "husky install",
     "semantic-release": "semantic-release",
     "docs:dev": "cd packages/docs && pnpm start",
-    "docs:build": "cd packages/docs && pnpm build"
+    "docs:build": "cd packages/docs && pnpm build",
+    "docs:test": "cd packages/docs && pnpm serve"
   },
   "repository": {
     "type": "git",
