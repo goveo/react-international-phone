@@ -1,10 +1,6 @@
----
-sidebar_position: 1
----
+# PhoneInput API
 
-# PhoneInput
-
-PhoneInput is a highly customizable phone input component.
+**PhoneInput** is a highly customizable phone input component.
 
 ## Usage Example
 
@@ -14,11 +10,20 @@ Import component
 export { PhoneInput } from 'react-international-phone';
 ```
 
-Use by providing the initial country, phone and phone setter
+Use by providing the _initialCountry_, _phone_ and _onChange_ callback.
 
 ```tsx
 <PhoneInput initialCountry="ua" phone={phone} onChange={setPhone} />
 ```
+
+Output:
+
+import { PhoneInput } from 'react-international-phone';
+
+<PhoneInput
+initialCountry="ua"
+inputProps={{ autoFocus: true }}
+/>
 
 ## Properties
 

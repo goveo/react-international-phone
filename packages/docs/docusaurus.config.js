@@ -72,8 +72,12 @@ const config = {
                 to: '/docs/getting-started',
               },
               {
-                label: 'API',
-                to: '/docs/API/PhoneInput',
+                label: 'Usage',
+                to: '/docs/Usage/PhoneInput',
+              },
+              {
+                label: 'Advanced Usage',
+                to: '/docs/Advanced%20Usage/',
               },
             ],
           },

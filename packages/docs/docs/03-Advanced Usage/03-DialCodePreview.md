@@ -1,8 +1,26 @@
----
-sidebar_position: 4
----
+# DialCodePreview component API
 
-# DialCodePreview component
+**DialCodePreview** is component for preview selected country dial code.
+
+## Usage Example
+
+Import component
+
+```tsx
+export { DialCodePreview } from 'react-international-phone';
+```
+
+Use by providing the _dialCode_ and _prefix_ properties.
+
+```tsx
+<DialCodePreview dialCode="1" prefix="+" />
+```
+
+Output:
+
+import { DialCodePreview } from 'react-international-phone';
+
+<DialCodePreview dialCode="1" prefix="+" style={{ width: "40px", height: "36px" }} />
 
 ### Properties
 

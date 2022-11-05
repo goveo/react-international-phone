@@ -1,8 +1,32 @@
----
-sidebar_position: 3
----
+# CountrySelectorDropdown API
 
-# CountrySelectorDropdown
+**CountrySelectorDropdown** is a dropdown component for selecting a country that opens after click on _CountrySelector_.
+
+## Usage Example
+
+Import component
+
+```tsx
+export { CountrySelectorDropdown } from 'react-international-phone';
+```
+
+Use by providing the _show_, _selectedCountry_ and _onSelect_ properties.
+
+```tsx
+<CountrySelectorDropdown
+  show={true}
+  selectedCountry="al"
+  onSelect={handleSelect}
+  onClickOutside={handleClose}
+  onEscapePress={handleClose}
+/>
+```
+
+Output:
+
+import { CountrySelectorDropdown } from 'react-international-phone';
+
+<CountrySelectorDropdown show={true} selectedCountry="al" style={{ position: 'relative', top: '0' }} />
 
 ### Properties
 

@@ -1,8 +1,29 @@
----
-sidebar_position: 2
----
+# CountrySelector API
 
-# CountrySelector
+**CountrySelector** is a button component for selecting a country.
+
+## Usage Example
+
+Import component
+
+```tsx
+export { CountrySelector } from 'react-international-phone';
+```
+
+Use by providing the _selectedCountry_ and _onSelect_ callback.
+
+```tsx
+<CountrySelector
+  selectedCountry="ua"
+  onSelect={({ iso2 }) => setCountry(iso2)}
+/>
+```
+
+Output:
+
+import { CountrySelector } from 'react-international-phone';
+
+<CountrySelector selectedCountry="ua" />
 
 ### Properties
 
