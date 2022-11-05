@@ -1,4 +1,4 @@
-# DialCodePreview component API
+# DialCodePreview API
 
 **DialCodePreview** is component for preview selected country dial code.
 
