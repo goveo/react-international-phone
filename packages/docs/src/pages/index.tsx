@@ -1,3 +1,4 @@
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import Link from '@docusaurus/Link';
 import { useColorMode } from '@docusaurus/theme-common';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -5,7 +6,6 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React from 'react';
-import { PhoneInput } from 'react-international-phone';
 
 import styles from './index.module.css';
 
@@ -25,12 +25,19 @@ const HomepageHeader: React.FC = () => {
             'margin-vert--lg',
           )}
         >
-          <PhoneInput
-            initialCountry="ua"
-            inputProps={{
-              autoFocus: true,
+          <BrowserOnly fallback={<div>Loading...</div>}>
+            {() => {
+              const { PhoneInput } = require('react-international-phone');
+              return (
+                <PhoneInput
+                  initialCountry="ua"
+                  inputProps={{
+                    autoFocus: true,
+                  }}
+                />
+              );
             }}
-          />
+          </BrowserOnly>
         </div>
         <Link
           className="button button--secondary button--lg"
