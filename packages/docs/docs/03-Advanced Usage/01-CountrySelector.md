@@ -21,9 +21,16 @@ Use by providing the _selectedCountry_ and _onSelect_ callback.
 
 Output:
 
-import { CountrySelector } from 'react-international-phone';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 
+<BrowserOnly fallback={<div>Loading...</div>}>
+{() => {
+const { CountrySelector } = require('react-international-phone');
+return (
 <CountrySelector selectedCountry="ua" />
+);
+}}
+</BrowserOnly>
 
 ### Properties
 

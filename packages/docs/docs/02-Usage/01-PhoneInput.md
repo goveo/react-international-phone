@@ -18,12 +18,19 @@ Use by providing the _initialCountry_, _phone_ and _onChange_ callback.
 
 Output:
 
-import { PhoneInput } from 'react-international-phone';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 
+<BrowserOnly fallback={<div>Loading...</div>}>
+{() => {
+const { PhoneInput } = require('react-international-phone');
+return (
 <PhoneInput
 initialCountry="ua"
 inputProps={{ autoFocus: true }}
 />
+);
+}}
+</BrowserOnly>
 
 ## Properties
 

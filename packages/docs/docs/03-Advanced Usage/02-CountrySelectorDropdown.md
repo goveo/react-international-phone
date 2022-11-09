@@ -24,9 +24,16 @@ Use by providing the _show_, _selectedCountry_ and _onSelect_ properties.
 
 Output:
 
-import { CountrySelectorDropdown } from 'react-international-phone';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 
+<BrowserOnly fallback={<div>Loading...</div>}>
+{() => {
+const { CountrySelectorDropdown } = require('react-international-phone');
+return (
 <CountrySelectorDropdown show={true} selectedCountry="al" style={{ position: 'relative', top: '0' }} />
+);
+}}
+</BrowserOnly>
 
 ### Properties
 
