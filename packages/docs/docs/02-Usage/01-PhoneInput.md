@@ -63,14 +63,14 @@ Input events like **`onFocus`** and **`onBlur`** can be passed to the `inputProp
 
 ## Style properties
 
-| Prop                      | Type                                                      | Description                                   |
-| ------------------------- | --------------------------------------------------------- | --------------------------------------------- |
-| style                     | `CSSProperties`                                           | Custom styles for **PhoneInput container**    |
-| className                 | `string`                                                  | Custom className for **PhoneInput container** |
-| inputStyle                | `CSSProperties`                                           | Custom styles for **input field**             |
-| inputClassName            | `string`                                                  | Custom className for **input field**          |
-| countrySelectorStyleProps | [`CountrySelectorStyleProps`](#CountrySelectorStyleProps) | Style properties for **country selector**     |
-| dialCodePreviewStyleProps | [`DialCodePreviewStyleProps`](#DialCodePreviewStyleProps) | Style properties for **dial code preview**    |
+| Prop                      | Type                                                                                | Description                                   |
+| ------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------- |
+| style                     | `CSSProperties`                                                                     | Custom styles for **PhoneInput container**    |
+| className                 | `string`                                                                            | Custom className for **PhoneInput container** |
+| inputStyle                | `CSSProperties`                                                                     | Custom styles for **input field**             |
+| inputClassName            | `string`                                                                            | Custom className for **input field**          |
+| countrySelectorStyleProps | [`CountrySelectorStyleProps`](/docs/Subcomponents%20API/CountrySelector#properties) | Style properties for **country selector**     |
+| dialCodePreviewStyleProps | [`DialCodePreviewStyleProps`](/docs/Subcomponents%20API/DialCodePreview#properties) | Style properties for **dial code preview**    |
 
 ## CSS variables
 

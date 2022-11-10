@@ -51,7 +51,7 @@ return (
 | onClickOutside | `() => void`                       | Callback that calls on outside click             |
 | onEscapePress  | `() => void`                       | Callback that calls on escape keyboard key press |
 
-### Style properties (CountrySelectorDropdownStyleProps type)
+### Style properties (`CountrySelectorDropdownStyleProps` type)
 
 | Prop                         | Type            | Description                                                                  |
 | ---------------------------- | --------------- | ---------------------------------------------------------------------------- |

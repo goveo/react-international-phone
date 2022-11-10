@@ -76,8 +76,8 @@ const config = {
                 to: '/docs/Usage/PhoneInput',
               },
               {
-                label: 'Advanced Usage',
-                to: '/docs/Advanced%20Usage/',
+                label: 'Subcomponents API',
+                to: '/docs/Subcomponents%20API/',
               },
             ],
           },

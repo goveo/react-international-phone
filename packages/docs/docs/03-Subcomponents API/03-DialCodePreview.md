@@ -37,7 +37,7 @@ return (
 | prefix `(required)`   | `string`  | Dial code prefix         |               |
 | disabled              | `boolean` | Is component disabled    | `undefined`   |
 
-### Style properties (DialCodePreviewStyleProps type)
+### Style properties (`DialCodePreviewStyleProps` type)
 
 | Prop      | Type            | Description                                        |
 | --------- | --------------- | -------------------------------------------------- |
