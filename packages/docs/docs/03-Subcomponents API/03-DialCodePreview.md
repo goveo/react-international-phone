@@ -1,3 +1,5 @@
+import RequiredMark from '@site/src/components/RequiredMark'
+
 # DialCodePreview API
 
 **DialCodePreview** is component for preview selected country dial code.
@@ -31,11 +33,11 @@ return (
 
 ### Properties
 
-| Prop                  | Type      | Description              | Default value |
-| --------------------- | --------- | ------------------------ | ------------- |
-| dialCode `(required)` | `string`  | Country dial code (iso2) |               |
-| prefix `(required)`   | `string`  | Dial code prefix         |               |
-| disabled              | `boolean` | Is component disabled    | `undefined`   |
+| Prop                     | Type      | Description              | Default value |
+| ------------------------ | --------- | ------------------------ | ------------- |
+| dialCode <RequiredMark/> | `string`  | Country dial code (iso2) |               |
+| prefix <RequiredMark/>   | `string`  | Dial code prefix         |               |
+| disabled                 | `boolean` | Is component disabled    | `undefined`   |
 
 ### Style properties (`DialCodePreviewStyleProps` type)
 

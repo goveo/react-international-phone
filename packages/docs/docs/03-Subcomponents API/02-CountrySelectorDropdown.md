@@ -1,3 +1,5 @@
+import RequiredMark from '@site/src/components/RequiredMark'
+
 # CountrySelectorDropdown API
 
 **CountrySelectorDropdown** is a dropdown component for selecting a country that opens after click on _CountrySelector_.
@@ -37,11 +39,11 @@ return (
 
 ### Properties
 
-| Prop              | Type          | Description                         | Default value |
-| ----------------- | ------------- | ----------------------------------- | ------------- |
-| show `(required)` | `boolean`     | Show dropdown                       |               |
-| dialCodePrefix    | `string`      | Prefix for country code             | `"+" `        |
-| selectedCountry   | `CountryIso2` | Selected option country code (iso2) | `undefined`   |
+| Prop                 | Type          | Description                         | Default value |
+| -------------------- | ------------- | ----------------------------------- | ------------- |
+| show <RequiredMark/> | `boolean`     | Show dropdown                       |               |
+| dialCodePrefix       | `string`      | Prefix for country code             | `"+" `        |
+| selectedCountry      | `CountryIso2` | Selected option country code (iso2) | `undefined`   |
 
 ### Events
 
