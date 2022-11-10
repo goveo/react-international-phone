@@ -11,7 +11,8 @@
   }
 
   .react-international-phone-input {
-    height: calc(base.$height - 2px);
+    height: base.$height;
+    box-sizing: border-box;
     padding: 0 8px;
     border: 1px solid base.$border-color;
     border-radius: base.$border-radius;

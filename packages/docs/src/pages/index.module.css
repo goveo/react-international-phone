@@ -1,0 +1,45 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.title {
+  font-size: 3rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+}
+
+.banner {
+  position: relative;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.phone {
+  display: flex;
+  justify-content: center;
+}
+
+.phone--dark {
+  --react-international-phone-border-color: gray;
+  --react-international-phone-background-color: #282c34;
+  --react-international-phone-text-color: white;
+  --react-international-phone-selected-dropdown-item-background-color: black;
+  --react-international-phone-country-selector-background-color-hover: black;
+}
+
+@media screen and (max-width: 996px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .banner {
+    padding: 2rem;
+  }
+}

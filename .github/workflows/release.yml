@@ -29,6 +29,8 @@ jobs:
         run: pnpm test
       - name: Build package
         run: pnpm build
+      - name: Build docs
+        run: pnpm docs:build
       - name: Publish npm package
         uses: cycjimmy/semantic-release-action@v3
         env:

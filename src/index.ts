@@ -5,3 +5,4 @@ export { PhoneInput } from './components/PhoneInput/PhoneInput';
 export { defaultCountries } from './data/countryData';
 export { usePhone } from './hooks/usePhone';
 export { usePhoneInput } from './hooks/usePhoneInput';
+export { parseCountry } from './utils';

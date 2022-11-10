@@ -1,8 +1,11 @@
 // Twemoji is used for emoji rendering
 // https://twemoji.twitter.com
 
+import './FlagEmoji.style.scss';
+
 import React, { CSSProperties } from 'react';
 
+import { buildClassNames } from '../../style/buildClassNames';
 import { ParsedCountry } from '../../types';
 
 const incrementCodepoint = (codePoint: string, incrementBy: number): string => {
@@ -42,6 +45,7 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   iso2,
   size = '24px',
   protocol = window?.location?.protocol ?? 'https:',
+  className,
   ...restProps
 }) => {
   if (!iso2) {
@@ -54,6 +58,10 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
 
   return (
     <img
+      className={buildClassNames({
+        addPrefix: ['flag-emoji'],
+        rawClassNames: [className],
+      })}
       src={src}
       width={size}
       height={size}
