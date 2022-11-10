@@ -4,6 +4,8 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+const packageJson = require('../../package.json');
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'react-international-phone',
@@ -106,6 +108,9 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      metadata: [
+        { name: 'keywords', content: packageJson.keywords.join(', ') },
+      ],
     }),
 };
 
