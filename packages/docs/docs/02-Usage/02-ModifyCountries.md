@@ -83,11 +83,15 @@ const [name, regions, iso2, dialCode, format, priority, areaCodes] =
   defaultCountries[0];
 ```
 
+:::tip
+
 Also you can use `parseCountry` helper function to convert country data array to an object (as shown in example).
 
 ```ts
 const { name, regions, iso2, dialCode, format, priority, areaCodes } =
   parseCountry(defaultCountries[0]);
 ```
+
+:::
 
 Country data was taken from [react-phone-input-2](https://github.com/bl00mber/react-phone-input-2/blob/master/src/rawCountries.js) :pray:
