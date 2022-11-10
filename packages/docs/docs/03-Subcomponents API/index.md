@@ -1,6 +1,6 @@
-# Advanced Usage
+# Subcomponents API
 
-**PhoneInput** component consists from four main parts:
+The **PhoneInput** component consists of four main parts:
 
 - Input component
 - CountrySelector component
