@@ -12,6 +12,17 @@ describe('getCursorPosition', () => {
     ).toBe(3);
   });
 
+  test('should handle set in the end', () => {
+    expect(
+      getCursorPosition({
+        phoneBeforeInput: '+380 (9',
+        phoneAfterInput: '+380 (97',
+        phoneAfterFormatted: '+380 (97) ',
+        cursorPositionAfterInput: 8,
+      }),
+    ).toBe(10);
+  });
+
   test('should handle set in the middle', () => {
     expect(
       getCursorPosition({
