@@ -141,5 +141,21 @@ describe('formatPhone', () => {
         disableDialCodeAndPrefix: true,
       }),
     ).toBe('(38) 099 11 12');
+
+    expect(
+      formatPhone('380', {
+        ...defaultConfig,
+        dialCode: '380',
+        disableDialCodeAndPrefix: true,
+      }),
+    ).toBe('(38) 0');
+
+    expect(
+      formatPhone('38', {
+        ...defaultConfig,
+        dialCode: '380',
+        disableDialCodeAndPrefix: true,
+      }),
+    ).toBe('(38) ');
   });
 });

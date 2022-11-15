@@ -2,7 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../data/countryData';
 import { CountryIso2 } from '../types';
-import { getCountry, getCursorPosition, removeNonDigits } from '../utils';
+import {
+  addDialCode,
+  getCountry,
+  getCursorPosition,
+  removeDialCode,
+  removeNonDigits,
+} from '../utils';
 import { usePhone, UsePhoneConfig } from './usePhone';
 
 export interface UsePhoneInputConfig
@@ -33,8 +39,26 @@ export const usePhoneInput = ({
     initialCountry,
   );
 
+  const passedCountry = useMemo(() => {
+    if (!country) return;
+    return getCountry({
+      value: country,
+      field: 'iso2',
+      countries,
+    });
+  }, [countries, country]);
+
+  const localValue = config.disableDialCodeAndPrefix
+    ? removeDialCode({
+        phone: value,
+        dialCode: passedCountry?.dialCode || '',
+        charAfterDialCode: config.hideSpaceAfterDialCode ? '' : ' ',
+        prefix: config.prefix,
+      })
+    : value;
+
   const { phone, initialized, undo, redo, handleValueChange } = usePhone(
-    value,
+    localValue,
     {
       country,
       countries,
@@ -110,17 +134,17 @@ export const usePhoneInput = ({
       cursorPosition: e.target.selectionStart ?? 0,
     });
 
+    if (config.disableDialCodeAndPrefix) {
+      return addDialCode({
+        phone: value,
+        dialCode: passedCountry?.dialCode || '',
+        charAfterDialCode: config.hideSpaceAfterDialCode ? '' : ' ',
+        prefix: config.prefix,
+      });
+    }
+
     return value;
   };
-
-  const passedCountry = useMemo(() => {
-    if (!country) return;
-    return getCountry({
-      value: country,
-      field: 'iso2',
-      countries,
-    });
-  }, [countries, country]);
 
   // Handle country change
   useEffect(() => {

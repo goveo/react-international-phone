@@ -93,7 +93,10 @@ export const formatPhone = (
   }
 
   // Passed phone that not started with dial code
-  if (!phoneValue.startsWith(config.dialCode)) {
+  if (
+    !phoneValue.startsWith(config.dialCode) &&
+    !config.disableDialCodeAndPrefix
+  ) {
     if (shouldForceDialCode) {
       return handleResult(
         `${config.prefix}${config.dialCode}${config.charAfterDialCode}`,
