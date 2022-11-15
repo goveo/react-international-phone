@@ -39,10 +39,10 @@ export interface UsePhoneConfig {
   defaultMask?: string;
 
   /**
-   * @description Hide space after country dial code
-   * @default false
+   * @description Char that renders after dial code
+   * @default " "
    */
-  hideSpaceAfterDialCode?: boolean;
+  charAfterDialCode?: string;
 
   /**
    * @description
@@ -129,7 +129,7 @@ const defaultPhoneConfig: Required<
 > = {
   prefix: '+',
   defaultMask: '............', // 12 chars
-  hideSpaceAfterDialCode: false,
+  charAfterDialCode: ' ',
   historySaveDebounceMS: 200,
   disableCountryGuess: false,
   disableDialCodePrefill: false,
@@ -144,7 +144,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     countries: countryData,
     prefix,
     defaultMask,
-    hideSpaceAfterDialCode,
+    charAfterDialCode,
     historySaveDebounceMS,
     disableCountryGuess,
     disableDialCodePrefill,
@@ -156,7 +156,6 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     ...defaultPhoneConfig,
     ...config,
   };
-  const charAfterDialCode = hideSpaceAfterDialCode ? '' : ' ';
   const shouldGuessCountry = disableDialCodeAndPrefix
     ? false
     : !disableCountryGuess;

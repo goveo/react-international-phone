@@ -25,13 +25,22 @@ export interface UsePhoneInputConfig
    * @description phone value
    */
   value?: string;
+
+  /**
+   * @description Hide space after country dial code
+   * @default false
+   */
+  hideSpaceAfterDialCode?: boolean;
 }
 
 export const usePhoneInput = ({
   initialCountry,
   value = '',
+  prefix = '+',
   countries = defaultCountries,
-  ...config
+  disableDialCodeAndPrefix,
+  hideSpaceAfterDialCode,
+  ...restConfig
 }: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,12 +57,15 @@ export const usePhoneInput = ({
     });
   }, [countries, country]);
 
-  const localValue = config.disableDialCodeAndPrefix
+  const charAfterDialCode = hideSpaceAfterDialCode ? '' : ' ';
+  const dialCode = passedCountry?.dialCode ?? '';
+
+  const localValue = disableDialCodeAndPrefix
     ? removeDialCode({
         phone: value,
-        dialCode: passedCountry?.dialCode || '',
-        charAfterDialCode: config.hideSpaceAfterDialCode ? '' : ' ',
-        prefix: config.prefix,
+        dialCode,
+        charAfterDialCode,
+        prefix,
       })
     : value;
 
@@ -62,6 +74,9 @@ export const usePhoneInput = ({
     {
       country,
       countries,
+      prefix,
+      disableDialCodeAndPrefix,
+      charAfterDialCode,
       onCountryGuess: ({ country, isFullMatch }) => {
         if (isFullMatch) {
           setCountry(country.iso2);
@@ -77,12 +92,11 @@ export const usePhoneInput = ({
       ) => {
         const cursorPosition = getCursorPosition({
           cursorPositionAfterInput,
-          phoneBeforeInput: phone ?? '',
+          phoneBeforeInput: phone,
           phoneAfterInput: unformattedValue,
           phoneAfterFormatted: newPhone,
-          leftOffset: config.forceDialCode
-            ? (config.prefix?.length ?? 0) +
-              (formatCountry?.dialCode?.length ?? 0)
+          leftOffset: restConfig.forceDialCode
+            ? prefix.length + (formatCountry?.dialCode?.length ?? 0)
             : 0,
         });
 
@@ -94,7 +108,7 @@ export const usePhoneInput = ({
           inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
         });
       },
-      ...config,
+      ...restConfig,
     },
   );
 
@@ -134,12 +148,12 @@ export const usePhoneInput = ({
       cursorPosition: e.target.selectionStart ?? 0,
     });
 
-    if (config.disableDialCodeAndPrefix) {
+    if (disableDialCodeAndPrefix) {
       return addDialCode({
         phone: value,
-        dialCode: passedCountry?.dialCode || '',
-        charAfterDialCode: config.hideSpaceAfterDialCode ? '' : ' ',
-        prefix: config.prefix,
+        dialCode,
+        charAfterDialCode,
+        prefix,
       });
     }
 
