@@ -1,6 +1,8 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
+import { defaultCountries } from '../../data/countryData';
+import { parseCountry } from '../../utils';
 import {
   getCountrySelector,
   getCountrySelectorDropdown,
@@ -43,6 +45,18 @@ describe('PhoneInput', () => {
     fireEvent.change(getInput(), { target: { value: '38099' } });
     expect(onChange.mock.calls.length).toBe(1);
     expect(onChange.mock.calls[0][0]).toBe('+380 (99) ');
+
+    fireEvent.change(getInput(), { target: { value: '+380 (99) 999' } });
+    expect(onChange.mock.calls.length).toBe(2);
+    expect(onChange.mock.calls[1][0]).toBe('+380 (99) 999 ');
+
+    fireEvent.change(getInput(), { target: { value: '' } });
+    expect(onChange.mock.calls.length).toBe(3);
+    expect(onChange.mock.calls[2][0]).toBe('');
+
+    fireEvent.change(getInput(), { target: { value: '+1 403 555-6666' } });
+    expect(onChange.mock.calls.length).toBe(4);
+    expect(onChange.mock.calls[3][0]).toBe('+1 (403) 555-6666');
   });
 
   test('should set flag to country selector', () => {
@@ -311,5 +325,34 @@ describe('PhoneInput', () => {
       shiftKey: true,
     });
     expect(getInput().value).toBe('+1 (234) 567-8');
+  });
+
+  test('should support countries filtering', () => {
+    const countries = defaultCountries.filter((country) => {
+      const { iso2 } = parseCountry(country);
+      return ['us', 'ua', 'cz'].includes(iso2);
+    });
+
+    render(
+      <PhoneInput initialCountry="us" value="+1234" countries={countries} />,
+    );
+
+    expect(getCountrySelectorDropdown().childNodes.length).toBe(
+      countries.length,
+    );
+
+    fireChangeEvent('44444');
+
+    // not supported country was not set (+44 should set uk by default)
+    expect(getInput().value).toBe('+4 (444) 4');
+    expect(getCountrySelector()).toHaveAttribute('title', 'United States');
+
+    fireChangeEvent('420123');
+    expect(getInput().value).toBe('+420 123 ');
+    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+
+    fireChangeEvent('555555');
+    expect(getInput().value).toBe('+555 555 ');
+    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
   });
 });
