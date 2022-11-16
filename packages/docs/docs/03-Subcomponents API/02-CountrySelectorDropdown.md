@@ -9,7 +9,7 @@ import RequiredMark from '@site/src/components/RequiredMark'
 Import component
 
 ```tsx
-export { CountrySelectorDropdown } from 'react-international-phone';
+import { CountrySelectorDropdown } from 'react-international-phone';
 ```
 
 Use by providing the _show_, _selectedCountry_ and _onSelect_ properties.
