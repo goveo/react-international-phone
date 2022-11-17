@@ -3,6 +3,7 @@ import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { parseCountry } from '../../utils';
+import { buildCountryData } from '../../utils/countryUtils/buildCountryData';
 import {
   getCountrySelector,
   getCountrySelectorDropdown,
@@ -354,5 +355,24 @@ describe('PhoneInput', () => {
     fireChangeEvent('555555');
     expect(getInput().value).toBe('+555 555 ');
     expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+  });
+
+  test('should support country modifying', () => {
+    const countries = defaultCountries.map((country) => {
+      const parsedCountry = parseCountry(country);
+      if (parsedCountry.iso2 === 'ua') {
+        return buildCountryData({ ...parsedCountry, format: '(..) ... ....' });
+      }
+      return country;
+    });
+
+    render(
+      <PhoneInput
+        initialCountry="ua"
+        value="+380(99)9999999"
+        countries={countries}
+      />,
+    );
+    expect(getInput().value).toBe('+380 (99) 999 9999');
   });
 });

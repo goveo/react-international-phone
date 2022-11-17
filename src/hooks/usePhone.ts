@@ -167,9 +167,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     return getCountry({
       value: country,
       field: 'iso2',
-      countries: defaultCountries,
+      countries: countryData,
     });
-  }, [country]);
+  }, [country, countryData]);
 
   const formatPhoneValue = (
     value: string,
