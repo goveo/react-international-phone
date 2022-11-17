@@ -31,6 +31,13 @@ export interface UsePhoneInputConfig
    * @default false
    */
   hideSpaceAfterDialCode?: boolean;
+
+  /**
+   * @description Callback that calls on country change
+   * @params *phone* - new phone value
+   * @default undefined
+   */
+  onCountryChange?: (phone: string) => void;
 }
 
 export const usePhoneInput = ({
@@ -40,6 +47,7 @@ export const usePhoneInput = ({
   countries = defaultCountries,
   disableDialCodeAndPrefix,
   hideSpaceAfterDialCode,
+  onCountryChange,
   ...restConfig
 }: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -169,8 +177,10 @@ export const usePhoneInput = ({
       return;
     }
 
-    handleValueChange('', { insertDialCodeOnEmpty: true });
+    const newValue = handleValueChange('', { insertDialCodeOnEmpty: true });
     inputRef.current?.focus();
+
+    onCountryChange?.(newValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
