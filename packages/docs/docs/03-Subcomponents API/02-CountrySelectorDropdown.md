@@ -74,6 +74,7 @@ return (
 | ------------------------------------------------------------------- | -------------------------------------------------------- |
 | --react-international-phone-dropdown-item-font-size                 | `14px`                                                   |
 | --react-international-phone-dropdown-item-text-color                | --react-international-phone-text-color                   |
+| --react-international-phone-dropdown-item-height                    | `28px`                                                   |
 | --react-international-phone-dropdown-item-background-color          | --react-international-phone-background-color             |
 | --react-international-phone-dropdown-item-dial-code-color           | `gray`                                                   |
 | --react-international-phone-selected-dropdown-item-text-color       | --react-international-phone-text-color                   |

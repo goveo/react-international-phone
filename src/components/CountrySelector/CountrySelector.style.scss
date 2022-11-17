@@ -43,8 +43,13 @@ $disabled-country-selector-background-color: var(
   padding: 0;
   border: 1px solid $country-selector-border-color;
   margin: 0;
+  // for old safari compatibility
+  appearance: button;
+  /* stylelint-disable-next-line */
+  -webkit-appearance: button;
   background-color: $country-selector-background-color;
   cursor: pointer;
+  text-transform: none;
   user-select: none;
 
   &:hover {

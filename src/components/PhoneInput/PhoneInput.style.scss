@@ -11,11 +11,13 @@
   }
 
   .react-international-phone-input {
+    overflow: visible;
     height: base.$height;
     box-sizing: border-box;
     padding: 0 8px;
     border: 1px solid base.$border-color;
     border-radius: base.$border-radius;
+    margin: 0;
     background-color: base.$background-color;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
