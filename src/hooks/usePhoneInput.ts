@@ -170,6 +170,7 @@ export const usePhoneInput = ({
     }
 
     handleValueChange('', { insertDialCodeOnEmpty: true });
+    inputRef.current?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
