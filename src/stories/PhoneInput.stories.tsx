@@ -27,10 +27,12 @@ const initialCountryArgType = {
   },
 };
 
-export const Default = Template.bind({});
-Default.argTypes = {
+const argTypes = {
   initialCountry: initialCountryArgType,
 };
+
+export const Default = Template.bind({});
+Default.argTypes = argTypes;
 
 Default.args = {
   disabled: false,
@@ -50,31 +52,33 @@ Default.args = {
   dialCodePreviewStyleProps: {},
 };
 
-export const ForcedDialCode = Template.bind({});
-ForcedDialCode.argTypes = {
-  initialCountry: initialCountryArgType,
+export const WithInitialValue = Template.bind({});
+WithInitialValue.argTypes = argTypes;
+
+WithInitialValue.args = {
+  value: '+380999999999',
+  initialCountry: 'ua',
 };
 
+export const ForcedDialCode = Template.bind({});
+ForcedDialCode.argTypes = argTypes;
+
 ForcedDialCode.args = {
-  initialCountry: 'ua',
+  initialCountry: 'pl',
   forceDialCode: true,
 };
 
 export const DisabledPrefill = Template.bind({});
-DisabledPrefill.argTypes = {
-  initialCountry: initialCountryArgType,
-};
+DisabledPrefill.argTypes = argTypes;
 
 DisabledPrefill.args = {
-  initialCountry: 'pl',
+  initialCountry: 'cz',
   disableDialCodePrefill: true,
   placeholder: 'Phone number',
 };
 
 export const DisabledCountryGuess = Template.bind({});
-DisabledCountryGuess.argTypes = {
-  initialCountry: initialCountryArgType,
-};
+DisabledCountryGuess.argTypes = argTypes;
 
 DisabledCountryGuess.args = {
   initialCountry: 'gb',
@@ -82,9 +86,7 @@ DisabledCountryGuess.args = {
 };
 
 export const WithoutDropdown = Template.bind({});
-WithoutDropdown.argTypes = {
-  initialCountry: initialCountryArgType,
-};
+WithoutDropdown.argTypes = argTypes;
 
 WithoutDropdown.args = {
   initialCountry: 'ee',
@@ -94,9 +96,7 @@ WithoutDropdown.args = {
 };
 
 export const WithCodePreview = Template.bind({});
-WithCodePreview.argTypes = {
-  initialCountry: initialCountryArgType,
-};
+WithCodePreview.argTypes = argTypes;
 
 WithCodePreview.args = {
   initialCountry: 'lv',
@@ -105,9 +105,7 @@ WithCodePreview.args = {
 };
 
 export const CustomStyles = Template.bind({});
-CustomStyles.argTypes = {
-  initialCountry: initialCountryArgType,
-};
+CustomStyles.argTypes = argTypes;
 
 CustomStyles.args = {
   initialCountry: 'ca',
@@ -124,9 +122,7 @@ CustomStyles.args = {
 };
 
 export const OnlyEuropeCountries = Template.bind({});
-OnlyEuropeCountries.argTypes = {
-  initialCountry: initialCountryArgType,
-};
+OnlyEuropeCountries.argTypes = argTypes;
 
 OnlyEuropeCountries.args = {
   initialCountry: 'fi',
@@ -136,9 +132,7 @@ OnlyEuropeCountries.args = {
 };
 
 export const OnlyBalticCountries = Template.bind({});
-OnlyBalticCountries.argTypes = {
-  initialCountry: initialCountryArgType,
-};
+OnlyBalticCountries.argTypes = argTypes;
 
 const balticCountries: CountryIso2[] = ['lt', 'lv', 'ee'];
 

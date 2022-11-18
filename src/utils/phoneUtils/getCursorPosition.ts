@@ -25,6 +25,14 @@ export const getCursorPosition = ({
     return phoneAfterFormatted.length;
   }
 
+  if (
+    cursorPositionAfterInput === 0 &&
+    phoneAfterInput.length > 0 &&
+    phoneAfterFormatted.length > 0
+  ) {
+    return 0;
+  }
+
   // Handle whole value removal (select all + replace by new value)
   if (
     phoneAfterInput.length < phoneBeforeInput.length &&

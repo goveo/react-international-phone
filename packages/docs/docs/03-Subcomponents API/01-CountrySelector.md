@@ -7,7 +7,7 @@
 Import component
 
 ```tsx
-export { CountrySelector } from 'react-international-phone';
+import { CountrySelector } from 'react-international-phone';
 ```
 
 Use by providing the _selectedCountry_ and _onSelect_ callback.

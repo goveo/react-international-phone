@@ -2,11 +2,12 @@
 
 🤙 International phone input component for React
 
-![demo](https://s4.gifyu.com/images/react-international-phone.gif)
-
-![build-status](https://img.shields.io/github/workflow/status/goveo/react-international-phone/Release)
+![build-status-badge](https://img.shields.io/github/workflow/status/goveo/react-international-phone/Release)
+![install-size-badge](https://badgen.net/packagephobia/install/react-international-phone)
 
 [Live demo: Storybook](https://react-international-phone-storybook.vercel.app)
+
+![demo](https://user-images.githubusercontent.com/25800848/202582471-ac10cd36-282c-4ce4-bd0b-a4e66d361e77.gif)
 
 ## Features
 
@@ -34,7 +35,11 @@ const App = () => {
 
   return (
     <div>
-      <PhoneInput initialCountry="ua" phone={phone} onChange={setPhone} />
+      <PhoneInput
+        initialCountry="ua"
+        value={phone}
+        onChange={(phone) => setPhone(phone)}
+      />
     </div>
   );
 };

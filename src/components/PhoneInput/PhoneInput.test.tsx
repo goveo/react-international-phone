@@ -1,6 +1,9 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
+import { defaultCountries } from '../../data/countryData';
+import { parseCountry } from '../../utils';
+import { buildCountryData } from '../../utils/countryUtils/buildCountryData';
 import {
   getCountrySelector,
   getCountrySelectorDropdown,
@@ -32,7 +35,7 @@ export const fireChangeEvent = (
 
 describe('PhoneInput', () => {
   test('should set phone value', () => {
-    render(<PhoneInput initialPhone="+38099109" initialCountry="ua" />);
+    render(<PhoneInput value="+38099109" initialCountry="ua" />);
     expect(getInput().value).toBe('+380 (99) 109 ');
   });
 
@@ -43,15 +46,27 @@ describe('PhoneInput', () => {
     fireEvent.change(getInput(), { target: { value: '38099' } });
     expect(onChange.mock.calls.length).toBe(1);
     expect(onChange.mock.calls[0][0]).toBe('+380 (99) ');
+
+    fireEvent.change(getInput(), { target: { value: '+380 (99) 999' } });
+    expect(onChange.mock.calls.length).toBe(2);
+    expect(onChange.mock.calls[1][0]).toBe('+380 (99) 999 ');
+
+    fireEvent.change(getInput(), { target: { value: '' } });
+    expect(onChange.mock.calls.length).toBe(3);
+    expect(onChange.mock.calls[2][0]).toBe('');
+
+    fireEvent.change(getInput(), { target: { value: '+1 403 555-6666' } });
+    expect(onChange.mock.calls.length).toBe(4);
+    expect(onChange.mock.calls[3][0]).toBe('+1 (403) 555-6666');
   });
 
   test('should set flag to country selector', () => {
-    render(<PhoneInput initialPhone="+380" initialCountry="ua" />);
+    render(<PhoneInput value="+380" initialCountry="ua" />);
     expect(getCountrySelector()).toHaveAttribute('title', 'Ukraine');
   });
 
   test('should format value', () => {
-    render(<PhoneInput initialCountry="ua" />);
+    render(<PhoneInput initialCountry="ua" value="380" />);
 
     fireEvent.change(getInput(), { target: { value: '380991234567' } });
     expect(getInput().value).toBe('+380 (99) 123 45 67');
@@ -175,11 +190,7 @@ describe('PhoneInput', () => {
 
   test('should handle forceDialCode', () => {
     render(
-      <PhoneInput
-        initialPhone="12345678900"
-        initialCountry="us"
-        forceDialCode
-      />,
+      <PhoneInput value="12345678900" initialCountry="us" forceDialCode />,
     );
     expect(getInput().value).toBe('+1 (234) 567-8900');
 
@@ -242,7 +253,7 @@ describe('PhoneInput', () => {
   });
 
   test('should support undo on ctrl+z', () => {
-    render(<PhoneInput initialCountry="us" initialPhone="+1234" />);
+    render(<PhoneInput initialCountry="us" value="+1234" />);
     increaseSystemTime();
 
     fireChangeEvent('1234567890');
@@ -285,7 +296,7 @@ describe('PhoneInput', () => {
   });
 
   test('should support redo on ctrl+shift+z', () => {
-    render(<PhoneInput initialCountry="us" initialPhone="+1234" />);
+    render(<PhoneInput initialCountry="us" value="+1234" />);
     increaseSystemTime();
 
     fireChangeEvent('1234567890');
@@ -315,5 +326,53 @@ describe('PhoneInput', () => {
       shiftKey: true,
     });
     expect(getInput().value).toBe('+1 (234) 567-8');
+  });
+
+  test('should support countries filtering', () => {
+    const countries = defaultCountries.filter((country) => {
+      const { iso2 } = parseCountry(country);
+      return ['us', 'ua', 'cz'].includes(iso2);
+    });
+
+    render(
+      <PhoneInput initialCountry="us" value="+1234" countries={countries} />,
+    );
+
+    expect(getCountrySelectorDropdown().childNodes.length).toBe(
+      countries.length,
+    );
+
+    fireChangeEvent('44444');
+
+    // not supported country was not set (+44 should set uk by default)
+    expect(getInput().value).toBe('+4 (444) 4');
+    expect(getCountrySelector()).toHaveAttribute('title', 'United States');
+
+    fireChangeEvent('420123');
+    expect(getInput().value).toBe('+420 123 ');
+    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+
+    fireChangeEvent('555555');
+    expect(getInput().value).toBe('+555 555 ');
+    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+  });
+
+  test('should support country modifying', () => {
+    const countries = defaultCountries.map((country) => {
+      const parsedCountry = parseCountry(country);
+      if (parsedCountry.iso2 === 'ua') {
+        return buildCountryData({ ...parsedCountry, format: '(..) ... ....' });
+      }
+      return country;
+    });
+
+    render(
+      <PhoneInput
+        initialCountry="ua"
+        value="+380(99)9999999"
+        countries={countries}
+      />,
+    );
+    expect(getInput().value).toBe('+380 (99) 999 9999');
   });
 });

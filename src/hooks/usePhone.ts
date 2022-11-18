@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { defaultCountries } from '../data/countryData';
 import {
@@ -14,9 +14,7 @@ import {
   guessCountryByPartialNumber,
   removeNonDigits,
 } from '../utils';
-import { getCursorPosition } from '../utils/phoneUtils/getCursorPosition';
 import { useHistoryState } from './useHistoryState';
-import { usePrevious } from './usePrevious';
 import { useTimer } from './useTimer';
 
 interface FormatPhoneValueFuncOptions {
@@ -41,10 +39,10 @@ export interface UsePhoneConfig {
   defaultMask?: string;
 
   /**
-   * @description Hide space after country dial code
-   * @default false
+   * @description Char that renders after dial code
+   * @default " "
    */
-  hideSpaceAfterDialCode?: boolean;
+  charAfterDialCode?: string;
 
   /**
    * @description
@@ -100,29 +98,38 @@ export interface UsePhoneConfig {
   countries?: CountryData[];
 
   /**
-   * @description
-   * Input's ref.
-   * Allows handling redo/undo using keyboard events.
-   * Allows handling input cursor position.
-   * @default undefined
-   */
-  inputRef?: React.RefObject<HTMLInputElement>;
-
-  /**
    * @description Callback that calls on country guess
-   * @params country guess result (includes *country* and *isFullMatch*)
+   * @param data country guess result (includes *country* and *isFullMatch*)
    * @default undefined
    */
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
+
+  /**
+   * @description Callback that calls on phone update (helpful for cursor handling)
+   * @param phone new phone value
+   * @param metadata helpful data for handling update
+   * @default undefined
+   */
+  onPhoneUpdate?: (
+    phone: string,
+    metadata: {
+      formatCountry: ParsedCountry | undefined;
+      unformattedValue: string;
+      cursorPosition: number;
+    },
+  ) => void;
 }
 
 // On change: make sure to update these values in stories
 const defaultPhoneConfig: Required<
-  Omit<UsePhoneConfig, 'inputRef' | 'country' | 'onCountryGuess'> // omit props with no default value
+  Omit<
+    UsePhoneConfig,
+    'inputRef' | 'country' | 'onCountryGuess' | 'onPhoneUpdate'
+  > // omit props with no default value
 > = {
   prefix: '+',
   defaultMask: '............', // 12 chars
-  hideSpaceAfterDialCode: false,
+  charAfterDialCode: ' ',
   historySaveDebounceMS: 200,
   disableCountryGuess: false,
   disableDialCodePrefill: false,
@@ -137,19 +144,18 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     countries: countryData,
     prefix,
     defaultMask,
-    hideSpaceAfterDialCode,
+    charAfterDialCode,
     historySaveDebounceMS,
     disableCountryGuess,
     disableDialCodePrefill,
     forceDialCode,
     disableDialCodeAndPrefix,
-    inputRef,
     onCountryGuess,
+    onPhoneUpdate,
   } = {
     ...defaultPhoneConfig,
     ...config,
   };
-  const charAfterDialCode = hideSpaceAfterDialCode ? '' : ' ';
   const shouldGuessCountry = disableDialCodeAndPrefix
     ? false
     : !disableCountryGuess;
@@ -161,11 +167,9 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     return getCountry({
       value: country,
       field: 'iso2',
-      countries: defaultCountries,
+      countries: countryData,
     });
-  }, [country]);
-
-  const prevPassedCountry = usePrevious(passedCountry);
+  }, [country, countryData]);
 
   const formatPhoneValue = (
     value: string,
@@ -210,88 +214,33 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   };
 
   const [phone, setPhone, undo, redo] = useHistoryState('');
+  const [initialized, setInitialized] = useState(false);
 
-  // set initial phone value
-  useEffect(() => {
-    setPhone(
-      formatPhoneValue(value, {
-        trimNonDigitsEnd: false,
-        insertDialCodeOnEmpty: !disableDialCodePrefill,
-      }).phone,
-      {
-        overrideLastHistoryItem: true,
-      },
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const rawPhone = useMemo(() => {
-    return removeNonDigits(phone);
-  }, [phone]);
-
-  // Handle undo/redo events
-  useEffect(() => {
-    const input = inputRef?.current;
-    if (!input) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      const ctrlPressed = e.ctrlKey;
-      const shiftPressed = e.shiftKey;
-      const zPressed = e.key.toLowerCase() === 'z';
-
-      if (!ctrlPressed || !zPressed) return;
-      return shiftPressed ? redo() : undo();
-    };
-
-    input?.addEventListener('keydown', onKeyDown);
-    return () => {
-      input?.removeEventListener('keydown', onKeyDown);
-    };
-  }, [inputRef, undo, redo]);
-
-  // on country change
-  useEffect(() => {
-    if (!passedCountry || !prevPassedCountry) return; // initial render
-
-    if (
-      guessCountryByPartialNumber({
-        phone: rawPhone,
-        countries: countryData,
-      }).country?.dialCode !== passedCountry.dialCode
-    ) {
-      // country was updated with country-selector (not from input)
-      const phoneValue = disableDialCodeAndPrefix
-        ? ''
-        : `${prefix}${passedCountry.dialCode}${charAfterDialCode}`;
-      return setPhone(phoneValue);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country]);
-
-  const handlePhoneValueChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+  const handleValueChange = (
+    newPhone: string,
+    {
+      isDeletion,
+      cursorPosition,
+      insertDialCodeOnEmpty,
+    }: {
+      isDeletion?: boolean;
+      cursorPosition?: number;
+      insertDialCodeOnEmpty?: boolean;
+    } = {},
   ): string => {
-    e.preventDefault();
-
-    // Didn't find out how to properly type it
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const inputType: string | undefined = (e.nativeEvent as any).inputType;
-    const isDeletion =
-      inputType?.toLocaleLowerCase().includes('delete') ?? false;
-
-    const value = e.target.value;
-
     const {
       phone: phoneValue,
       countryGuessResult,
       formatCountry,
-    } = formatPhoneValue(value, {
+    } = formatPhoneValue(newPhone, {
       trimNonDigitsEnd: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
-      insertDialCodeOnEmpty: false,
+      insertDialCodeOnEmpty:
+        insertDialCodeOnEmpty || (!initialized && !disableDialCodePrefill),
       forceDisableCountryGuess:
         forceDialCode &&
         isDeletion &&
-        removeNonDigits(value).length < (passedCountry?.dialCode.length ?? 0),
+        removeNonDigits(newPhone).length <
+          (passedCountry?.dialCode.length ?? 0),
     });
 
     const timePassedSinceLastChange = timer.check();
@@ -303,26 +252,11 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       overrideLastHistoryItem: !historySaveDebounceTimePassed,
     });
 
-    if (inputRef?.current) {
-      const cursorPosition = getCursorPosition({
-        cursorPositionAfterInput:
-          inputRef.current.selectionStart ?? phone.length,
-        phoneBeforeInput: phone,
-        phoneAfterInput: value,
-        phoneAfterFormatted: phoneValue,
-        leftOffset: forceDialCode
-          ? prefix.length + (formatCountry?.dialCode?.length ?? 0)
-          : 0,
-      });
-
-      /**
-       * HACK: should set cursor on the next tick to make sure that the phone value is updated
-       * useTimeout with 0ms provides issues when two keys are pressed same time
-       */
-      Promise.resolve().then(() => {
-        inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
-      });
-    }
+    onPhoneUpdate?.(phoneValue, {
+      formatCountry,
+      unformattedValue: newPhone,
+      cursorPosition: cursorPosition ?? 0,
+    });
 
     if (
       shouldGuessCountry &&
@@ -332,12 +266,25 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       onCountryGuess?.(countryGuessResult as RequiredType<CountryGuessResult>);
     }
 
+    if (!initialized) {
+      setInitialized(true);
+    }
+
     return phoneValue;
   };
 
+  // Handle value update
+  useEffect(() => {
+    if (initialized && value === phone) return;
+    handleValueChange(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
   return {
     phone,
-    rawPhone,
-    handlePhoneValueChange,
+    initialized,
+    undo,
+    redo,
+    handleValueChange,
   };
 };

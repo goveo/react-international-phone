@@ -21,7 +21,11 @@ const App = () => {
 
   return (
     <div>
-      <PhoneInput initialCountry="ua" phone={phone} onChange={setPhone} />
+      <PhoneInput
+        initialCountry="ua"
+        value={phone}
+        onChange={(phone) => setPhone(phone)}
+      />
     </div>
   );
 };

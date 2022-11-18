@@ -1,19 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { act, renderHook } from '@testing-library/react-hooks/dom';
-import * as React from 'react';
 
 import { usePhone } from '../usePhone';
-
-const createChangeEvent = (options: {
-  value: string;
-  isDeletion?: boolean;
-}) => {
-  return {
-    preventDefault: () => {},
-    nativeEvent: { inputType: options.isDeletion ? 'delete' : 'another-type' },
-    target: { value: options.value },
-  } as unknown as React.ChangeEvent<HTMLInputElement>;
-};
 
 describe('usePhone', () => {
   it('Should set initial value', () => {
@@ -26,91 +14,71 @@ describe('usePhone', () => {
     expect(notFullPhone.current.phone).toBe('+1 (444) ');
   });
 
-  it('Should format phone with handlePhoneValueChange', () => {
+  it('Should format phone with handleValueChange', () => {
     const { result } = renderHook(() => usePhone(''));
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '380123456789' }),
-      );
+      result.current.handleValueChange('380123456789');
     });
     expect(result.current.phone).toBe('+380 (12) 345 67 89');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '111111' }),
-      );
+      result.current.handleValueChange('111111');
     });
     expect(result.current.phone).toBe('+1 (111) 11');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1111111' }),
-      );
+      result.current.handleValueChange('+1111111');
     });
     expect(result.current.phone).toBe('+1 (111) 111-');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1111', isDeletion: true }),
-      );
+      result.current.handleValueChange('+1111');
     });
-    expect(result.current.phone).toBe('+1 (111');
+    expect(result.current.phone).toBe('+1 (111) ');
 
     act(() => {
-      result.current.handlePhoneValueChange(createChangeEvent({ value: '' }));
+      result.current.handleValueChange('');
     });
     expect(result.current.phone).toBe('');
   });
 
-  it('Should handle hideSpaceAfterDialCode config prop', () => {
-    // with disabled hideSpaceAfterDialCode
+  it('Should handle charAfterDialCode config prop', () => {
+    // with space
     const { result: resultWithSpace } = renderHook(() =>
-      usePhone('', { country: 'us', hideSpaceAfterDialCode: false }),
+      usePhone('', { country: 'us', charAfterDialCode: ' ' }),
     );
     act(() => {
-      resultWithSpace.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1' }),
-      );
+      resultWithSpace.current.handleValueChange('+1');
     });
     expect(resultWithSpace.current.phone).toBe('+1 ');
 
     act(() => {
-      resultWithSpace.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+38099' }),
-      );
+      resultWithSpace.current.handleValueChange('+38099');
     });
     expect(resultWithSpace.current.phone).toBe('+380 (99) ');
 
     act(() => {
-      resultWithSpace.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+380991112233' }),
-      );
+      resultWithSpace.current.handleValueChange('+380991112233');
     });
     expect(resultWithSpace.current.phone).toBe('+380 (99) 111 22 33');
 
-    // with enabled hideSpaceAfterDialCode
+    // without space
     const { result: resultWithoutSpace } = renderHook(() =>
-      usePhone('', { country: 'us', hideSpaceAfterDialCode: true }),
+      usePhone('', { country: 'us', charAfterDialCode: '' }),
     );
     act(() => {
-      resultWithoutSpace.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1' }),
-      );
+      resultWithoutSpace.current.handleValueChange('+1');
     });
     expect(resultWithoutSpace.current.phone).toBe('+1');
 
     act(() => {
-      resultWithoutSpace.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+38099' }),
-      );
+      resultWithoutSpace.current.handleValueChange('+38099');
     });
     expect(resultWithoutSpace.current.phone).toBe('+380(99) ');
 
     act(() => {
-      resultWithoutSpace.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+380991112233' }),
-      );
+      resultWithoutSpace.current.handleValueChange('+380991112233');
     });
     expect(resultWithoutSpace.current.phone).toBe('+380(99) 111 22 33');
   });
@@ -122,23 +90,17 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('+1 (23');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+987' }),
-      );
+      result.current.handleValueChange('+987');
     });
     expect(result.current.phone).toBe('+9 (87');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+98765432100' }),
-      );
+      result.current.handleValueChange('+98765432100');
     });
     expect(result.current.phone).toBe('+9 (876) 543-2100');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+3876543210' }),
-      );
+      result.current.handleValueChange('+3876543210');
     });
     expect(result.current.phone).toBe('+3 (876) 543-210');
   });
@@ -149,9 +111,7 @@ describe('usePhone', () => {
     );
     expect(resultWithoutPrefill.current.phone).toBe('');
     act(() => {
-      resultWithoutPrefill.current.handlePhoneValueChange(
-        createChangeEvent({ value: '' }),
-      );
+      resultWithoutPrefill.current.handleValueChange('');
     });
     expect(resultWithoutPrefill.current.phone).toBe('');
 
@@ -161,9 +121,7 @@ describe('usePhone', () => {
     expect(resultWithPrefill.current.phone).toBe('+1 ');
 
     act(() => {
-      resultWithPrefill.current.handlePhoneValueChange(
-        createChangeEvent({ value: '' }),
-      );
+      resultWithPrefill.current.handleValueChange('');
     });
     expect(resultWithPrefill.current.phone).toBe('');
   });
@@ -175,28 +133,22 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('+1 ');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1234' }),
-      );
+      result.current.handleValueChange('+1234');
     });
     expect(result.current.phone).toBe('+1 (234) ');
 
     act(() => {
-      result.current.handlePhoneValueChange(createChangeEvent({ value: '' }));
+      result.current.handleValueChange('');
     });
     expect(result.current.phone).toBe('+1 ');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+38099' }),
-      );
+      result.current.handleValueChange('+38099');
     });
     expect(result.current.phone).toBe('+380 (99) ');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+38' }),
-      );
+      result.current.handleValueChange('+38');
     });
     expect(result.current.phone).toBe('+380 ');
   });
@@ -208,16 +160,12 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('(123) 45');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1 (123) 456-7890' }),
-      );
+      result.current.handleValueChange('+1 (123) 456-7890');
     });
     expect(result.current.phone).toBe('(112) 345-6789');
 
     act(() => {
-      result.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+380 (99) 456-7890' }),
-      );
+      result.current.handleValueChange('+380 (99) 456-7890');
     });
     expect(result.current.phone).toBe('(380) 994-5678');
   });
@@ -234,9 +182,7 @@ describe('usePhone', () => {
     expect(withForceDialCode.current.phone).toBe('(123) 45');
 
     act(() => {
-      withForceDialCode.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1 (123) 456-7890' }),
-      );
+      withForceDialCode.current.handleValueChange('+1 (123) 456-7890');
     });
     expect(withForceDialCode.current.phone).toBe('(112) 345-6789');
 
@@ -251,9 +197,7 @@ describe('usePhone', () => {
     expect(withDisableCountryGuess.current.phone).toBe('(123) 45');
 
     act(() => {
-      withDisableCountryGuess.current.handlePhoneValueChange(
-        createChangeEvent({ value: '+1 (123) 456-7890' }),
-      );
+      withDisableCountryGuess.current.handleValueChange('+1 (123) 456-7890');
     });
     expect(withDisableCountryGuess.current.phone).toBe('(112) 345-6789');
   });

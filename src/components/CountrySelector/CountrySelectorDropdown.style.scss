@@ -8,6 +8,10 @@ $dropdown-item-text-color: var(
   --react-international-phone-dropdown-item-text-color,
   base.$text-color
 );
+$dropdown-item-height: var(
+  --react-international-phone-dropdown-item-height,
+  28px
+);
 $dropdown-item-background-color: var(
   --react-international-phone-dropdown-item-background-color,
   base.$background-color
@@ -53,11 +57,17 @@ $dropdown-shadow: var(
 
   &__list-item {
     display: flex;
+    min-height: $dropdown-item-height; // min-height (instead of just height) for safari compatibility
+    box-sizing: border-box;
     align-items: center;
     padding: 2px 8px;
-    gap: 8px;
+
+    &-flag-emoji {
+      margin-right: 8px;
+    }
 
     &-country-name {
+      margin-right: 8px;
       font-size: $dropdown-item-font-size;
     }
 

@@ -9,7 +9,7 @@ import RequiredMark from '@site/src/components/RequiredMark'
 Import component
 
 ```tsx
-export { DialCodePreview } from 'react-international-phone';
+import { DialCodePreview } from 'react-international-phone';
 ```
 
 Use by providing the _dialCode_ and _prefix_ properties.

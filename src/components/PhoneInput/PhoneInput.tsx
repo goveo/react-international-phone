@@ -92,6 +92,9 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     usePhoneInput({
       ...usePhoneInputConfig,
       countries,
+      onCountryChange: (phone) => {
+        onChange?.(phone);
+      },
     });
 
   const fullCountry = useMemo(() => {

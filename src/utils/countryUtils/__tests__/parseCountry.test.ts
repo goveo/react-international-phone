@@ -10,6 +10,7 @@ describe('parseCountry', () => {
       '380',
       '(..) ... .. ..',
       1,
+      ['97', '63', '67', '50'],
     ];
 
     const fullCountryResult = parseCountry(fullCountry);
@@ -19,9 +20,10 @@ describe('parseCountry', () => {
     expect(fullCountryResult).toHaveProperty('dialCode', fullCountry[3]);
     expect(fullCountryResult).toHaveProperty('format', fullCountry[4]);
     expect(fullCountryResult).toHaveProperty('priority', fullCountry[5]);
+    expect(fullCountryResult).toHaveProperty('areaCodes', fullCountry[6]);
   });
 
-  test('should parse country without priority and format', () => {
+  test('should parse country without areaCodes, priority and format', () => {
     const testCountry: CountryData = [
       'Ukraine',
       ['europe', 'ex-ussr'],
