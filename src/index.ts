@@ -5,4 +5,5 @@ export { PhoneInput } from './components/PhoneInput/PhoneInput';
 export { defaultCountries } from './data/countryData';
 export { usePhone } from './hooks/usePhone';
 export { usePhoneInput } from './hooks/usePhoneInput';
-export { parseCountry } from './utils';
+export type { CountryIso2 } from './types';
+export { buildCountryData, parseCountry } from './utils';
