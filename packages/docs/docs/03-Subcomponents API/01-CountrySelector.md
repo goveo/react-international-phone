@@ -34,11 +34,12 @@ return (
 
 ### Properties
 
-| Prop            | Type          | Description                                               | Default value |
-| --------------- | ------------- | --------------------------------------------------------- | ------------- |
-| selectedCountry | `CountryIso2` | Selected country (iso2)                                   | `undefined`   |
-| disabled        | `boolean`     | Is CountrySelector disabled                               | `undefined`   |
-| hideDropdown    | `boolean`     | Hide dropdown icon and make CountrySelector not clickable | `undefined`   |
+| Prop                | Type                                                                             | Description                                                                                          | Default value |
+| ------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------- |
+| selectedCountry     | `CountryIso2`                                                                    | Selected country (iso2)                                                                              | `undefined`   |
+| disabled            | `boolean`                                                                        | Is CountrySelector disabled                                                                          | `undefined`   |
+| hideDropdown        | `boolean`                                                                        | Hide dropdown icon and make CountrySelector not clickable                                            | `undefined`   |
+| renderButtonWrapper | `(props: { children: React.ReactNode; onClick: () => void }) => React.ReactNode` | Render function for custom button wrapper. `children` and `onClick` should be passed to button props | `undefined`   |
 
 ### Events
 
