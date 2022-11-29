@@ -20,6 +20,9 @@ export interface CountrySelectorStyleProps {
   buttonStyle?: React.CSSProperties;
   buttonClassName?: string;
 
+  buttonContentWrapperStyle?: React.CSSProperties;
+  buttonContentWrapperClassName?: string;
+
   flagStyle?: React.CSSProperties;
   flagClassName?: string;
 
@@ -65,7 +68,13 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     const onClick = () => setShowDropdown(true);
 
     const buttonContent = (
-      <>
+      <div
+        className={buildClassNames({
+          addPrefix: ['country-selector-button__button-content'],
+          rawClassNames: [styleProps.buttonContentWrapperClassName],
+        })}
+        style={styleProps.buttonContentWrapperStyle}
+      >
         <FlagEmoji
           iso2={selectedCountry}
           className={buildClassNames({
@@ -94,7 +103,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
             style={styleProps.dropdownArrowStyle}
           />
         )}
-      </>
+      </div>
     );
     if (renderButtonWrapper) {
       return renderButtonWrapper({ children: buttonContent, onClick });

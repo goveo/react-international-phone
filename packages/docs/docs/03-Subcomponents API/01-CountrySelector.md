@@ -49,17 +49,19 @@ return (
 
 ### Style properties (`CountrySelectorStyleProps` type)
 
-| Prop                   | Type                                                                                                | Description                                             |
-| ---------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| style                  | `CSSProperties`                                                                                     | Custom styles for **CountrySelector container**         |
-| className              | `string`                                                                                            | Custom className for **CountrySelector container**      |
-| buttonStyle            | `CSSProperties`                                                                                     | Custom styles for **CountrySelector button**            |
-| buttonClassName        | `string`                                                                                            | Custom className for **CountrySelector button**         |
-| flagStyle              | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector flag**              |
-| flagClassName          | `string`                                                                                            | Custom className for **CountrySelector flag**           |
-| dropdownArrowStyle     | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector dropdown arrow**    |
-| dropdownArrowClassName | `string`                                                                                            | Custom className for **CountrySelector dropdown arrow** |
-| dropdownStyleProps     | [`CountrySelectorDropdownStyleProps`](/docs/Subcomponents%20API/CountrySelectorDropdown#properties) | Style properties for **CountrySelector dropdown**       |
+| Prop                          | Type                                                                                                | Description                                                     |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| style                         | `CSSProperties`                                                                                     | Custom styles for **CountrySelector container**                 |
+| className                     | `string`                                                                                            | Custom className for **CountrySelector container**              |
+| buttonStyle                   | `CSSProperties`                                                                                     | Custom styles for **CountrySelector button**                    |
+| buttonClassName               | `string`                                                                                            | Custom className for **CountrySelector button**                 |
+| buttonContentWrapperStyle     | `CSSProperties`                                                                                     | Custom styles for **CountrySelector button content wrapper**    |
+| buttonContentWrapperClassName | `string`                                                                                            | Custom className for **CountrySelector button content wrapper** |
+| flagStyle                     | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector flag**                      |
+| flagClassName                 | `string`                                                                                            | Custom className for **CountrySelector flag**                   |
+| dropdownArrowStyle            | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector dropdown arrow**            |
+| dropdownArrowClassName        | `string`                                                                                            | Custom className for **CountrySelector dropdown arrow**         |
+| dropdownStyleProps            | [`CountrySelectorDropdownStyleProps`](/docs/Subcomponents%20API/CountrySelectorDropdown#properties) | Style properties for **CountrySelector dropdown**               |
 
 ### CSS variables
 

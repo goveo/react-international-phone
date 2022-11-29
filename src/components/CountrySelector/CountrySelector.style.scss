@@ -64,6 +64,12 @@ $disabled-country-selector-background-color: var(
     }
   }
 
+  &__button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   &__flag-emoji {
     margin: 0 4px;
 
