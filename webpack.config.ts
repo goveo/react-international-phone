@@ -1,3 +1,4 @@
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
 import type { Configuration } from 'webpack';
 
@@ -18,7 +19,7 @@ export default <Configuration>{
       },
       {
         test: /\.s[ac]ss$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
         test: /\.css$/,
@@ -31,6 +32,14 @@ export default <Configuration>{
       },
     ],
   },
+  plugins: [
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+  ],
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'build'),

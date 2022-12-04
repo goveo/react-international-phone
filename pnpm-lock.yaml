@@ -42,6 +42,7 @@ importers:
       jest: ^29.1.2
       jest-environment-jsdom: ^29.1.2
       lint-staged: ^13.0.3
+      mini-css-extract-plugin: ^2.7.1
       postcss: ^8.4.17
       postcss-scss: ^4.0.5
       prettier: ^2.7.1
@@ -105,6 +106,7 @@ importers:
       jest: 29.1.2_omll4mx5m2hnzy3nvxfn74lw6e
       jest-environment-jsdom: 29.1.2
       lint-staged: 13.0.3
+      mini-css-extract-plugin: 2.7.1_webpack@5.74.0
       postcss: 8.4.17
       postcss-scss: 4.0.5_postcss@8.4.17
       prettier: 2.7.1
@@ -14242,6 +14244,16 @@ packages:
     dependencies:
       schema-utils: 4.0.0
       webpack: 5.74.0
+
+  /mini-css-extract-plugin/2.7.1_webpack@5.74.0:
+    resolution: {integrity: sha512-viOoaUFy+Z2w43VsGPbtfwFrr0tKwDctK9dUofG5MBViYhD1noGFUzzDIVw0KPwCGUP+c7zqLxm+acuQs7zLzw==}
+    engines: {node: '>= 12.13.0'}
+    peerDependencies:
+      webpack: ^5.0.0
+    dependencies:
+      schema-utils: 4.0.0
+      webpack: 5.74.0_webpack-cli@4.10.0
+    dev: true
 
   /minimalistic-assert/1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
