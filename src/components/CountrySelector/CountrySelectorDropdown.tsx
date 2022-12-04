@@ -77,7 +77,7 @@ export const CountrySelectorDropdown: React.FC<
         addPrefix: ['country-selector-dropdown'],
         rawClassNames: [styleProps.className],
       })}
-      style={{ visibility: show ? 'visible' : 'hidden', ...styleProps.style }}
+      style={{ display: show ? 'block' : 'none', ...styleProps.style }}
     >
       {countries.map((c) => {
         const country = parseCountry(c);
