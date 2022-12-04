@@ -46,6 +46,7 @@ export default <Configuration>{
     clean: true,
     libraryTarget: 'umd',
     library: 'react-international-phone',
+    globalObject: 'this',
   },
   externals: {
     react: 'react',
