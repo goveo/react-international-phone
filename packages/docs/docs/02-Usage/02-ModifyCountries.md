@@ -42,23 +42,16 @@ const App = () => {
 
 Output:
 
-import BrowserOnly from '@docusaurus/BrowserOnly';
-
-<BrowserOnly fallback={<div>Loading...</div>}>
-{() => {
-const { PhoneInput, defaultCountries, parseCountry, } = require('react-international-phone');
+import { PhoneInput, defaultCountries, parseCountry, } from 'react-international-phone'
 const countries = defaultCountries.filter((country) => {
 const { iso2 } = parseCountry(country);
 return ['us', 'ua', 'gb'].includes(iso2);
 });
-return (
+
 <PhoneInput
   initialCountry="ua"
   countries={countries}
 />
-);
-}}
-</BrowserOnly>
 
 ## Country Data Type
 
