@@ -23,6 +23,6 @@
     "node_modules",
     "**/node_modules/*",
     "**/__tests__/*",
-    "/src/**/*.@(story|stories).tsx"
+    "src/stories/*"
   ]
 }
