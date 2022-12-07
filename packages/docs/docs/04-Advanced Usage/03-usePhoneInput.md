@@ -2,6 +2,8 @@
 
 **usePhoneInput** is a hook for providing phone formatting to existing input components.
 
+Use `phone` (as value), `handlePhoneValueChange` (as onChange callback) and `inputRef` (as passed ref) to handle input.
+
 ## Usage Example
 
 ```ts
