@@ -24,6 +24,10 @@
   "files": [
     "build"
   ],
+  "exports": {
+    ".": "./build/index.js",
+    "./style.css": "./build/index.css"
+  },
   "scripts": {
     "build": "webpack",
     "test": "jest --coverage",

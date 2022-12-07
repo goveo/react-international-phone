@@ -23,7 +23,7 @@
     "prism-react-renderer": "^1.3.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-international-phone": "workspace:^1.4.0"
+    "react-international-phone": "workspace:^"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.2.0",

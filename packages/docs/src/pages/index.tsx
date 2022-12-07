@@ -1,4 +1,4 @@
-import 'react-international-phone/build/index.css';
+import 'react-international-phone/style.css';
 
 import Link from '@docusaurus/Link';
 import { useColorMode } from '@docusaurus/theme-common';
