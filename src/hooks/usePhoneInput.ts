@@ -139,7 +139,7 @@ export const usePhoneInput = ({
   }, [inputRef, undo, redo]);
 
   const handlePhoneValueChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): string => {
     e.preventDefault();
 

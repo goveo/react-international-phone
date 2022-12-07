@@ -35,9 +35,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
         color="primary"
         value={phoneInput.phone}
         onChange={(e) => {
-          const value = phoneInput.handlePhoneValueChange(
-            e as React.ChangeEvent<HTMLInputElement>,
-          );
+          const value = phoneInput.handlePhoneValueChange(e);
           onChange(value);
         }}
         inputRef={phoneInput.inputRef}
