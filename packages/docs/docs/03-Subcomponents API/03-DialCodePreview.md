@@ -20,16 +20,9 @@ Use by providing the _dialCode_ and _prefix_ properties.
 
 Output:
 
-import BrowserOnly from '@docusaurus/BrowserOnly';
+import { DialCodePreview } from 'react-international-phone';
 
-<BrowserOnly fallback={<div>Loading...</div>}>
-{() => {
-const { DialCodePreview } = require('react-international-phone');
-return (
 <DialCodePreview dialCode="1" prefix="+" style={{ width: "40px", height: "36px" }} />
-);
-}}
-</BrowserOnly>
 
 ### Properties
 

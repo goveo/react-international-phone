@@ -38,13 +38,13 @@ const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
 interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
   iso2?: ParsedCountry['iso2'];
   size?: CSSProperties['width'];
-  protocol?: 'http:' | 'https:';
+  protocol?: 'http' | 'https';
 }
 
 export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   iso2,
   size = '24px',
-  protocol = window?.location?.protocol ?? 'https:',
+  protocol = 'https',
   className,
   ...restProps
 }) => {
@@ -54,7 +54,7 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   }
 
   const flagCodepoint = getFlagCodepointByIso2(iso2);
-  const src = `${protocol}//twemoji.maxcdn.com/2/svg/${flagCodepoint}.svg`;
+  const src = `${protocol}://twemoji.maxcdn.com/2/svg/${flagCodepoint}.svg`;
 
   return (
     <img

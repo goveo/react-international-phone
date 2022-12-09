@@ -21,24 +21,18 @@ Use by providing the _selectedCountry_ and _onSelect_ callback.
 
 Output:
 
-import BrowserOnly from '@docusaurus/BrowserOnly';
+import { CountrySelector } from 'react-international-phone';
 
-<BrowserOnly fallback={<div>Loading...</div>}>
-{() => {
-const { CountrySelector } = require('react-international-phone');
-return (
 <CountrySelector selectedCountry="ua" />
-);
-}}
-</BrowserOnly>
 
 ### Properties
 
-| Prop            | Type          | Description                                               | Default value |
-| --------------- | ------------- | --------------------------------------------------------- | ------------- |
-| selectedCountry | `CountryIso2` | Selected country (iso2)                                   | `undefined`   |
-| disabled        | `boolean`     | Is CountrySelector disabled                               | `undefined`   |
-| hideDropdown    | `boolean`     | Hide dropdown icon and make CountrySelector not clickable | `undefined`   |
+| Prop                | Type                                                                             | Description                                                                                          | Default value |
+| ------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------- |
+| selectedCountry     | `CountryIso2`                                                                    | Selected country (iso2)                                                                              | `undefined`   |
+| disabled            | `boolean`                                                                        | Is CountrySelector disabled                                                                          | `undefined`   |
+| hideDropdown        | `boolean`                                                                        | Hide dropdown icon and make CountrySelector not clickable                                            | `undefined`   |
+| renderButtonWrapper | `(props: { children: React.ReactNode; onClick: () => void }) => React.ReactNode` | Render function for custom button wrapper. `children` and `onClick` should be passed to button props | `undefined`   |
 
 ### Events
 
@@ -48,17 +42,19 @@ return (
 
 ### Style properties (`CountrySelectorStyleProps` type)
 
-| Prop                   | Type                                                                                                | Description                                             |
-| ---------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| style                  | `CSSProperties`                                                                                     | Custom styles for **CountrySelector container**         |
-| className              | `string`                                                                                            | Custom className for **CountrySelector container**      |
-| buttonStyle            | `CSSProperties`                                                                                     | Custom styles for **CountrySelector button**            |
-| buttonClassName        | `string`                                                                                            | Custom className for **CountrySelector button**         |
-| flagStyle              | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector flag**              |
-| flagClassName          | `string`                                                                                            | Custom className for **CountrySelector flag**           |
-| dropdownArrowStyle     | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector dropdown arrow**    |
-| dropdownArrowClassName | `string`                                                                                            | Custom className for **CountrySelector dropdown arrow** |
-| dropdownStyleProps     | [`CountrySelectorDropdownStyleProps`](/docs/Subcomponents%20API/CountrySelectorDropdown#properties) | Style properties for **CountrySelector dropdown**       |
+| Prop                          | Type                                                                                                | Description                                                     |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| style                         | `CSSProperties`                                                                                     | Custom styles for **CountrySelector container**                 |
+| className                     | `string`                                                                                            | Custom className for **CountrySelector container**              |
+| buttonStyle                   | `CSSProperties`                                                                                     | Custom styles for **CountrySelector button**                    |
+| buttonClassName               | `string`                                                                                            | Custom className for **CountrySelector button**                 |
+| buttonContentWrapperStyle     | `CSSProperties`                                                                                     | Custom styles for **CountrySelector button content wrapper**    |
+| buttonContentWrapperClassName | `string`                                                                                            | Custom className for **CountrySelector button content wrapper** |
+| flagStyle                     | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector flag**                      |
+| flagClassName                 | `string`                                                                                            | Custom className for **CountrySelector flag**                   |
+| dropdownArrowStyle            | `dropdownStyleProps`                                                                                | Custom styles for **CountrySelector dropdown arrow**            |
+| dropdownArrowClassName        | `string`                                                                                            | Custom className for **CountrySelector dropdown arrow**         |
+| dropdownStyleProps            | [`CountrySelectorDropdownStyleProps`](/docs/Subcomponents%20API/CountrySelectorDropdown#properties) | Style properties for **CountrySelector dropdown**               |
 
 ### CSS variables
 

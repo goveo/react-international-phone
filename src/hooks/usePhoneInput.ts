@@ -52,9 +52,7 @@ export const usePhoneInput = ({
 }: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [country, setCountry] = useState<CountryIso2 | undefined>(
-    initialCountry,
-  );
+  const [country, setCountry] = useState<CountryIso2>(initialCountry);
 
   const passedCountry = useMemo(() => {
     if (!country) return;
@@ -141,7 +139,7 @@ export const usePhoneInput = ({
   }, [inputRef, undo, redo]);
 
   const handlePhoneValueChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): string => {
     e.preventDefault();
 
@@ -185,10 +183,10 @@ export const usePhoneInput = ({
   }, [country]);
 
   return {
-    inputRef,
-    phone,
-    handlePhoneValueChange,
-    country,
-    setCountry,
+    phone, // Formatted phone string.
+    handlePhoneValueChange, // Change handler for input component
+    inputRef, // Ref object for input component (handles caret position, focus and undo/redo).
+    country, // Current country iso code.
+    setCountry, // Country setter.
   };
 };

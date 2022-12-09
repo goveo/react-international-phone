@@ -39,7 +39,8 @@ export const getCountrySelectorFlag = () =>
   screen.getByText((content, element) => {
     return (
       element?.tagName.toLowerCase() === 'img' &&
-      element?.parentElement?.tagName.toLowerCase() === 'button'
+      element?.parentElement?.tagName.toLowerCase() === 'div' &&
+      element?.parentElement?.parentElement?.tagName.toLowerCase() === 'button'
     );
   }) as HTMLLIElement;
 

@@ -20,6 +20,9 @@ export interface CountrySelectorStyleProps {
   buttonStyle?: React.CSSProperties;
   buttonClassName?: string;
 
+  buttonContentWrapperStyle?: React.CSSProperties;
+  buttonContentWrapperClassName?: string;
+
   flagStyle?: React.CSSProperties;
   flagClassName?: string;
 
@@ -35,6 +38,10 @@ export interface CountrySelectorProps extends CountrySelectorStyleProps {
   disabled?: boolean;
   hideDropdown?: boolean;
   countries?: CountryData[];
+  renderButtonWrapper?: (props: {
+    children: React.ReactNode;
+    onClick: () => void;
+  }) => React.ReactNode;
 }
 
 export const CountrySelector: React.FC<CountrySelectorProps> = ({
@@ -43,6 +50,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   disabled,
   hideDropdown,
   countries = defaultCountries,
+  renderButtonWrapper,
   ...styleProps
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -56,31 +64,16 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     });
   }, [countries, selectedCountry]);
 
-  return (
-    <div
-      className={buildClassNames({
-        addPrefix: ['country-selector'],
-        rawClassNames: [styleProps.className],
-      })}
-      style={styleProps.style}
-    >
-      <button
-        title={fullSelectedCountry?.name}
-        onClick={() => setShowDropdown(true)}
+  const renderSelectorButton = () => {
+    const onClick = () => setShowDropdown(true);
+
+    const buttonContent = (
+      <div
         className={buildClassNames({
-          addPrefix: [
-            'country-selector-button',
-            showDropdown && 'country-selector-button--active',
-            disabled && 'country-selector-button--disabled',
-            hideDropdown && 'country-selector-button--hide-dropdown',
-          ],
-          rawClassNames: [styleProps.buttonClassName],
+          addPrefix: ['country-selector-button__button-content'],
+          rawClassNames: [styleProps.buttonContentWrapperClassName],
         })}
-        disabled={hideDropdown || disabled}
-        aria-haspopup="listbox"
-        aria-expanded={hideDropdown}
-        data-country={selectedCountry}
-        style={styleProps.buttonStyle}
+        style={styleProps.buttonContentWrapperStyle}
       >
         <FlagEmoji
           iso2={selectedCountry}
@@ -110,8 +103,44 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
             style={styleProps.dropdownArrowStyle}
           />
         )}
+      </div>
+    );
+    if (renderButtonWrapper) {
+      return renderButtonWrapper({ children: buttonContent, onClick });
+    }
+    return (
+      <button
+        title={fullSelectedCountry?.name}
+        onClick={onClick}
+        className={buildClassNames({
+          addPrefix: [
+            'country-selector-button',
+            showDropdown && 'country-selector-button--active',
+            disabled && 'country-selector-button--disabled',
+            hideDropdown && 'country-selector-button--hide-dropdown',
+          ],
+          rawClassNames: [styleProps.buttonClassName],
+        })}
+        disabled={hideDropdown || disabled}
+        aria-haspopup="listbox"
+        aria-expanded={hideDropdown}
+        data-country={selectedCountry}
+        style={styleProps.buttonStyle}
+      >
+        {buttonContent}
       </button>
+    );
+  };
 
+  return (
+    <div
+      className={buildClassNames({
+        addPrefix: ['country-selector'],
+        rawClassNames: [styleProps.className],
+      })}
+      style={styleProps.style}
+    >
+      {renderSelectorButton()}
       <CountrySelectorDropdown
         show={showDropdown}
         countries={countries}

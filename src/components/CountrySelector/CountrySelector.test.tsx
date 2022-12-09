@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import {
@@ -100,5 +100,38 @@ describe('CountrySelector', () => {
     expect(getCountrySelectorDropdown()).not.toBeVisible();
     expect(onSelect.mock.calls.length).toBe(1);
     expect(onSelect.mock.calls[0][0]).toMatchObject({ name: 'Ukraine' });
+  });
+
+  test('should set button wrapper with renderButtonWrapper', () => {
+    render(
+      <CountrySelector
+        selectedCountry="us"
+        renderButtonWrapper={({ children, onClick }) => (
+          <div onClick={onClick} className="custom-wrapper">
+            {children}
+          </div>
+        )}
+      />,
+    );
+    let countrySelector = null;
+    try {
+      // Button should not be found
+      countrySelector = screen.getByText((content, element) => {
+        return element?.tagName.toLowerCase() === 'button';
+      });
+    } catch {
+      expect(countrySelector).toBe(null);
+    }
+
+    countrySelector = screen.getByText((content, element) => {
+      return (
+        element?.tagName.toLowerCase() === 'div' &&
+        element.className === 'custom-wrapper'
+      );
+    });
+
+    expect(countrySelector).not.toBe(null);
+    fireEvent.click(countrySelector);
+    expect(getCountrySelectorDropdown()).toBeVisible();
   });
 });

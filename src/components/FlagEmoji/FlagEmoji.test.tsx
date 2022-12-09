@@ -39,51 +39,11 @@ describe('FlagEmoji', () => {
     expect(onClick.mock.calls.length).toBe(1);
   });
 
-  test('location protocol support', () => {
-    global.window = Object.create(window);
-    Object.defineProperty(window, 'location', {
-      value: {
-        protocol: 'http:',
-      },
-      writable: true,
-    });
-
-    const { rerender } = render(<FlagEmoji iso2="ua" />);
-    expect(getFlagEmoji().getAttribute('src')).toMatch(/http:\/\//);
-
-    Object.defineProperty(window, 'location', {
-      value: {
-        protocol: 'https:',
-      },
-      writable: true,
-    });
-
-    rerender(<FlagEmoji iso2="ua" />);
-    expect(getFlagEmoji().getAttribute('src')).toMatch(/https:\/\//);
-
-    Object.defineProperty(window, 'location', {
-      value: {
-        protocol: undefined,
-      },
-      writable: true,
-    });
-
-    rerender(<FlagEmoji iso2="ua" />);
-    expect(getFlagEmoji().getAttribute('src')).toMatch(/https:\/\//);
-
-    Object.defineProperty(window, 'location', {
-      value: undefined,
-    });
-
-    rerender(<FlagEmoji iso2="ua" />);
-    expect(getFlagEmoji().getAttribute('src')).toMatch(/https:\/\//);
-  });
-
   test('pass protocol prop', () => {
-    const { rerender } = render(<FlagEmoji iso2="ua" protocol="https:" />);
+    const { rerender } = render(<FlagEmoji iso2="ua" protocol="https" />);
     expect(getFlagEmoji().getAttribute('src')).toMatch(/https:\/\//);
 
-    rerender(<FlagEmoji iso2="ua" protocol="http:" />);
+    rerender(<FlagEmoji iso2="ua" protocol="http" />);
     expect(getFlagEmoji().getAttribute('src')).toMatch(/http:\/\//);
   });
 });
