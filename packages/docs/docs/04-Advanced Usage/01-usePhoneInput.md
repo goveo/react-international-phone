@@ -1,3 +1,5 @@
+import RequiredMark from '@site/src/components/RequiredMark'
+
 # usePhoneInput
 
 **usePhoneInput** is a hook for providing phone formatting to existing input components.

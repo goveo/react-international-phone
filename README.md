@@ -29,6 +29,7 @@ $ npm i react-international-phone
 ```tsx
 import { useState } from 'react';
 import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
 
 const App = () => {
   const [phone, setPhone] = useState('');
