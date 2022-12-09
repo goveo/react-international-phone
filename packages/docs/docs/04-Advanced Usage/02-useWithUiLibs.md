@@ -23,7 +23,7 @@ import React from 'react';
 import { CountrySelector, usePhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
-export const MuiPhone = ({ value, onChange }) => {
+export const MuiPhoneInput = ({ value, onChange }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
@@ -71,12 +71,15 @@ import React from 'react';
 import { CountrySelector, usePhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
-interface PhoneInputProps {
+interface MuiPhoneInputProps {
   value: string;
   onChange: (phone: string) => void;
 }
 
-export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
+export const MuiPhoneInput: React.FC<MuiPhoneInputProps> = ({
+  value,
+  onChange,
+}) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
