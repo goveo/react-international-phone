@@ -105,20 +105,6 @@ describe('CountrySelectorDropdown', () => {
     expect(getCountrySelectorDropdown()).toBeVisible();
   });
 
-  test('should track click outside', () => {
-    const onClickOutside = jest.fn();
-    const { rerender } = render(
-      <CountrySelectorDropdown show={true} onClickOutside={onClickOutside} />,
-    );
-    fireEvent.mouseDown(document.body);
-    expect(onClickOutside.mock.calls.length).toBe(1);
-
-    // should not break without passing a callback
-    rerender(<CountrySelectorDropdown show={true} />);
-    fireEvent.mouseDown(document.body);
-    expect(getCountrySelectorDropdown()).toBeVisible();
-  });
-
   test('use different prefixes', () => {
     const { rerender } = render(
       <CountrySelectorDropdown show={true} dialCodePrefix="test" />,

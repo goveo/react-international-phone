@@ -3,7 +3,6 @@ import './CountrySelectorDropdown.style.scss';
 import React, { useCallback, useRef } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
-import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2, ParsedCountry } from '../../types';
 import { parseCountry } from '../../utils';
@@ -33,7 +32,6 @@ export interface CountrySelectorDropdownProps
   selectedCountry?: CountryIso2;
   countries?: CountryData[];
   onSelect?: (country: ParsedCountry) => void;
-  onClickOutside?: () => void;
   onEscapePress?: () => void;
 }
 
@@ -45,7 +43,6 @@ export const CountrySelectorDropdown: React.FC<
   selectedCountry,
   countries = defaultCountries,
   onSelect,
-  onClickOutside,
   onEscapePress,
   ...styleProps
 }) => {
@@ -62,12 +59,6 @@ export const CountrySelectorDropdown: React.FC<
     },
     [onEscapePress, onSelect],
   );
-
-  const handleClickOutside = useCallback(() => {
-    onClickOutside?.();
-  }, [onClickOutside]);
-
-  useOnClickOutside({ ref: listRef, onClickOutside: handleClickOutside });
 
   return (
     <ul
