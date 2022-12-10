@@ -46,6 +46,14 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      announcementBar: {
+        id: 'support_ukraine',
+        content:
+          '<a target="_blank" rel="noopener noreferrer" href="https://war.ukraine.ua/support-ukraine/" style="display: flex; align-items: center; justify-content: center">Support Ukraine<img src="https://twemoji.maxcdn.com/2/svg/1f1fa-1f1e6.svg" width="20px" style="margin-left: 8px" /></a>',
+        backgroundColor: 'var(--ifm-color-emphasis-900)',
+        textColor: 'var(--ifm-color-emphasis-0)',
+        isCloseable: false,
+      },
       navbar: {
         title: 'react-international-phone',
         logo: undefined,
