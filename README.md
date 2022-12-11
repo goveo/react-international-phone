@@ -4,6 +4,7 @@
 
 ![build-status-badge](https://img.shields.io/github/workflow/status/goveo/react-international-phone/Release)
 ![install-size-badge](https://badgen.net/packagephobia/install/react-international-phone)
+[![codecov](https://codecov.io/gh/goveo/react-international-phone/branch/master/graph/badge.svg?token=SHEF4U216O)](https://codecov.io/gh/goveo/react-international-phone)
 
 [Live demo: Storybook](https://react-international-phone-storybook.vercel.app)
 
