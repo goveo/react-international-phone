@@ -1,8 +1,9 @@
 import './CountrySelector.style.scss';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
+import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
@@ -64,8 +65,15 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     });
   }, [countries, selectedCountry]);
 
+  const countrySelectorRef = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside({
+    ref: countrySelectorRef,
+    onClickOutside: () => setShowDropdown(false),
+  });
+
   const renderSelectorButton = () => {
-    const onClick = () => setShowDropdown(true);
+    const onClick = () => setShowDropdown((v) => !v);
 
     const buttonContent = (
       <div
@@ -139,6 +147,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         rawClassNames: [styleProps.className],
       })}
       style={styleProps.style}
+      ref={countrySelectorRef}
     >
       {renderSelectorButton()}
       <CountrySelectorDropdown
@@ -149,9 +158,6 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           onSelect?.(country);
         }}
         selectedCountry={selectedCountry}
-        onClickOutside={() => {
-          setShowDropdown(false);
-        }}
         onEscapePress={() => {
           setShowDropdown(false);
         }}

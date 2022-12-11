@@ -73,6 +73,15 @@ describe('CountrySelector', () => {
     expect(getCountrySelectorDropdown()).not.toBeVisible();
   });
 
+  test('close dropdown on click while dropdown is open', () => {
+    render(<CountrySelector />);
+    fireEvent.click(getCountrySelector());
+    expect(getCountrySelectorDropdown()).toBeVisible();
+
+    fireEvent.click(getCountrySelector());
+    expect(getCountrySelectorDropdown()).not.toBeVisible();
+  });
+
   test('close dropdown on escape press', () => {
     render(<CountrySelector />);
     fireEvent.click(getCountrySelector());
