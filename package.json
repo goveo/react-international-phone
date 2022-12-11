@@ -138,5 +138,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": "https://react-international-phone-docs.vercel.app/"
 }
