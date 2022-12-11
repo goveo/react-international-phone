@@ -102,7 +102,9 @@ export const usePhoneInput = ({
           phoneAfterInput: unformattedValue,
           phoneAfterFormatted: newPhone,
           leftOffset: restConfig.forceDialCode
-            ? prefix.length + (formatCountry?.dialCode?.length ?? 0)
+            ? prefix.length +
+              (formatCountry?.dialCode?.length ?? 0) +
+              charAfterDialCode.length
             : 0,
         });
 
