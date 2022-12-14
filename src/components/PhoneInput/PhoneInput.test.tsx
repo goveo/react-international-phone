@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
@@ -15,22 +16,24 @@ import {
 } from '../../utils/test-utils';
 import { PhoneInput } from './PhoneInput';
 
-const increaseSystemTime = getSystemTimerIncreaseFunc();
-
 export const fireChangeEvent = (
   value: string,
   {
     isDeletion,
-    increaseSystemTimeMs,
-  }: { isDeletion?: boolean; increaseSystemTimeMs?: number } = {},
+    cursorPosition,
+  }: {
+    isDeletion?: boolean;
+    cursorPosition?: number;
+  } = {},
 ) => {
   fireEvent.change(getInput(), {
-    target: { value },
+    target: {
+      value,
+      selectionStart: cursorPosition ?? value.length,
+      selectionEnd: cursorPosition ?? value.length,
+    },
     nativeEvent: { inputType: isDeletion ? 'delete' : 'another-type' },
   });
-  if (increaseSystemTimeMs) {
-    increaseSystemTime(increaseSystemTimeMs);
-  }
 };
 
 describe('PhoneInput', () => {
@@ -252,80 +255,92 @@ describe('PhoneInput', () => {
     expect(getDialCodePreview()?.textContent).toBe('+1');
   });
 
-  test('should support undo on ctrl+z', () => {
-    render(<PhoneInput initialCountry="us" value="+1234" />);
-    increaseSystemTime();
+  describe('undo/redo', () => {
+    test('should support undo on ctrl+z', () => {
+      render(<PhoneInput initialCountry="us" value="+1234" />);
+      const increaseSystemTime = getSystemTimerIncreaseFunc();
+      increaseSystemTime();
 
-    fireChangeEvent('1234567890');
-    fireEvent.keyDown(getInput(), {
-      key: 'Z',
-      code: 'KeyZ',
-      ctrlKey: true,
-      shiftKey: false,
+      fireChangeEvent('1234567890');
+      increaseSystemTime();
+
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: true,
+        shiftKey: false,
+      });
+
+      expect(getInput().value).toBe('+1 (234) ');
+
+      fireChangeEvent('123456');
+      increaseSystemTime();
+
+      fireChangeEvent('12345678');
+      increaseSystemTime();
+
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: true,
+        shiftKey: false,
+      });
+      expect(getInput().value).toBe('+1 (234) 56');
+
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: true,
+        shiftKey: false,
+      });
+      expect(getInput().value).toBe('+1 (234) ');
+
+      // not valid event
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: false,
+        shiftKey: false,
+      });
+      expect(getInput().value).toBe('+1 (234) ');
     });
 
-    expect(getInput().value).toBe('+1 (234) ');
+    test('should support redo on ctrl+shift+z', () => {
+      render(<PhoneInput initialCountry="us" value="+1234" />);
+      const increaseSystemTime = getSystemTimerIncreaseFunc();
+      increaseSystemTime();
 
-    fireChangeEvent('123456');
-    fireChangeEvent('12345678');
+      fireChangeEvent('1234567890');
+      increaseSystemTime();
 
-    fireEvent.keyDown(getInput(), {
-      key: 'Z',
-      code: 'KeyZ',
-      ctrlKey: true,
-      shiftKey: false,
+      fireChangeEvent('12345678');
+      increaseSystemTime();
+
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: true,
+        shiftKey: false,
+      });
+      expect(getInput().value).toBe('+1 (234) 567-890');
+
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: true,
+        shiftKey: true,
+      });
+      expect(getInput().value).toBe('+1 (234) 567-8');
+
+      // not valid event
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: false,
+        shiftKey: true,
+      });
+      expect(getInput().value).toBe('+1 (234) 567-8');
     });
-    expect(getInput().value).toBe('+1 (234) 56');
-
-    fireEvent.keyDown(getInput(), {
-      key: 'Z',
-      code: 'KeyZ',
-      ctrlKey: true,
-      shiftKey: false,
-    });
-    expect(getInput().value).toBe('+1 (234) ');
-
-    // not valid event
-    fireEvent.keyDown(getInput(), {
-      key: 'Z',
-      code: 'KeyZ',
-      ctrlKey: false,
-      shiftKey: false,
-    });
-    expect(getInput().value).toBe('+1 (234) ');
-  });
-
-  test('should support redo on ctrl+shift+z', () => {
-    render(<PhoneInput initialCountry="us" value="+1234" />);
-    increaseSystemTime();
-
-    fireChangeEvent('1234567890');
-    fireChangeEvent('12345678');
-
-    fireEvent.keyDown(getInput(), {
-      key: 'Z',
-      code: 'KeyZ',
-      ctrlKey: true,
-      shiftKey: false,
-    });
-    expect(getInput().value).toBe('+1 (234) 567-890');
-
-    fireEvent.keyDown(getInput(), {
-      key: 'Z',
-      code: 'KeyZ',
-      ctrlKey: true,
-      shiftKey: true,
-    });
-    expect(getInput().value).toBe('+1 (234) 567-8');
-
-    // not valid event
-    fireEvent.keyDown(getInput(), {
-      key: 'Z',
-      code: 'KeyZ',
-      ctrlKey: false,
-      shiftKey: true,
-    });
-    expect(getInput().value).toBe('+1 (234) 567-8');
   });
 
   test('should support countries filtering', () => {
@@ -374,5 +389,82 @@ describe('PhoneInput', () => {
       />,
     );
     expect(getInput().value).toBe('+380 (99) 999 9999');
+  });
+
+  describe('cursor position', () => {
+    const user = userEvent.setup({ delay: null });
+
+    const getCursorPosition = () => {
+      return getInput().selectionStart;
+    };
+
+    const setCursorPosition = (
+      selectionStart: number,
+      selectionEnd: number = selectionStart,
+    ) => {
+      getInput().selectionStart = selectionStart;
+      getInput().selectionEnd = selectionEnd;
+    };
+
+    test('should handle cursor when typing (end)', async () => {
+      render(<PhoneInput value="+1" initialCountry="us" />);
+      expect(getInput().value).toBe('+1 ');
+      expect(getCursorPosition()).toBe('+1 '.length);
+
+      await user.type(getInput(), '2');
+      expect(getInput().value).toBe('+1 (2');
+      expect(getCursorPosition()).toBe('+1 (2'.length);
+
+      await user.type(getInput(), '34');
+      expect(getInput().value).toBe('+1 (234) ');
+      expect(getCursorPosition()).toBe('+1 (234) '.length);
+    });
+
+    test('should handle cursor when typing (start)', async () => {
+      render(<PhoneInput value="+1" initialCountry="us" />);
+
+      await user.type(getInput(), '1', { initialSelectionStart: '+'.length });
+      expect(getInput().value).toBe('+1 (1');
+      expect(getCursorPosition()).toBe('+1'.length);
+
+      await user.type(getInput(), '3', { initialSelectionStart: '+'.length });
+      expect(getInput().value).toBe('+31 1');
+      expect(getCursorPosition()).toBe('+3'.length);
+
+      await user.type(getInput(), '3', { initialSelectionStart: ''.length });
+      expect(getInput().value).toBe('+33 1 1');
+      expect(getCursorPosition()).toBe('+3'.length);
+    });
+
+    test('should handle cursor when typing (middle)', async () => {
+      render(<PhoneInput value="+1 (234)" initialCountry="us" />);
+
+      await user.type(getInput(), '9', {
+        initialSelectionStart: '+1 ('.length,
+      });
+      expect(getInput().value).toBe('+1 (923) 4');
+      expect(getCursorPosition()).toBe('+1 (9'.length);
+
+      await user.type(getInput(), '9', {
+        initialSelectionStart: '+1 (923'.length,
+      });
+      expect(getInput().value).toBe('+1 (923) 94');
+      expect(getCursorPosition()).toBe('+1 (923) 9'.length);
+    });
+
+    test('should handle cursor on insertion', async () => {
+      render(<PhoneInput value="+1 (234)" initialCountry="us" />);
+      getInput().focus();
+
+      setCursorPosition('+1'.length);
+      await user.paste('9999');
+      expect(getInput().value).toBe('+1 (999) 923-4');
+      expect(getCursorPosition()).toBe('+1 (999) 9'.length);
+
+      setCursorPosition(0, getInput().value.length);
+      await user.paste('38099');
+      expect(getInput().value).toBe('+380 (99) ');
+      expect(getCursorPosition()).toBe('+380 (99) '.length);
+    });
   });
 });
