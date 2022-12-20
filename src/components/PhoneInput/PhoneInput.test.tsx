@@ -425,7 +425,7 @@ describe('PhoneInput', () => {
 
       await user.type(getInput(), '1', { initialSelectionStart: '+'.length });
       expect(getInput().value).toBe('+1 (1');
-      expect(getCursorPosition()).toBe('+1'.length);
+      expect(getCursorPosition()).toBe('+1 ('.length);
 
       await user.type(getInput(), '3', { initialSelectionStart: '+'.length });
       expect(getInput().value).toBe('+31 1');
@@ -465,6 +465,17 @@ describe('PhoneInput', () => {
       await user.paste('38099');
       expect(getInput().value).toBe('+380 (99) ');
       expect(getCursorPosition()).toBe('+380 (99) '.length);
+    });
+
+    test('should handle deletion', async () => {
+      render(<PhoneInput value="+1 (111) 11" initialCountry="us" />);
+      getInput().focus();
+
+      await user.type(getInput(), '{backspace}', {
+        initialSelectionStart: '+1 (111'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 1');
+      expect(getCursorPosition()).toBe('+1 (11'.length);
     });
   });
 });
