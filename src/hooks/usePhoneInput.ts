@@ -94,6 +94,7 @@ export const usePhoneInput = ({
           formatCountry,
           unformattedValue,
           cursorPosition: cursorPositionAfterInput,
+          deletion,
         },
       ) => {
         const cursorPosition = getCursorPosition({
@@ -102,8 +103,11 @@ export const usePhoneInput = ({
           phoneAfterInput: unformattedValue,
           phoneAfterFormatted: newPhone,
           leftOffset: restConfig.forceDialCode
-            ? prefix.length + (formatCountry?.dialCode?.length ?? 0)
+            ? prefix.length +
+              (formatCountry?.dialCode?.length ?? 0) +
+              charAfterDialCode.length
             : 0,
+          deletion,
         });
 
         /**
@@ -146,11 +150,19 @@ export const usePhoneInput = ({
     // Didn't find out how to properly type it
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inputType: string | undefined = (e.nativeEvent as any).inputType;
-    const isDeletion =
-      inputType?.toLocaleLowerCase().includes('delete') ?? false;
+
+    const getDeletionType = () => {
+      const isDeletion =
+        inputType?.toLocaleLowerCase().includes('delete') ?? false;
+      if (!isDeletion) return undefined;
+
+      return inputType?.toLocaleLowerCase().includes('forward')
+        ? 'forward'
+        : 'backward';
+    };
 
     const value = handleValueChange(e.target.value, {
-      isDeletion,
+      deletion: getDeletionType(),
       cursorPosition: e.target.selectionStart ?? 0,
     });
 

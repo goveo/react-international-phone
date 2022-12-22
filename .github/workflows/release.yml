@@ -26,11 +26,16 @@ jobs:
       - name: Lint
         run: pnpm lint
       - name: Test
-        run: pnpm test:ci
+        run: pnpm test:coverage
       - name: Build package
         run: pnpm build
       - name: Build docs
         run: pnpm docs:build
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+          verbose: true
       - name: Publish npm package
         uses: cycjimmy/semantic-release-action@v3
         env:

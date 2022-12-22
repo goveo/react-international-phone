@@ -30,8 +30,8 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "jest --coverage",
-    "test:ci": "jest --ci",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
     "storybook-test:chrome": "npx playwright test ./.storybook/browser.test --headed --browser=chromium",
@@ -73,6 +73,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.1.1",
     "@types/node": "^18.8.5",
     "@types/react": "^16.14.32",
@@ -138,5 +139,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": "https://react-international-phone-docs.vercel.app/"
 }

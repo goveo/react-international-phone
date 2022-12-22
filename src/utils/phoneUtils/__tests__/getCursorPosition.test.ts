@@ -81,6 +81,16 @@ describe('getCursorPosition', () => {
         leftOffset: '+380'.length,
       }),
     ).toBe('+380'.length);
+
+    expect(
+      getCursorPosition({
+        phoneBeforeInput: '+48',
+        phoneAfterInput: '+380',
+        cursorPositionAfterInput: '+380'.length,
+        phoneAfterFormatted: '+380 ',
+        leftOffset: '+380 '.length,
+      }),
+    ).toBe('+380 '.length);
   });
 
   test('should handle change in full phone', () => {
@@ -141,6 +151,7 @@ describe('getCursorPosition', () => {
         phoneAfterInput: '1 (111) 111-111',
         cursorPositionAfterInput: 0,
         phoneAfterFormatted: '+1 (111) 111-1111',
+        deletion: 'backward',
       }),
     ).toBe(0);
 
@@ -150,6 +161,7 @@ describe('getCursorPosition', () => {
         phoneAfterInput: '380',
         cursorPositionAfterInput: 0,
         phoneAfterFormatted: '+380 ',
+        deletion: 'backward',
       }),
     ).toBe(0);
   });

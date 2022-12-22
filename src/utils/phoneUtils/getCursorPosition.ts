@@ -8,6 +8,7 @@ interface GetCursorPositionProps {
   phoneAfterFormatted: string;
   cursorPositionAfterInput: number;
   leftOffset?: number;
+  deletion?: 'forward' | 'backward' | undefined;
 }
 
 export const getCursorPosition = ({
@@ -16,6 +17,7 @@ export const getCursorPosition = ({
   phoneAfterFormatted,
   cursorPositionAfterInput,
   leftOffset = 0,
+  deletion,
 }: GetCursorPositionProps) => {
   if (cursorPositionAfterInput < leftOffset) {
     return leftOffset;
@@ -25,12 +27,20 @@ export const getCursorPosition = ({
     return phoneAfterFormatted.length;
   }
 
+  const setCursorBeforeDigit = deletion === 'backward';
+
   if (
     cursorPositionAfterInput === 0 &&
     phoneAfterInput.length > 0 &&
     phoneAfterFormatted.length > 0
   ) {
-    return 0;
+    if (setCursorBeforeDigit) return 0;
+    for (let index = 0; index < phoneAfterFormatted.length; index += 1) {
+      if (isDigit(phoneAfterFormatted[index])) {
+        return index;
+      }
+    }
+    return phoneAfterFormatted.length;
   }
 
   // Handle whole value removal (select all + replace by new value)
@@ -41,16 +51,15 @@ export const getCursorPosition = ({
     return phoneAfterFormatted.length;
   }
 
-  // find inserted char index in phoneAfter value
-  let phoneAfterNewCharIndex: number | null = null;
-  for (let index = cursorPositionAfterInput - 1; index > 0; index -= 1) {
-    if (phoneAfterInput[index] !== phoneBeforeInput[index]) {
-      phoneAfterNewCharIndex = index;
+  let lastInsertedDigitIndex: number | null = null;
+  for (let index = cursorPositionAfterInput - 1; index >= 0; index -= 1) {
+    if (isDigit(phoneAfterInput[index])) {
+      lastInsertedDigitIndex = index;
       break;
     }
   }
 
-  if (phoneAfterNewCharIndex === null) {
+  if (lastInsertedDigitIndex === null) {
     if (cursorPositionAfterInput !== 0) {
       return cursorPositionAfterInput;
     }
@@ -59,10 +68,14 @@ export const getCursorPosition = ({
 
   // find "digit index" of new char (only digits count)
   let newCharDigitIndex = 0;
-  for (let index = 0; index < phoneAfterNewCharIndex; index += 1) {
+  for (let index = 0; index < lastInsertedDigitIndex; index += 1) {
     if (isDigit(phoneAfterInput[index])) {
       newCharDigitIndex += 1;
     }
+  }
+
+  if (setCursorBeforeDigit) {
+    newCharDigitIndex -= 1;
   }
 
   // find cursor position by going over digits until we get newCharDigitIndex
@@ -85,6 +98,10 @@ export const getCursorPosition = ({
     !isDigit(phoneAfterFormatted[cursorPosition]) &&
     cursorPosition < phoneAfterFormatted.length
   ) {
+    cursorPosition += 1;
+  }
+
+  if (setCursorBeforeDigit) {
     cursorPosition += 1;
   }
 
