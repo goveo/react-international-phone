@@ -8,42 +8,8 @@ interface GetCursorPositionProps {
   phoneAfterFormatted: string;
   cursorPositionAfterInput: number;
   leftOffset?: number;
+  deletion?: 'forward' | 'backward' | undefined;
 }
-
-const getStringsDifference = ({
-  phoneBeforeInput,
-  phoneAfterInput,
-  cursorPositionAfterInput,
-}: {
-  phoneBeforeInput: string;
-  phoneAfterInput: string;
-  cursorPositionAfterInput: number;
-}) => {
-  let differenceStartIndex: number | null = null;
-  let differenceEndIndex: number | null = null;
-
-  for (let i = 0; i < cursorPositionAfterInput; i += 1) {
-    if (phoneBeforeInput[i] !== phoneAfterInput[i]) {
-      differenceStartIndex = i;
-      break;
-    }
-  }
-
-  for (let offset = 0; offset < phoneAfterInput.length; offset += 1) {
-    const indexBefore = phoneBeforeInput.length - offset;
-    const indexAfter = phoneAfterInput.length - offset;
-
-    if (phoneBeforeInput[indexBefore] !== phoneAfterInput[indexAfter]) {
-      differenceEndIndex = indexAfter;
-      break;
-    }
-  }
-
-  return {
-    differenceStartIndex,
-    differenceEndIndex,
-  };
-};
 
 export const getCursorPosition = ({
   phoneBeforeInput,
@@ -51,6 +17,7 @@ export const getCursorPosition = ({
   phoneAfterFormatted,
   cursorPositionAfterInput,
   leftOffset = 0,
+  deletion,
 }: GetCursorPositionProps) => {
   if (cursorPositionAfterInput < leftOffset) {
     return leftOffset;
@@ -60,12 +27,20 @@ export const getCursorPosition = ({
     return phoneAfterFormatted.length;
   }
 
+  const setCursorBeforeDigit = deletion === 'backward';
+
   if (
     cursorPositionAfterInput === 0 &&
     phoneAfterInput.length > 0 &&
     phoneAfterFormatted.length > 0
   ) {
-    return 0;
+    if (setCursorBeforeDigit) return 0;
+    for (let index = 0; index < phoneAfterFormatted.length; index += 1) {
+      if (isDigit(phoneAfterFormatted[index])) {
+        return index;
+      }
+    }
+    return phoneAfterFormatted.length;
   }
 
   // Handle whole value removal (select all + replace by new value)
@@ -74,18 +49,6 @@ export const getCursorPosition = ({
     phoneAfterInput.length === 1
   ) {
     return phoneAfterFormatted.length;
-  }
-
-  let isDeletion = false;
-  if (phoneAfterInput.length < phoneBeforeInput.length) {
-    const { differenceStartIndex } = getStringsDifference({
-      phoneBeforeInput,
-      phoneAfterInput,
-      cursorPositionAfterInput,
-    });
-    if (differenceStartIndex === null) {
-      isDeletion = true;
-    }
   }
 
   let lastInsertedDigitIndex: number | null = null;
@@ -111,8 +74,7 @@ export const getCursorPosition = ({
     }
   }
 
-  // if deletion -> move cursor to prev char
-  if (isDeletion) {
+  if (setCursorBeforeDigit) {
     newCharDigitIndex -= 1;
   }
 
@@ -139,7 +101,7 @@ export const getCursorPosition = ({
     cursorPosition += 1;
   }
 
-  if (isDeletion) {
+  if (setCursorBeforeDigit) {
     cursorPosition += 1;
   }
 

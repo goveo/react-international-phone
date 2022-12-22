@@ -23,6 +23,12 @@ interface FormatPhoneValueFuncOptions {
   forceDisableCountryGuess?: boolean;
 }
 
+interface HandleValueChangeFuncOptions {
+  deletion?: 'forward' | 'backward' | undefined;
+  cursorPosition?: number;
+  insertDialCodeOnEmpty?: boolean;
+}
+
 const MASK_CHAR = '.';
 
 export interface UsePhoneConfig {
@@ -116,6 +122,7 @@ export interface UsePhoneConfig {
       formatCountry: ParsedCountry | undefined;
       unformattedValue: string;
       cursorPosition: number;
+      deletion: HandleValueChangeFuncOptions['deletion'];
     },
   ) => void;
 }
@@ -219,26 +226,22 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
   const handleValueChange = (
     newPhone: string,
     {
-      isDeletion,
+      deletion,
       cursorPosition,
       insertDialCodeOnEmpty,
-    }: {
-      isDeletion?: boolean;
-      cursorPosition?: number;
-      insertDialCodeOnEmpty?: boolean;
-    } = {},
+    }: HandleValueChangeFuncOptions = {},
   ): string => {
     const {
       phone: phoneValue,
       countryGuessResult,
       formatCountry,
     } = formatPhoneValue(newPhone, {
-      trimNonDigitsEnd: isDeletion, // trim values if user deleting chars (delete mask's whitespace and brackets)
+      trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
       insertDialCodeOnEmpty:
         insertDialCodeOnEmpty || (!initialized && !disableDialCodePrefill),
       forceDisableCountryGuess:
         forceDialCode &&
-        isDeletion &&
+        !!deletion &&
         removeNonDigits(newPhone).length <
           (passedCountry?.dialCode.length ?? 0),
     });
@@ -256,6 +259,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       formatCountry,
       unformattedValue: newPhone,
       cursorPosition: cursorPosition ?? 0,
+      deletion,
     });
 
     if (

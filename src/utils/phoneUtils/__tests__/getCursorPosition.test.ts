@@ -151,6 +151,7 @@ describe('getCursorPosition', () => {
         phoneAfterInput: '1 (111) 111-111',
         cursorPositionAfterInput: 0,
         phoneAfterFormatted: '+1 (111) 111-1111',
+        deletion: 'backward',
       }),
     ).toBe(0);
 
@@ -160,6 +161,7 @@ describe('getCursorPosition', () => {
         phoneAfterInput: '380',
         cursorPositionAfterInput: 0,
         phoneAfterFormatted: '+380 ',
+        deletion: 'backward',
       }),
     ).toBe(0);
   });

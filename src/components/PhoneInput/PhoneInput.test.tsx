@@ -467,15 +467,100 @@ describe('PhoneInput', () => {
       expect(getCursorPosition()).toBe('+380 (99) '.length);
     });
 
-    test('should handle deletion', async () => {
-      render(<PhoneInput value="+1 (111) 11" initialCountry="us" />);
+    test('should handle backspace key', async () => {
+      render(<PhoneInput value="+1 (111) 111-11" initialCountry="us" />);
       getInput().focus();
+
+      await user.type(getInput(), '{backspace}', {
+        initialSelectionStart: '+1 (111) 111-11'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 111-1');
+      expect(getCursorPosition()).toBe('+1 (111) 111-1'.length);
+
+      await user.type(getInput(), '{backspace}', {
+        initialSelectionStart: '+1 (111) 111-1'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 111');
+      expect(getCursorPosition()).toBe('+1 (111) 111'.length);
 
       await user.type(getInput(), '{backspace}', {
         initialSelectionStart: '+1 (111'.length,
       });
-      expect(getInput().value).toBe('+1 (111) 1');
+      expect(getInput().value).toBe('+1 (111) 11');
       expect(getCursorPosition()).toBe('+1 (11'.length);
+
+      // Should just move cursor when set on non-digit symbol
+      await user.type(getInput(), '{backspace}', {
+        initialSelectionStart: '+1 (111) '.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+1 (111'.length);
+
+      await user.type(getInput(), '{backspace}', {
+        initialSelectionStart: '+1 (111)'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+1 (111'.length);
+
+      await user.type(getInput(), '{backspace}', {
+        initialSelectionStart: '+'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe(''.length);
+    });
+
+    test('should handle delete key', async () => {
+      render(<PhoneInput value="+1 (111) 111-11" initialCountry="us" />);
+      getInput().focus();
+
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: '+'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 111-1');
+      expect(getCursorPosition()).toBe('+'.length);
+
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: '+1 (111) 1'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 111-');
+      expect(getCursorPosition()).toBe('+1 (111) 1'.length);
+
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: '+1 (111) 11'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+1 (111) 11'.length);
+
+      // Should just move cursor when set on non-digit symbol
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: ''.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+'.length);
+
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: '+1'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+1 ('.length);
+
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: '+1 '.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+1 ('.length);
+
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: '+1 (111'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+1 (111) '.length);
+
+      await user.type(getInput(), '{delete}', {
+        initialSelectionStart: '+1 (111)'.length,
+      });
+      expect(getInput().value).toBe('+1 (111) 11');
+      expect(getCursorPosition()).toBe('+1 (111) '.length);
     });
   });
 });
