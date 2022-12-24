@@ -12,7 +12,7 @@ export const guessCountryByPartialNumber = ({
   const emptyResult = {
     country: undefined,
     fullDialCodeMatch: false,
-    areaCodeMatch: false,
+    areaCodeMatch: undefined,
   };
   if (!partialPhone) {
     return emptyResult;

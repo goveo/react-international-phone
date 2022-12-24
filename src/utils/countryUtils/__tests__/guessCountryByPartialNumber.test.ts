@@ -190,5 +190,15 @@ describe('guessCountryByPartialNumber', () => {
       country: { dialCode: '380', iso2: 'ua' },
       areaCodeMatch: undefined,
     });
+
+    expect(
+      guessCountryByPartialNumber({
+        phone: '+999 (99) 999 9999',
+        countries: defaultCountries,
+      }),
+    ).toMatchObject({
+      country: undefined,
+      areaCodeMatch: undefined,
+    });
   });
 });
