@@ -9,7 +9,11 @@ export const guessCountryByPartialNumber = ({
   phone: string;
   countries: CountryData[];
 }): CountryGuessResult => {
-  const emptyResult = { country: undefined, isFullMatch: false };
+  const emptyResult = {
+    country: undefined,
+    fullDialCodeMatch: false,
+    areaCodeMatch: false,
+  };
   if (!partialPhone) {
     return emptyResult;
   }
@@ -24,17 +28,19 @@ export const guessCountryByPartialNumber = ({
 
   const updateResult = ({
     country,
-    isFullMatch,
+    fullDialCodeMatch,
+    areaCodeMatch,
   }: {
     country: ParsedCountry;
-    isFullMatch: boolean;
+    fullDialCodeMatch: boolean;
+    areaCodeMatch?: boolean;
   }) => {
     const sameDialCode = country.dialCode === result.country?.dialCode;
     const newPriorityValueLower =
       (country.priority ?? 0) < (result.country?.priority ?? 0);
 
     if (!sameDialCode || newPriorityValueLower) {
-      result = { country, isFullMatch };
+      result = { country, fullDialCodeMatch, areaCodeMatch };
     }
   };
 
@@ -54,18 +60,30 @@ export const guessCountryByPartialNumber = ({
         for (const areaCode of areaCodes) {
           if (phoneWithoutDialCode.startsWith(areaCode)) {
             // found full match with area code
-            return { country: parsedCountry, isFullMatch: true };
+            return {
+              country: parsedCountry,
+              fullDialCodeMatch: true,
+              areaCodeMatch: true,
+            };
           }
         }
       }
 
-      if (isNewDialCodeLonger || dialCode === phone || !result.isFullMatch) {
-        updateResult({ country: parsedCountry, isFullMatch: true });
+      if (
+        isNewDialCodeLonger ||
+        dialCode === phone ||
+        !result.fullDialCodeMatch
+      ) {
+        updateResult({
+          country: parsedCountry,
+          fullDialCodeMatch: true,
+          areaCodeMatch: areaCodes ? !areaCodes : undefined,
+        });
       }
     }
 
     // ignore particle matches if full match was found
-    if (result.isFullMatch) continue;
+    if (result.fullDialCodeMatch) continue;
 
     // particle match with dialCode
     if (phone.length < dialCode.length) {
@@ -76,7 +94,7 @@ export const guessCountryByPartialNumber = ({
           : true;
 
         if (isNewCodeLess) {
-          updateResult({ country: parsedCountry, isFullMatch: false });
+          updateResult({ country: parsedCountry, fullDialCodeMatch: false });
         }
       }
     }

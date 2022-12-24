@@ -29,7 +29,7 @@ interface HandleValueChangeFuncOptions {
   insertDialCodeOnEmpty?: boolean;
 }
 
-const MASK_CHAR = '.';
+export const MASK_CHAR = '.';
 
 export interface UsePhoneConfig {
   /**
@@ -105,7 +105,7 @@ export interface UsePhoneConfig {
 
   /**
    * @description Callback that calls on country guess
-   * @param data country guess result (includes *country* and *isFullMatch*)
+   * @param data country guess result (includes *country*, *fullDialCodeMatch* and *areaCodeMatch*)
    * @default undefined
    */
   onCountryGuess?: (data: RequiredType<CountryGuessResult>) => void;
@@ -128,7 +128,7 @@ export interface UsePhoneConfig {
 }
 
 // On change: make sure to update these values in stories
-const defaultPhoneConfig: Required<
+export const defaultPhoneConfig: Required<
   Omit<
     UsePhoneConfig,
     'inputRef' | 'country' | 'onCountryGuess' | 'onPhoneUpdate'
