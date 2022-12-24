@@ -2,16 +2,6 @@ import { screen } from '@testing-library/react';
 
 import { CountryIso2 } from '../types';
 
-export const getSystemTimerIncreaseFunc = () => {
-  const currentDate = new Date();
-  let ms = 0;
-  jest.useFakeTimers().setSystemTime(currentDate.setMilliseconds(ms));
-  return (msStep = 1000) => {
-    ms += msStep;
-    jest.useFakeTimers().setSystemTime(currentDate.setMilliseconds(ms));
-  };
-};
-
 export const getInput = () =>
   screen.getByText(
     (content, element) => element?.tagName.toLowerCase() === 'input',
