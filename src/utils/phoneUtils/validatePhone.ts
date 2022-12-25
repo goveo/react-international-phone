@@ -16,7 +16,7 @@ export interface ValidatePhoneConfig {
 export interface ValidatePhoneReturn {
   country: ParsedCountry | undefined;
   isValid: boolean;
-  filled: boolean;
+  lengthMatch: boolean;
   areaCodeMatch: boolean | undefined;
 }
 
@@ -31,6 +31,7 @@ export const validatePhone = (
     ...defaultPhoneConfig,
     ...config,
   };
+
   const { country, fullDialCodeMatch, areaCodeMatch } =
     guessCountryByPartialNumber({
       phone,
@@ -40,7 +41,7 @@ export const validatePhone = (
   if (!country || !fullDialCodeMatch) {
     return {
       country: undefined,
-      filled: false,
+      lengthMatch: false,
       areaCodeMatch,
       isValid: false,
     };
@@ -50,7 +51,7 @@ export const validatePhone = (
   if (!phone.startsWith(phoneStart)) {
     return {
       country,
-      filled: false,
+      lengthMatch: false,
       areaCodeMatch,
       isValid: false,
     };
@@ -62,7 +63,7 @@ export const validatePhone = (
   if (maskPart.length !== countryMask.length) {
     return {
       country,
-      filled: false,
+      lengthMatch: false,
       areaCodeMatch,
       isValid: false,
     };
@@ -72,7 +73,7 @@ export const validatePhone = (
     if (maskPart[i] !== countryMask[i] && countryMask[i] !== MASK_CHAR) {
       return {
         country,
-        filled: false,
+        lengthMatch: false,
         areaCodeMatch,
         isValid: false,
       };
@@ -81,7 +82,7 @@ export const validatePhone = (
 
   return {
     country,
-    filled: true,
+    lengthMatch: true,
     areaCodeMatch,
     isValid: areaCodeMatch ?? true,
   };

@@ -32,28 +32,27 @@ describe('validatePhone', () => {
 
   test('should handle phone value fill', () => {
     expect(validatePhone('+1 (999) 999-9999')).toMatchObject({
-      filled: true,
+      lengthMatch: true,
     });
 
     expect(validatePhone('')).toMatchObject({
-      filled: false,
+      lengthMatch: false,
     });
 
     expect(validatePhone('+')).toMatchObject({
-      filled: false,
+      lengthMatch: false,
     });
 
     expect(validatePhone('+380')).toMatchObject({
-      filled: false,
+      lengthMatch: false,
     });
 
     expect(validatePhone('+1 (999) 999-')).toMatchObject({
-      filled: false,
+      lengthMatch: false,
     });
 
-    // FIXME: update filled property
     expect(validatePhone('+1 (999) 999-99999')).toMatchObject({
-      filled: false,
+      lengthMatch: false,
     });
   });
 
@@ -123,6 +122,124 @@ describe('validatePhone', () => {
 
     expect(validatePhone('+1 (402) 999-99999')).toMatchObject({
       isValid: false,
+    });
+  });
+
+  test('should support config.countries', () => {
+    const balticCountries = defaultCountries.filter((c) => {
+      return ['lt', 'lv', 'ee'].includes(parseCountry(c).iso2);
+    });
+
+    expect(
+      validatePhone('+1 (201) 234-5678', { countries: balticCountries }),
+    ).toMatchObject({
+      country: undefined,
+      areaCodeMatch: undefined,
+      lengthMatch: false,
+      isValid: false,
+    });
+
+    expect(
+      validatePhone('+372 9999 999999', { countries: balticCountries }),
+    ).toMatchObject({
+      country: getCountry('ee'),
+      areaCodeMatch: undefined,
+      lengthMatch: true,
+      isValid: true,
+    });
+
+    expect(
+      validatePhone('+371 99 999 999', { countries: balticCountries }),
+    ).toMatchObject({
+      country: getCountry('lv'),
+      areaCodeMatch: undefined,
+      lengthMatch: true,
+      isValid: true,
+    });
+
+    expect(
+      validatePhone('+1 (201) 234-5678', {
+        countries: defaultCountries.filter(
+          (country) => parseCountry(country).iso2 !== 'us', // remove us
+        ),
+      }),
+    ).toMatchObject({
+      country: getCountry('ca'),
+      areaCodeMatch: false,
+      lengthMatch: true,
+      isValid: false,
+    });
+  });
+
+  test('should support config.prefix', () => {
+    expect(validatePhone('+1 (201) 234-5678', { prefix: '' })).toMatchObject({
+      country: getCountry('us'),
+      areaCodeMatch: true,
+      lengthMatch: false,
+      isValid: false,
+    });
+
+    expect(validatePhone('1 (201) 234-5678', { prefix: '' })).toMatchObject({
+      country: getCountry('us'),
+      areaCodeMatch: true,
+      lengthMatch: true,
+      isValid: true,
+    });
+
+    expect(validatePhone('-1 (201) 234-5678', { prefix: '-' })).toMatchObject({
+      country: getCountry('us'),
+      areaCodeMatch: true,
+      lengthMatch: true,
+      isValid: true,
+    });
+  });
+
+  test('should support config.charAfterDialCode', () => {
+    expect(
+      validatePhone('+1 (201) 234-5678', { charAfterDialCode: '' }),
+    ).toMatchObject({
+      country: getCountry('us'),
+      areaCodeMatch: true,
+      lengthMatch: false,
+      isValid: false,
+    });
+
+    expect(
+      validatePhone('+1(201) 234-5678', { charAfterDialCode: '' }),
+    ).toMatchObject({
+      country: getCountry('us'),
+      areaCodeMatch: true,
+      lengthMatch: true,
+      isValid: true,
+    });
+  });
+
+  test('should support config.defaultMask', () => {
+    expect(
+      validatePhone('+370 123456789000', { defaultMask: '.... .... ....' }),
+    ).toMatchObject({
+      country: getCountry('lt'),
+      areaCodeMatch: undefined,
+      lengthMatch: false,
+      isValid: false,
+    });
+
+    expect(
+      validatePhone('+370 1234 5678 9000', { defaultMask: '.... .... ....' }),
+    ).toMatchObject({
+      country: getCountry('lt'),
+      areaCodeMatch: undefined,
+      lengthMatch: true,
+      isValid: true,
+    });
+
+    expect(
+      validatePhone('+370 1234 5678', { defaultMask: '.... ....' }),
+    ).toMatchObject({
+      country: getCountry('lt'),
+      areaCodeMatch: undefined,
+      lengthMatch: true,
+      isValid: true,
     });
   });
 });
