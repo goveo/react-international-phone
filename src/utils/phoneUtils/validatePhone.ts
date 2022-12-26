@@ -1,5 +1,6 @@
 import { defaultPhoneConfig, MASK_CHAR } from '../../hooks/usePhone';
 import { CountryData, ParsedCountry } from '../../types';
+import { removeNonDigits } from '../common';
 import { guessCountryByPartialNumber } from '../countryUtils';
 
 export interface ValidatePhoneConfig {
@@ -11,6 +12,7 @@ export interface ValidatePhoneConfig {
   prefix?: string;
   charAfterDialCode?: string;
   defaultMask?: string;
+  defaultMaskMinPhoneLength?: number;
 }
 
 export interface ValidatePhoneReturn {
@@ -27,7 +29,13 @@ export const validatePhone = (
   phone: string,
   config?: ValidatePhoneConfig,
 ): ValidatePhoneReturn => {
-  const { countries, defaultMask, prefix, charAfterDialCode } = {
+  const {
+    countries,
+    defaultMask,
+    defaultMaskMinPhoneLength = 10,
+    prefix,
+    charAfterDialCode,
+  } = {
     ...defaultPhoneConfig,
     ...config,
   };
@@ -38,6 +46,7 @@ export const validatePhone = (
       countries,
     });
 
+  // Handle non-existent dial code
   if (!country || !fullDialCodeMatch) {
     return {
       country: undefined,
@@ -47,6 +56,7 @@ export const validatePhone = (
     };
   }
 
+  // Validate phone start (prefix + dial code + char after code)
   const phoneStart = `${prefix}${country.dialCode}${charAfterDialCode}`;
   if (!phone.startsWith(phoneStart)) {
     return {
@@ -58,9 +68,15 @@ export const validatePhone = (
   }
 
   const maskPart = phone.substring(phoneStart.length);
-  const countryMask = country.format ?? defaultMask;
 
-  if (maskPart.length !== countryMask.length) {
+  const isDefaultMask = !country.format;
+  const countryMask = isDefaultMask ? defaultMask : (country.format as string);
+
+  // Validate default mask
+  if (
+    isDefaultMask &&
+    removeNonDigits(phone).length < defaultMaskMinPhoneLength
+  ) {
     return {
       country,
       lengthMatch: false,
@@ -69,6 +85,17 @@ export const validatePhone = (
     };
   }
 
+  // Validate non default mask
+  if (!isDefaultMask && maskPart.length !== countryMask.length) {
+    return {
+      country,
+      lengthMatch: false,
+      areaCodeMatch,
+      isValid: false,
+    };
+  }
+
+  // Validate mask content
   for (let i = 0; i < maskPart.length; i += 1) {
     if (maskPart[i] !== countryMask[i] && countryMask[i] !== MASK_CHAR) {
       return {

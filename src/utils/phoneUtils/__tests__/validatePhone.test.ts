@@ -216,7 +216,22 @@ describe('validatePhone', () => {
 
   test('should support config.defaultMask', () => {
     expect(
-      validatePhone('+370 123456789000', { defaultMask: '.... .... ....' }),
+      validatePhone('+370 1234 56789', {
+        defaultMask: '.... .....',
+        defaultMaskMinPhoneLength: 11,
+      }),
+    ).toMatchObject({
+      country: getCountry('lt'),
+      areaCodeMatch: undefined,
+      lengthMatch: true,
+      isValid: true,
+    });
+
+    expect(
+      validatePhone('+370 123456789000', {
+        defaultMask: '.... .....',
+        defaultMaskMinPhoneLength: 11,
+      }),
     ).toMatchObject({
       country: getCountry('lt'),
       areaCodeMatch: undefined,
@@ -225,21 +240,27 @@ describe('validatePhone', () => {
     });
 
     expect(
-      validatePhone('+370 1234 5678 9000', { defaultMask: '.... .... ....' }),
+      validatePhone('+370 1234 567890', {
+        defaultMask: '.... .....',
+        defaultMaskMinPhoneLength: 11,
+      }),
     ).toMatchObject({
       country: getCountry('lt'),
       areaCodeMatch: undefined,
-      lengthMatch: true,
-      isValid: true,
+      lengthMatch: false,
+      isValid: false,
     });
 
     expect(
-      validatePhone('+370 1234 5678', { defaultMask: '.... ....' }),
+      validatePhone('+370 1234 567', {
+        defaultMask: '.... .....',
+        defaultMaskMinPhoneLength: 11,
+      }),
     ).toMatchObject({
       country: getCountry('lt'),
       areaCodeMatch: undefined,
-      lengthMatch: true,
-      isValid: true,
+      lengthMatch: false,
+      isValid: false,
     });
   });
 });
