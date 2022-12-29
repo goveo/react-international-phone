@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import * as Yup from 'yup';
 
 import { PhoneInput, usePhoneValidation, validatePhone } from '../index';
 
@@ -101,9 +102,53 @@ export const Formik = () => {
       if (!validationResult.areaCodeMatch) {
         errors.phone = 'wrong area code';
       }
+      if (!validationResult.country) {
+        errors.phone = 'wrong dial code';
+      }
 
       return errors;
     },
+  });
+
+  return (
+    <div>
+      <PhoneInput
+        initialCountry="us"
+        value={values.phone}
+        onChange={(newPhone) => {
+          setFieldTouched('phone');
+          setFieldValue('phone', newPhone);
+        }}
+        inputProps={{
+          name: 'phone',
+        }}
+      />
+      <code style={{ color: errors.phone ? 'red' : 'green' }}>
+        <p>{errors.phone ? `Error: ${errors.phone}` : 'Phone is valid'}</p>
+      </code>
+    </div>
+  );
+};
+
+const formValidationSchema = Yup.object().shape({
+  phone: Yup.string()
+    .required('Required')
+    .test(
+      'phone',
+      'Phone number is invalid',
+      (value) => validatePhone(value ?? '').isValid,
+    ),
+});
+
+export const FormikWithYup = () => {
+  const { values, errors, setFieldTouched, setFieldValue } = useFormik({
+    initialValues: {
+      phone: '+1 (204)',
+    },
+    onSubmit: () => undefined,
+    validateOnChange: true,
+    validateOnMount: true,
+    validationSchema: formValidationSchema,
   });
 
   return (
