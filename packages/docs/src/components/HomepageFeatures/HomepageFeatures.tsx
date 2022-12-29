@@ -14,32 +14,21 @@ const features: FeatureItem[] = [
   {
     emoji: '😎',
     title: 'Easy to integrate',
-    description: <>Just import and use, no need for the initial setup.</>,
-  },
-  {
-    emoji: '🔍',
-    title: 'Country guessing',
-    description: (
-      <>Just start typing and the component will guess the country.</>
-    ),
-  },
-  {
-    emoji: '🏳️',
-    title: 'Country flags',
     description: (
       <>
-        Country flags are rendered using{' '}
-        <Link href="https://twemoji.twitter.com/">Twemoji</Link>.
+        Just import and use, no need for the initial setup. Integrate with any
+        UI library using a headless hook.
       </>
     ),
   },
   {
-    emoji: '⌨',
-    title: 'Caret position handling',
+    emoji: '🌍',
+    title: 'Country guessing',
     description: (
       <>
-        Typing in the middle of the input, selection and deletion feels
-        naturally.
+        Just start typing and the component will guess the country and format
+        the phone. Country flags are rendered using{' '}
+        <Link href="https://twemoji.twitter.com/">Twemoji</Link>.
       </>
     ),
   },
@@ -52,6 +41,23 @@ const features: FeatureItem[] = [
     emoji: '🌈',
     title: 'Easy to customize',
     description: <>Customize styles and component behavior using props.</>,
+  },
+  {
+    emoji: '⌨',
+    title: 'Caret position handling',
+    description: (
+      <>
+        Typing in the middle of the input, selection and deletion feels
+        naturally.
+      </>
+    ),
+  },
+  {
+    emoji: '✔️',
+    title: 'Validation',
+    description: (
+      <>Easily validate entered phone numbers using provided functions.</>
+    ),
   },
 ];
 
