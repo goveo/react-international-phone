@@ -83,8 +83,8 @@ export const usePhoneInput = ({
       prefix,
       disableDialCodeAndPrefix,
       charAfterDialCode,
-      onCountryGuess: ({ country, isFullMatch }) => {
-        if (isFullMatch) {
+      onCountryGuess: ({ country, fullDialCodeMatch }) => {
+        if (fullDialCodeMatch) {
           setCountry(country.iso2);
         }
       },

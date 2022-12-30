@@ -8,5 +8,6 @@ export { defaultCountries } from './data/countryData';
 export type { UsePhoneConfig } from './hooks/usePhone';
 export { usePhone } from './hooks/usePhone';
 export { usePhoneInput } from './hooks/usePhoneInput';
+export { usePhoneValidation } from './hooks/usePhoneValidation';
 export type { CountryIso2 } from './types';
-export { buildCountryData, parseCountry } from './utils';
+export { buildCountryData, parseCountry, validatePhone } from './utils';

@@ -12,7 +12,6 @@ import {
   getDropdownArrow,
   getDropdownOption,
   getInput,
-  getSystemTimerIncreaseFunc,
 } from '../../utils/test-utils';
 import { PhoneInput } from './PhoneInput';
 
@@ -256,9 +255,17 @@ describe('PhoneInput', () => {
   });
 
   describe('undo/redo', () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    const increaseSystemTime = (ms = 1000) => jest.advanceTimersByTime(ms);
+
     test('should support undo on ctrl+z', () => {
       render(<PhoneInput initialCountry="us" value="+1234" />);
-      const increaseSystemTime = getSystemTimerIncreaseFunc();
       increaseSystemTime();
 
       fireChangeEvent('1234567890');
@@ -307,7 +314,6 @@ describe('PhoneInput', () => {
 
     test('should support redo on ctrl+shift+z', () => {
       render(<PhoneInput initialCountry="us" value="+1234" />);
-      const increaseSystemTime = getSystemTimerIncreaseFunc();
       increaseSystemTime();
 
       fireChangeEvent('1234567890');

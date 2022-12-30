@@ -264,7 +264,8 @@ export interface ParsedCountry {
 
 export interface CountryGuessResult {
   country: ParsedCountry | undefined;
-  isFullMatch: boolean;
+  fullDialCodeMatch: boolean;
+  areaCodeMatch: boolean | undefined;
 }
 
 export type RequiredType<T> = {
