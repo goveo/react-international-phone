@@ -116,4 +116,12 @@ describe('CountrySelectorDropdown', () => {
     expect(getDropdownOption('pl')).toHaveTextContent('48');
     expect(getDropdownOption('ua')).toHaveTextContent('380');
   });
+
+  test('should scroll to selected country on initial render', () => {
+    const scrollIntoViewMock = jest.fn();
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+    render(<CountrySelectorDropdown show={true} selectedCountry="ua" />);
+    expect(scrollIntoViewMock).toBeCalledTimes(1);
+  });
 });

@@ -1,6 +1,6 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
@@ -59,6 +59,22 @@ export const CountrySelectorDropdown: React.FC<
     },
     [onEscapePress, onSelect],
   );
+
+  // Scroll to selected country on mount
+  useEffect(() => {
+    if (!listRef.current || !selectedCountry) return;
+
+    const element = listRef.current.querySelector(
+      `[data-country="${selectedCountry}"]`,
+    );
+    if (!element) return;
+
+    // HACK: can't use scrollIntoView when display = 'none'
+    listRef.current.style.display = 'block';
+    element.scrollIntoView?.();
+    listRef.current.style.display = 'none';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ul
