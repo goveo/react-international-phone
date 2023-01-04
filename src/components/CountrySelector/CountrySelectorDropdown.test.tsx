@@ -2,6 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
+import * as scrollToChildModule from '../../utils/common/scrollToChild';
 import {
   getCountryFlag,
   getCountrySelectorDropdown,
@@ -115,5 +116,52 @@ describe('CountrySelectorDropdown', () => {
     rerender(<CountrySelectorDropdown show={true} dialCodePrefix="" />);
     expect(getDropdownOption('pl')).toHaveTextContent('48');
     expect(getDropdownOption('ua')).toHaveTextContent('380');
+  });
+
+  describe('scroll to selected country', () => {
+    const scrollToChildSpy = jest.spyOn(scrollToChildModule, 'scrollToChild');
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test('should scroll to selected country on initial render', () => {
+      render(<CountrySelectorDropdown show={true} selectedCountry="ua" />);
+      expect(scrollToChildSpy).toBeCalledTimes(1);
+    });
+
+    test('should scroll to selected country on country change', () => {
+      const { rerender } = render(
+        <CountrySelectorDropdown show={true} selectedCountry="ua" />,
+      );
+      expect(scrollToChildSpy).toBeCalledTimes(1);
+
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="us" />);
+      expect(scrollToChildSpy).toBeCalledTimes(2);
+
+      rerender(<CountrySelectorDropdown show={false} selectedCountry="us" />);
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="us" />);
+      expect(scrollToChildSpy).toBeCalledTimes(2);
+    });
+
+    test('should not scroll to selected country if user selected it manually', () => {
+      const { rerender } = render(
+        <CountrySelectorDropdown show={true} selectedCountry="ua" />,
+      );
+      expect(scrollToChildSpy).toBeCalledTimes(1);
+
+      fireEvent.click(getDropdownOption('us'));
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="us" />);
+      expect(scrollToChildSpy).toBeCalledTimes(1);
+
+      fireEvent.click(getDropdownOption('ee'));
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="ee" />);
+      expect(scrollToChildSpy).toBeCalledTimes(1);
+
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="pl" />);
+      expect(scrollToChildSpy).toBeCalledTimes(2);
+
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="ee" />);
+      expect(scrollToChildSpy).toBeCalledTimes(3);
+    });
   });
 });

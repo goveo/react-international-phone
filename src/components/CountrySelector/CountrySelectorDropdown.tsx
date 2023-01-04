@@ -1,11 +1,11 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2, ParsedCountry } from '../../types';
-import { parseCountry } from '../../utils';
+import { parseCountry, scrollToChild } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 
 export interface CountrySelectorDropdownStyleProps {
@@ -47,18 +47,46 @@ export const CountrySelectorDropdown: React.FC<
   ...styleProps
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
+  const lastSelectedCountry = useRef<CountryIso2>();
+
+  const handleCountrySelect = useCallback(
+    (country: ParsedCountry) => {
+      lastSelectedCountry.current = country.iso2;
+      onSelect?.(country);
+    },
+    [onSelect],
+  );
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLLIElement>, country: ParsedCountry) => {
       if (e.key === 'Enter') {
-        onSelect?.(country);
+        handleCountrySelect(country);
       }
       if (e.key === 'Escape') {
         onEscapePress?.();
       }
     },
-    [onEscapePress, onSelect],
+    [handleCountrySelect, onEscapePress],
   );
+
+  // Scroll to selected country
+  useEffect(() => {
+    if (
+      !listRef.current ||
+      !selectedCountry ||
+      // Don't scroll if user selected country by clicking dropdown item
+      selectedCountry === lastSelectedCountry.current
+    )
+      return;
+
+    const element = listRef.current.querySelector(
+      `[data-country="${selectedCountry}"]`,
+    );
+    if (!element) return;
+
+    scrollToChild(listRef.current, element as HTMLElement);
+    lastSelectedCountry.current = selectedCountry;
+  }, [selectedCountry]);
 
   return (
     <ul
@@ -87,7 +115,7 @@ export const CountrySelectorDropdown: React.FC<
               ],
               rawClassNames: [styleProps.listItemClassName],
             })}
-            onClick={() => onSelect?.(country)}
+            onClick={() => handleCountrySelect(country)}
             onKeyDown={(e) => {
               handleKeyPress(e, country);
             }}
