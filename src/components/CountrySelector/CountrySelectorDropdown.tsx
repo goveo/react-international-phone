@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2, ParsedCountry } from '../../types';
-import { parseCountry } from '../../utils';
+import { parseCountry, scrollToChild } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 
 export interface CountrySelectorDropdownStyleProps {
@@ -69,7 +69,7 @@ export const CountrySelectorDropdown: React.FC<
     [handleCountrySelect, onEscapePress],
   );
 
-  // Scroll to selected country on mount
+  // Scroll to selected country
   useEffect(() => {
     if (
       !listRef.current ||
@@ -84,14 +84,8 @@ export const CountrySelectorDropdown: React.FC<
     );
     if (!element) return;
 
-    // HACK: can't use scrollIntoView when display = 'none'
-    const initialDisplayValue = listRef.current.style.display;
-    if (initialDisplayValue !== 'block') {
-      listRef.current.style.display = 'block';
-    }
-    element.scrollIntoView?.();
-    listRef.current.style.display = initialDisplayValue;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    scrollToChild(listRef.current, element as HTMLElement);
+    lastSelectedCountry.current = selectedCountry;
   }, [selectedCountry]);
 
   return (
