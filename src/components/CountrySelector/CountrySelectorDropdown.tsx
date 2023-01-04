@@ -47,22 +47,37 @@ export const CountrySelectorDropdown: React.FC<
   ...styleProps
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
+  const lastSelectedCountry = useRef<CountryIso2>();
+
+  const handleCountrySelect = useCallback(
+    (country: ParsedCountry) => {
+      lastSelectedCountry.current = country.iso2;
+      onSelect?.(country);
+    },
+    [onSelect],
+  );
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLLIElement>, country: ParsedCountry) => {
       if (e.key === 'Enter') {
-        onSelect?.(country);
+        handleCountrySelect(country);
       }
       if (e.key === 'Escape') {
         onEscapePress?.();
       }
     },
-    [onEscapePress, onSelect],
+    [handleCountrySelect, onEscapePress],
   );
 
   // Scroll to selected country on mount
   useEffect(() => {
-    if (!listRef.current || !selectedCountry) return;
+    if (
+      !listRef.current ||
+      !selectedCountry ||
+      // Don't scroll if user selected country by clicking dropdown item
+      selectedCountry === lastSelectedCountry.current
+    )
+      return;
 
     const element = listRef.current.querySelector(
       `[data-country="${selectedCountry}"]`,
@@ -70,11 +85,14 @@ export const CountrySelectorDropdown: React.FC<
     if (!element) return;
 
     // HACK: can't use scrollIntoView when display = 'none'
-    listRef.current.style.display = 'block';
+    const initialDisplayValue = listRef.current.style.display;
+    if (initialDisplayValue !== 'block') {
+      listRef.current.style.display = 'block';
+    }
     element.scrollIntoView?.();
-    listRef.current.style.display = 'none';
+    listRef.current.style.display = initialDisplayValue;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedCountry]);
 
   return (
     <ul
@@ -103,7 +121,7 @@ export const CountrySelectorDropdown: React.FC<
               ],
               rawClassNames: [styleProps.listItemClassName],
             })}
-            onClick={() => onSelect?.(country)}
+            onClick={() => handleCountrySelect(country)}
             onKeyDown={(e) => {
               handleKeyPress(e, country);
             }}

@@ -117,11 +117,54 @@ describe('CountrySelectorDropdown', () => {
     expect(getDropdownOption('ua')).toHaveTextContent('380');
   });
 
-  test('should scroll to selected country on initial render', () => {
-    const scrollIntoViewMock = jest.fn();
-    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+  describe('scroll to selected country', () => {
+    const mockScrollIntoView = () => {
+      const mockFn = jest.fn();
+      window.HTMLElement.prototype.scrollIntoView = mockFn;
+      return mockFn;
+    };
 
-    render(<CountrySelectorDropdown show={true} selectedCountry="ua" />);
-    expect(scrollIntoViewMock).toBeCalledTimes(1);
+    test('should scroll to selected country on initial render', () => {
+      const scrollIntoViewMock = mockScrollIntoView();
+
+      render(<CountrySelectorDropdown show={true} selectedCountry="ua" />);
+      expect(scrollIntoViewMock).toBeCalledTimes(1);
+    });
+
+    test('should scroll to selected country on country change', () => {
+      const scrollIntoViewMock = mockScrollIntoView();
+
+      const { rerender } = render(
+        <CountrySelectorDropdown show={true} selectedCountry="ua" />,
+      );
+      expect(scrollIntoViewMock).toBeCalledTimes(1);
+
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="us" />);
+      expect(scrollIntoViewMock).toBeCalledTimes(2);
+
+      rerender(<CountrySelectorDropdown show={false} selectedCountry="us" />);
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="us" />);
+      expect(scrollIntoViewMock).toBeCalledTimes(2);
+    });
+
+    test('should not scroll to selected country if user selected it manually', () => {
+      const scrollIntoViewMock = mockScrollIntoView();
+
+      const { rerender } = render(
+        <CountrySelectorDropdown show={true} selectedCountry="ua" />,
+      );
+      expect(scrollIntoViewMock).toBeCalledTimes(1);
+
+      fireEvent.click(getDropdownOption('us'));
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="us" />);
+      expect(scrollIntoViewMock).toBeCalledTimes(1);
+
+      fireEvent.click(getDropdownOption('ee'));
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="ee" />);
+      expect(scrollIntoViewMock).toBeCalledTimes(1);
+
+      rerender(<CountrySelectorDropdown show={true} selectedCountry="pl" />);
+      expect(scrollIntoViewMock).toBeCalledTimes(2);
+    });
   });
 });
