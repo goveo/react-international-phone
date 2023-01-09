@@ -46,4 +46,12 @@ describe('FlagEmoji', () => {
     rerender(<FlagEmoji iso2="ua" protocol="http" />);
     expect(getFlagEmoji().getAttribute('src')).toMatch(/http:\/\//);
   });
+
+  test('should be able to disable lazy-loading using disableLazyLoading prop', () => {
+    const { rerender } = render(<FlagEmoji iso2="ua" disableLazyLoading />);
+    expect(getFlagEmoji().getAttribute('loading')).toBeNull();
+
+    rerender(<FlagEmoji iso2="ua" />);
+    expect(getFlagEmoji().getAttribute('loading')).toBe('lazy');
+  });
 });

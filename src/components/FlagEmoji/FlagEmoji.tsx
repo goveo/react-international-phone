@@ -39,12 +39,14 @@ interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
   iso2?: ParsedCountry['iso2'];
   size?: CSSProperties['width'];
   protocol?: 'http' | 'https';
+  disableLazyLoading?: boolean;
 }
 
 export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   iso2,
   size = '24px',
   protocol = 'https',
+  disableLazyLoading,
   className,
   ...restProps
 }) => {
@@ -54,7 +56,8 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   }
 
   const flagCodepoint = getFlagCodepointByIso2(iso2);
-  const src = `${protocol}://twemoji.maxcdn.com/2/svg/${flagCodepoint}.svg`;
+
+  const src = `${protocol}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${flagCodepoint}.svg`;
 
   return (
     <img
@@ -67,6 +70,7 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
       height={size}
       draggable={false}
       data-country={iso2}
+      loading={disableLazyLoading ? undefined : 'lazy'}
       {...restProps}
     />
   );
