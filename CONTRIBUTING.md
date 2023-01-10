@@ -11,4 +11,15 @@ More info about forking and branching you can find on [GitHub Docs](https://docs
 - Build package by `pnpm build` and make sure that build is working.
 - Test documentation by `pnpm docs:build` and `pnpm docs:test`.
 
-Thank you for considering contributing :)
+## Commit titles
+
+Commit titles should correspond to [convention](https://www.conventionalcommits.org/en/v1.0.0/).
+This is needed for the commit analyzer and automatic release functionality 🙏
+
+Examples:
+
+- fix(CountrySelector): add type="button" to selector button
+- docs(validation): add phone-validation page to docs
+- test(PhoneInput): fix undo/redo tests flaky crash
+
+### Thank you for considering contributing :)
