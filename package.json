@@ -56,6 +56,8 @@
   },
   "devDependencies": {
     "@chakra-ui/react": "^1.8.9",
+    "@commitlint/cli": "^17.4.1",
+    "@commitlint/config-conventional": "^17.4.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@mui/material": "^5.10.16",
