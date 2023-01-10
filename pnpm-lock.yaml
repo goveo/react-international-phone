@@ -11,6 +11,7 @@ importers:
       '@emotion/styled': ^11
       '@mui/material': ^5.10.16
       '@playwright/test': ^1.27.1
+      '@semantic-release/changelog': ^6.0.2
       '@semantic-release/commit-analyzer': ^9.0.2
       '@semantic-release/git': ^10.0.1
       '@semantic-release/github': ^8.0.6
@@ -81,6 +82,7 @@ importers:
       '@emotion/styled': 11.10.5_jcn3l3ruk7zhqocfc7ptlmc64u
       '@mui/material': 5.10.16_fmbsh74cgdrxlhkcol5w2ohzb4
       '@playwright/test': 1.27.1
+      '@semantic-release/changelog': 6.0.2_semantic-release@19.0.5
       '@semantic-release/commit-analyzer': 9.0.2_semantic-release@19.0.5
       '@semantic-release/git': 10.0.1_semantic-release@19.0.5
       '@semantic-release/github': 8.0.6_semantic-release@19.0.5
@@ -5550,6 +5552,19 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.4.0
+    dev: true
+
+  /@semantic-release/changelog/6.0.2_semantic-release@19.0.5:
+    resolution: {integrity: sha512-jHqfTkoPbDEOAgAP18mGP53IxeMwxTISN+GwTRy9uLu58UjARoZU8ScCgWGeO2WPkEsm57H8AkyY02W2ntIlIw==}
+    engines: {node: '>=14.17'}
+    peerDependencies:
+      semantic-release: '>=18.0.0'
+    dependencies:
+      '@semantic-release/error': 3.0.0
+      aggregate-error: 3.1.0
+      fs-extra: 11.1.0
+      lodash: 4.17.21
+      semantic-release: 19.0.5
     dev: true
 
   /@semantic-release/commit-analyzer/9.0.2_semantic-release@19.0.5:
