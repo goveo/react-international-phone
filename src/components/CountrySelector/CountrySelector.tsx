@@ -118,6 +118,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     }
     return (
       <button
+        type="button"
         title={fullSelectedCountry?.name}
         onClick={onClick}
         className={buildClassNames({
