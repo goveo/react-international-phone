@@ -95,6 +95,14 @@ WithoutDropdown.args = {
   forceDialCode: true,
 };
 
+export const WithHiddenDialCode = Template.bind({});
+WithHiddenDialCode.argTypes = argTypes;
+
+WithHiddenDialCode.args = {
+  initialCountry: 'se',
+  disableDialCodeAndPrefix: true,
+};
+
 export const WithCodePreview = Template.bind({});
 WithCodePreview.argTypes = argTypes;
 

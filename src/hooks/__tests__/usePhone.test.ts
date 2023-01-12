@@ -145,12 +145,13 @@ describe('usePhone', () => {
     act(() => {
       result.current.handleValueChange('+38099');
     });
-    expect(result.current.phone).toBe('+380 (99) ');
+    // Can't change dial code
+    expect(result.current.phone).toBe('+1 ');
 
     act(() => {
       result.current.handleValueChange('+38');
     });
-    expect(result.current.phone).toBe('+380 ');
+    expect(result.current.phone).toBe('+1 ');
   });
 
   it('Should handle disableDialCodeAndPrefix config prop', () => {

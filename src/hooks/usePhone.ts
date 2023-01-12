@@ -231,18 +231,36 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       insertDialCodeOnEmpty,
     }: HandleValueChangeFuncOptions = {},
   ): string => {
+    let newPhoneValue = newPhone;
+    let cursorPositionAfterInput = cursorPosition;
+
+    if (
+      forceDialCode &&
+      !disableDialCodeAndPrefix &&
+      passedCountry &&
+      // dial code have been changed
+      !removeNonDigits(newPhone).startsWith(passedCountry.dialCode) &&
+      // phone was not removed completely
+      !!newPhone
+    ) {
+      // Prevent change of dial code and set the cursor to beginning
+      // (after formatting it will be set after dial code)
+      newPhoneValue = phone;
+      cursorPositionAfterInput = 0;
+    }
+
     const {
       phone: phoneValue,
       countryGuessResult,
       formatCountry,
-    } = formatPhoneValue(newPhone, {
+    } = formatPhoneValue(newPhoneValue, {
       trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
       insertDialCodeOnEmpty:
         insertDialCodeOnEmpty || (!initialized && !disableDialCodePrefill),
       forceDisableCountryGuess:
         forceDialCode &&
         !!deletion &&
-        removeNonDigits(newPhone).length <
+        removeNonDigits(newPhoneValue).length <
           (passedCountry?.dialCode.length ?? 0),
     });
 
@@ -257,8 +275,8 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
 
     onPhoneUpdate?.(phoneValue, {
       formatCountry,
-      unformattedValue: newPhone,
-      cursorPosition: cursorPosition ?? 0,
+      unformattedValue: newPhoneValue,
+      cursorPosition: cursorPositionAfterInput ?? 0,
       deletion,
     });
 

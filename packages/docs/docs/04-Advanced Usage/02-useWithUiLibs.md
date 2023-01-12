@@ -18,7 +18,7 @@ import TabItem from '@theme/TabItem';
 <TabItem value="jsx" label="JavaScript">
 
 ```jsx
-import { IconButton, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import React from 'react';
 import { CountrySelector, usePhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
@@ -32,31 +32,38 @@ export const MuiPhoneInput = ({ value, onChange }) => {
     });
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <CountrySelector
-        selectedCountry={country}
-        onSelect={(country) => setCountry(country.iso2)}
-        renderButtonWrapper={({ children, onClick }) => (
-          <IconButton
-            onClick={onClick}
-            color="primary"
-            sx={{ mr: '4px', height: '48px', width: '48px' }}
-          >
-            {children}
-          </IconButton>
-        )}
-      />
-      <TextField
-        label="Phone number"
-        color="primary"
-        value={phone}
-        onChange={(e) => {
-          const value = handlePhoneValueChange(e);
-          onChange(value);
-        }}
-        inputRef={inputRef}
-      />
-    </div>
+    <TextField
+      label="Phone number"
+      color="primary"
+      placeholder="Phone number"
+      value={phone}
+      onChange={(e) => {
+        const value = handlePhoneValueChange(e);
+        onChange(value);
+      }}
+      inputRef={inputRef}
+      InputProps={{
+        startAdornment: (
+          <CountrySelector
+            selectedCountry={country}
+            onSelect={(country) => setCountry(country.iso2)}
+            renderButtonWrapper={({ children, onClick }) => (
+              <Button
+                onClick={onClick}
+                color="primary"
+                sx={{
+                  margin: '0 4px 0 -4px',
+                  padding: '2px',
+                  minWidth: '0',
+                }}
+              >
+                {children}
+              </Button>
+            )}
+          />
+        ),
+      }}
+    />
   );
 };
 ```
@@ -66,7 +73,7 @@ export const MuiPhoneInput = ({ value, onChange }) => {
   <TabItem value="tsx" label="TypeScript">
 
 ```tsx
-import { IconButton, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import React from 'react';
 import { CountrySelector, usePhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
@@ -88,31 +95,38 @@ export const MuiPhoneInput: React.FC<MuiPhoneInputProps> = ({
     });
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <CountrySelector
-        selectedCountry={country}
-        onSelect={(country) => setCountry(country.iso2)}
-        renderButtonWrapper={({ children, onClick }) => (
-          <IconButton
-            onClick={onClick}
-            color="primary"
-            sx={{ mr: '4px', height: '48px', width: '48px' }}
-          >
-            {children}
-          </IconButton>
-        )}
-      />
-      <TextField
-        label="Phone number"
-        color="primary"
-        value={phone}
-        onChange={(e) => {
-          const value = handlePhoneValueChange(e);
-          onChange(value);
-        }}
-        inputRef={inputRef}
-      />
-    </div>
+    <TextField
+      label="Phone number"
+      color="primary"
+      placeholder="Phone number"
+      value={phone}
+      onChange={(e) => {
+        const value = handlePhoneValueChange(e);
+        onChange(value);
+      }}
+      inputRef={inputRef}
+      InputProps={{
+        startAdornment: (
+          <CountrySelector
+            selectedCountry={country}
+            onSelect={(country) => setCountry(country.iso2)}
+            renderButtonWrapper={({ children, onClick }) => (
+              <Button
+                onClick={onClick}
+                color="primary"
+                sx={{
+                  margin: '0 4px 0 -4px',
+                  padding: '2px',
+                  minWidth: '0',
+                }}
+              >
+                {children}
+              </Button>
+            )}
+          />
+        ),
+      }}
+    />
   );
 };
 ```

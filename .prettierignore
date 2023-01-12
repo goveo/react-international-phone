@@ -4,3 +4,4 @@ node_modules
 .husky
 pnpm-lock.yaml
 /packages/docs/.docusaurus
+CHANGELOG.md
