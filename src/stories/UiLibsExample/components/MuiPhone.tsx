@@ -3,7 +3,7 @@ import React from 'react';
 
 import { CountrySelector, usePhoneInput } from '../../../index';
 
-interface MUIPhoneProps {
+export interface MUIPhoneProps {
   value: string;
   onChange: (phone: string) => void;
 }
