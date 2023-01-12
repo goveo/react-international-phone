@@ -36,10 +36,9 @@ export const MuiPhoneWithAdornment: React.FC<MUIPhoneProps> = ({
                 onClick={onClick}
                 color="primary"
                 sx={{
-                  ml: '-8px',
-                  mr: '4px',
-                  p: '4px',
-                  minWidth: 'fit-content',
+                  margin: '0 4px 0 -4px',
+                  padding: '2px',
+                  minWidth: '0',
                 }}
               >
                 {children}
