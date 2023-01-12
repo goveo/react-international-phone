@@ -128,6 +128,9 @@ export const usePhoneInput = ({
     if (!input) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
+      // Keydown event without key property throws on autofill
+      if (!e.key) return;
+
       const ctrlPressed = e.ctrlKey;
       const shiftPressed = e.shiftKey;
       const zPressed = e.key.toLowerCase() === 'z';
