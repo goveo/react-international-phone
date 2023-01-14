@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/goveo/react-international-phone/compare/v1.6.4...v1.6.5) (2023-01-14)
+
+
+### Bug Fixes
+
+* **forceDialCode:** allow dial code change if a new phone has been pasted ([367f872](https://github.com/goveo/react-international-phone/commit/367f872fab6746c3c584adab962ed62de5e15bb5))
+
 ## [1.6.4](https://github.com/goveo/react-international-phone/compare/v1.6.3...v1.6.4) (2023-01-12)
 
 
