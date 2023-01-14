@@ -153,6 +153,8 @@ export const usePhoneInput = ({
     // Didn't find out how to properly type it
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inputType: string | undefined = (e.nativeEvent as any).inputType;
+    // Possible input types:
+    // https://rawgit.com/w3c/input-events/v1/index.html#interface-InputEvent-Attributes
 
     const getDeletionType = () => {
       const isDeletion =
@@ -164,8 +166,11 @@ export const usePhoneInput = ({
         : 'backward';
     };
 
+    const isInserted = inputType?.startsWith('insertFrom');
+
     const value = handleValueChange(e.target.value, {
       deletion: getDeletionType(),
+      inserted: isInserted,
       cursorPosition: e.target.selectionStart ?? 0,
     });
 
