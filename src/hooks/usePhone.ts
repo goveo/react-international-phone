@@ -25,6 +25,7 @@ interface FormatPhoneValueFuncOptions {
 
 interface HandleValueChangeFuncOptions {
   deletion?: 'forward' | 'backward' | undefined;
+  inserted?: boolean;
   cursorPosition?: number;
   insertDialCodeOnEmpty?: boolean;
 }
@@ -229,6 +230,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       deletion,
       cursorPosition,
       insertDialCodeOnEmpty,
+      inserted,
     }: HandleValueChangeFuncOptions = {},
   ): string => {
     let newPhoneValue = newPhone;
@@ -243,10 +245,20 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       // phone was not removed completely
       !!newPhone
     ) {
-      // Prevent change of dial code and set the cursor to beginning
-      // (after formatting it will be set after dial code)
-      newPhoneValue = phone;
-      cursorPositionAfterInput = 0;
+      // Allow dial code change when selected all (ctrl+a) and inserted new value that starts with prefix
+      if (
+        inserted &&
+        newPhone.startsWith(prefix) &&
+        // cursor position was set to 0 before the input
+        newPhone.length - (cursorPosition ?? 0) === 0
+      ) {
+        newPhoneValue = newPhone;
+      } else {
+        // Prevent change of dial code and set the cursor to beginning
+        // (after formatting it will be set after dial code)
+        newPhoneValue = phone;
+        cursorPositionAfterInput = 0;
+      }
     }
 
     const {

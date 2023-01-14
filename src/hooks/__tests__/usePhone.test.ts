@@ -126,32 +126,76 @@ describe('usePhone', () => {
     expect(resultWithPrefill.current.phone).toBe('');
   });
 
-  it('Should handle forceDialCode config prop', () => {
-    const { result } = renderHook(() =>
-      usePhone('', { country: 'us', forceDialCode: true }),
-    );
-    expect(result.current.phone).toBe('+1 ');
+  describe('should handle forceDialCode config prop', () => {
+    test('should handle default behavior', () => {
+      const { result } = renderHook(() =>
+        usePhone('', { country: 'us', forceDialCode: true }),
+      );
+      expect(result.current.phone).toBe('+1 ');
 
-    act(() => {
-      result.current.handleValueChange('+1234');
-    });
-    expect(result.current.phone).toBe('+1 (234) ');
+      act(() => {
+        result.current.handleValueChange('+1234');
+      });
+      expect(result.current.phone).toBe('+1 (234) ');
 
-    act(() => {
-      result.current.handleValueChange('');
-    });
-    expect(result.current.phone).toBe('+1 ');
+      act(() => {
+        result.current.handleValueChange('');
+      });
+      expect(result.current.phone).toBe('+1 ');
 
-    act(() => {
-      result.current.handleValueChange('+38099');
+      act(() => {
+        result.current.handleValueChange('+38099');
+      });
     });
-    // Can't change dial code
-    expect(result.current.phone).toBe('+1 ');
 
-    act(() => {
-      result.current.handleValueChange('+38');
+    it('should not allow dial code change', () => {
+      const { result } = renderHook(() =>
+        usePhone('', { country: 'us', forceDialCode: true }),
+      );
+      expect(result.current.phone).toBe('+1 ');
+
+      act(() => {
+        result.current.handleValueChange('+38099');
+      });
+      expect(result.current.phone).toBe('+1 ');
+
+      act(() => {
+        result.current.handleValueChange('+38');
+      });
+      expect(result.current.phone).toBe('+1 ');
     });
-    expect(result.current.phone).toBe('+1 ');
+
+    it('allow dial code change if a new phone was pasted', () => {
+      const { result } = renderHook(() =>
+        usePhone('', { country: 'us', forceDialCode: true }),
+      );
+      expect(result.current.phone).toBe('+1 ');
+
+      // should start with prefix
+      act(() => {
+        result.current.handleValueChange('38099', {
+          inserted: true,
+          cursorPosition: '38099'.length,
+        });
+      });
+      expect(result.current.phone).toBe('+1 ');
+
+      act(() => {
+        result.current.handleValueChange('++3809711 ', {
+          inserted: true,
+          cursorPosition: '+'.length,
+        });
+      });
+      expect(result.current.phone).toBe('+1 ');
+
+      act(() => {
+        result.current.handleValueChange('+38099', {
+          inserted: true,
+          cursorPosition: '+38099'.length,
+        });
+      });
+      expect(result.current.phone).toBe('+380 (99) ');
+    });
   });
 
   it('Should handle disableDialCodeAndPrefix config prop', () => {
