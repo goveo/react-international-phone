@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import {
@@ -12,7 +13,7 @@ import { CountrySelector } from './CountrySelector';
 
 describe('CountrySelector', () => {
   test('render CountrySelector', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     expect(getCountrySelector()).toBeVisible();
   });
 
@@ -25,7 +26,7 @@ describe('CountrySelector', () => {
   });
 
   test('open dropdown on click', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
     expect(getDropdownOption('ua')).toBeVisible();
@@ -54,7 +55,7 @@ describe('CountrySelector', () => {
   });
 
   test('contain active class when open', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelector().className).toMatch(/active/);
     expect(getDropdownArrow()?.className).toMatch(/active/);
@@ -65,7 +66,7 @@ describe('CountrySelector', () => {
   });
 
   test('close dropdown on click outside', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
 
@@ -74,7 +75,7 @@ describe('CountrySelector', () => {
   });
 
   test('close dropdown on click while dropdown is open', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
 
@@ -83,7 +84,7 @@ describe('CountrySelector', () => {
   });
 
   test('close dropdown on escape press', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="us" />);
     fireEvent.click(getCountrySelector());
     fireEvent.focus(getDropdownOption('ua'));
     expect(getCountrySelectorDropdown()).toBeVisible();
@@ -95,17 +96,14 @@ describe('CountrySelector', () => {
     expect(getCountrySelectorDropdown()).not.toBeVisible();
   });
 
-  test('select country option on enter press', () => {
+  test('select country option on enter press', async () => {
+    const user = userEvent.setup();
+
     const onSelect = jest.fn();
     render(<CountrySelector selectedCountry="us" onSelect={onSelect} />);
-    fireEvent.click(getCountrySelector());
-    fireEvent.focus(getDropdownOption('ua'));
+    await user.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
-    fireEvent.keyDown(getDropdownOption('ua'), {
-      key: 'Enter',
-      code: 'Enter',
-      charCode: 13,
-    });
+    await user.keyboard('{arrowup}{arrowup}{arrowup}{enter}');
     expect(getCountrySelectorDropdown()).not.toBeVisible();
     expect(onSelect.mock.calls.length).toBe(1);
     expect(onSelect.mock.calls[0][0]).toMatchObject({ name: 'Ukraine' });

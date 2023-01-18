@@ -34,7 +34,7 @@ export interface CountrySelectorStyleProps {
 }
 
 export interface CountrySelectorProps extends CountrySelectorStyleProps {
-  selectedCountry?: CountryIso2;
+  selectedCountry: CountryIso2;
   onSelect?: CountrySelectorDropdownProps['onSelect'];
   disabled?: boolean;
   hideDropdown?: boolean;

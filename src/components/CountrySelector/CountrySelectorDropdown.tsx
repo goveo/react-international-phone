@@ -1,6 +1,6 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
@@ -29,7 +29,7 @@ export interface CountrySelectorDropdownProps
   extends CountrySelectorDropdownStyleProps {
   show: boolean;
   dialCodePrefix?: string;
-  selectedCountry?: CountryIso2;
+  selectedCountry: CountryIso2;
   countries?: CountryData[];
   onSelect?: (country: ParsedCountry) => void;
   onEscapePress?: () => void;
@@ -47,45 +47,103 @@ export const CountrySelectorDropdown: React.FC<
   ...styleProps
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
-  const lastSelectedCountry = useRef<CountryIso2>();
+  const lastScrolledCountry = useRef<CountryIso2>();
+
+  const getCountryIndex = useCallback(
+    (country: CountryIso2) => {
+      return countries.findIndex((c) => parseCountry(c).iso2 === country);
+    },
+    [countries],
+  );
+
+  const [activeItemIndex, setActiveItemIndex] = useState(
+    getCountryIndex(selectedCountry),
+  );
+
+  const resetActiveItemIndex = () => {
+    if (lastScrolledCountry.current === selectedCountry) return;
+    setActiveItemIndex(getCountryIndex(selectedCountry));
+  };
 
   const handleCountrySelect = useCallback(
     (country: ParsedCountry) => {
-      lastSelectedCountry.current = country.iso2;
+      setActiveItemIndex(getCountryIndex(country.iso2));
       onSelect?.(country);
     },
-    [onSelect],
+    [onSelect, getCountryIndex],
   );
 
-  const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLLIElement>, country: ParsedCountry) => {
-      if (e.key === 'Enter') {
-        handleCountrySelect(country);
-      }
-      if (e.key === 'Escape') {
-        onEscapePress?.();
-      }
-    },
-    [handleCountrySelect, onEscapePress],
-  );
+  const moveActiveItem = (direction: 'up' | 'down') => {
+    const indexShift = direction === 'up' ? -1 : 1;
+    setActiveItemIndex((v) => {
+      const newIndex = v + indexShift;
+      if (newIndex < 0) return 0;
+      if (newIndex > countries.length - 1) return countries.length - 1;
+      return newIndex;
+    });
+  };
 
-  // Scroll to selected country
-  useEffect(() => {
-    if (
-      !listRef.current ||
-      !selectedCountry ||
-      // Don't scroll if user selected country by clicking dropdown item
-      selectedCountry === lastSelectedCountry.current
-    )
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    if (e.key === 'Enter') {
+      const activeCountry = parseCountry(countries[activeItemIndex]);
+      handleCountrySelect(activeCountry);
       return;
+    }
+
+    if (e.key === 'Escape') {
+      onEscapePress?.();
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      moveActiveItem('up');
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      moveActiveItem('down');
+      return;
+    }
+  };
+
+  const scrollToActiveCountry = useCallback(() => {
+    if (!listRef.current || activeItemIndex === undefined) return;
+
+    const activeCountry = parseCountry(countries[activeItemIndex]).iso2;
+    if (activeCountry === lastScrolledCountry.current) return;
 
     const element = listRef.current.querySelector(
-      `[data-country="${selectedCountry}"]`,
+      `[data-country="${activeCountry}"]`,
     );
     if (!element) return;
-
     scrollToChild(listRef.current, element as HTMLElement);
-    lastSelectedCountry.current = selectedCountry;
+
+    lastScrolledCountry.current = activeCountry;
+  }, [activeItemIndex, countries]);
+
+  // Scroll to active item on change
+  useEffect(() => {
+    scrollToActiveCountry();
+  }, [activeItemIndex, scrollToActiveCountry]);
+
+  useEffect(() => {
+    if (!listRef.current) return;
+
+    if (show) {
+      // Autofocus on open dropdown
+      listRef.current.focus();
+    } else {
+      resetActiveItemIndex();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
+  // Update activeItemIndex on selectedCountry prop change
+  useEffect(() => {
+    resetActiveItemIndex();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCountry]);
 
   return (
@@ -97,28 +155,28 @@ export const CountrySelectorDropdown: React.FC<
         rawClassNames: [styleProps.className],
       })}
       style={{ display: show ? 'block' : 'none', ...styleProps.style }}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
     >
-      {countries.map((c) => {
+      {countries.map((c, index) => {
         const country = parseCountry(c);
         const isSelected = country.iso2 === selectedCountry;
+        const isActive = index === activeItemIndex;
 
         return (
           <li
             key={country.iso2}
             data-country={country.iso2}
-            tabIndex={0}
             role="option"
             className={buildClassNames({
               addPrefix: [
                 'country-selector-dropdown__list-item',
                 isSelected && 'country-selector-dropdown__list-item--selected',
+                isActive && 'country-selector-dropdown__list-item--active',
               ],
               rawClassNames: [styleProps.listItemClassName],
             })}
             onClick={() => handleCountrySelect(country)}
-            onKeyDown={(e) => {
-              handleKeyPress(e, country);
-            }}
             style={styleProps.listItemStyle}
           >
             <FlagEmoji

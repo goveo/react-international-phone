@@ -34,6 +34,11 @@ $selected-dropdown-item-dial-code-color: var(
   $dropdown-item-dial-code-color
 );
 
+$active-dropdown-item-background-color: var(
+  --react-international-phone-selected-dropdown-item-background-color,
+  whitesmoke
+);
+
 $dropdown-shadow: var(
   --react-international-phone-dropdown-shadow,
   2px 2px 16px rgb(0 0 0 / 25%)
@@ -77,17 +82,22 @@ $dropdown-shadow: var(
     }
 
     &:hover {
-      background-color: $selected-dropdown-item-background-color;
+      background-color: $active-dropdown-item-background-color;
       cursor: pointer;
     }
 
-    &--selected {
+    &--selected,
+    &--active {
       background-color: $selected-dropdown-item-background-color;
       color: $selected-dropdown-item-text-color;
 
       .react-international-phone-country-selector-dropdown__list-item-dial-code {
         color: $selected-dropdown-item-dial-code-color;
       }
+    }
+
+    &--active {
+      background-color: $active-dropdown-item-background-color;
     }
   }
 }
