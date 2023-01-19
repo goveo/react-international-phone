@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
@@ -17,6 +18,11 @@ const defaultDropdownProps: CountrySelectorDropdownProps = {
   selectedCountry: 'ua',
   show: true,
 };
+
+const activeItemClass =
+  'react-international-phone-country-selector-dropdown__list-item--active';
+const selectedItemClass =
+  'react-international-phone-country-selector-dropdown__list-item--selected';
 
 describe('CountrySelectorDropdown', () => {
   test('render CountrySelectorDropdown', () => {
@@ -220,6 +226,55 @@ describe('CountrySelectorDropdown', () => {
         />,
       );
       expect(scrollToChildSpy).toBeCalledTimes(5);
+    });
+  });
+
+  describe('accessibility', () => {
+    const user = userEvent.setup();
+    test('should select country by keyboard arrows', async () => {
+      const onSelect = jest.fn();
+
+      render(
+        <CountrySelectorDropdown
+          {...defaultDropdownProps}
+          selectedCountry="us"
+          onSelect={onSelect}
+        />,
+      );
+      expect(getCountrySelectorDropdown()).toBeVisible();
+
+      expect(getDropdownOption('us')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('us')).toHaveClass(selectedItemClass);
+
+      expect(getDropdownOption('ua')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('ua')).not.toHaveClass(selectedItemClass);
+
+      await user.keyboard('{arrowup}{arrowup}{arrowup}');
+
+      expect(getDropdownOption('us')).toHaveClass(selectedItemClass);
+      expect(getDropdownOption('us')).not.toHaveClass(activeItemClass);
+
+      expect(getDropdownOption('ua')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('ua')).not.toHaveClass(selectedItemClass);
+
+      await user.keyboard('{enter}');
+
+      expect(onSelect.mock.calls.length).toBe(1);
+      expect(onSelect.mock.calls[0][0]).toMatchObject({ name: 'Ukraine' });
+    });
+
+    test('should scroll to active item', async () => {
+      render(
+        <CountrySelectorDropdown
+          {...defaultDropdownProps}
+          selectedCountry="us"
+        />,
+      );
+      await user.keyboard('{arrowup>19}');
+
+      expect(getDropdownOption('se')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('se')).not.toHaveClass(selectedItemClass);
+      expect(getDropdownOption('se')).toBeVisible();
     });
   });
 });
