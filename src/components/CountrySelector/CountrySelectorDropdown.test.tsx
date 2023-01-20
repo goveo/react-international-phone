@@ -228,6 +228,29 @@ describe('CountrySelectorDropdown', () => {
       expect(onSelect.mock.calls[0][0]).toMatchObject({ name: 'Ukraine' });
     });
 
+    test('should move active item on pageUp and pageDown', async () => {
+      render(
+        <CountrySelectorDropdown
+          {...defaultDropdownProps}
+          selectedCountry="us"
+        />,
+      );
+      expect(getCountrySelectorDropdown()).toBeVisible();
+      expect(getDropdownOption('us')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('af')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('zw')).not.toHaveClass(activeItemClass);
+
+      await user.keyboard('{pageup}');
+      expect(getDropdownOption('us')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('af')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('zw')).not.toHaveClass(activeItemClass);
+
+      await user.keyboard('{pagedown}');
+      expect(getDropdownOption('us')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('af')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('zw')).toHaveClass(activeItemClass);
+    });
+
     test('should scroll to active item', async () => {
       render(
         <CountrySelectorDropdown

@@ -73,12 +73,20 @@ export const CountrySelectorDropdown: React.FC<
     [onSelect, getCountryIndex],
   );
 
-  const moveActiveItem = (direction: 'up' | 'down') => {
-    const indexShift = direction === 'up' ? -1 : 1;
+  const moveActiveItem = (to: 'prev' | 'next' | 'first' | 'last') => {
+    const lastPossibleIndex = countries.length - 1;
+
+    const getNewIndex = (currentIndex: number) => {
+      if (to === 'prev') return currentIndex - 1;
+      if (to === 'next') return currentIndex + 1;
+      if (to === 'last') return lastPossibleIndex;
+      return 0;
+    };
+
     setActiveItemIndex((v) => {
-      const newIndex = v + indexShift;
+      const newIndex = getNewIndex(v);
       if (newIndex < 0) return 0;
-      if (newIndex > countries.length - 1) return countries.length - 1;
+      if (newIndex > lastPossibleIndex) return lastPossibleIndex;
       return newIndex;
     });
   };
@@ -97,13 +105,25 @@ export const CountrySelectorDropdown: React.FC<
 
     if (e.key === 'ArrowUp') {
       e.preventDefault();
-      moveActiveItem('up');
+      moveActiveItem('prev');
       return;
     }
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      moveActiveItem('down');
+      moveActiveItem('next');
+      return;
+    }
+
+    if (e.key === 'PageUp') {
+      e.preventDefault();
+      moveActiveItem('first');
+      return;
+    }
+
+    if (e.key === 'PageDown') {
+      e.preventDefault();
+      moveActiveItem('last');
       return;
     }
   };
