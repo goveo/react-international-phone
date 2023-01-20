@@ -19,7 +19,7 @@ Use by providing the _show_, _selectedCountry_ and _onSelect_ properties.
   show={true}
   selectedCountry="al"
   onSelect={handleSelect}
-  onEscapePress={handleClose}
+  onClose={handleClose}
 />
 ```
 
@@ -39,10 +39,10 @@ import { CountrySelectorDropdown } from 'react-international-phone';
 
 ### Events
 
-| Prop          | Type                               | Description                                      |
-| ------------- | ---------------------------------- | ------------------------------------------------ |
-| onSelect      | `(country: ParsedCountry) => void` | Callback that calls on option select             |
-| onEscapePress | `() => void`                       | Callback that calls on escape keyboard key press |
+| Prop     | Type                               | Description                                                                                |
+| -------- | ---------------------------------- | ------------------------------------------------------------------------------------------ |
+| onSelect | `(country: ParsedCountry) => void` | Callback that calls on option select                                                       |
+| onClose  | `() => void`                       | Callback that calls on dropdown close without select any item (usually by keyboard events) |
 
 ### Style properties (`CountrySelectorDropdownStyleProps` type)
 

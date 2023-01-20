@@ -32,7 +32,7 @@ export interface CountrySelectorDropdownProps
   selectedCountry: CountryIso2;
   countries?: CountryData[];
   onSelect?: (country: ParsedCountry) => void;
-  onEscapePress?: () => void;
+  onClose?: () => void;
 }
 
 export const CountrySelectorDropdown: React.FC<
@@ -43,7 +43,7 @@ export const CountrySelectorDropdown: React.FC<
   selectedCountry,
   countries = defaultCountries,
   onSelect,
-  onEscapePress,
+  onClose,
   ...styleProps
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
@@ -91,7 +91,7 @@ export const CountrySelectorDropdown: React.FC<
     }
 
     if (e.key === 'Escape') {
-      onEscapePress?.();
+      onClose?.();
       return;
     }
 
@@ -156,6 +156,7 @@ export const CountrySelectorDropdown: React.FC<
       })}
       style={{ display: show ? 'block' : 'none', ...styleProps.style }}
       onKeyDown={handleKeyDown}
+      onBlur={onClose}
       tabIndex={-1}
       aria-activedescendant={`${
         parseCountry(countries[activeItemIndex]).iso2

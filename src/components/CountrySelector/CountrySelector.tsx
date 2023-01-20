@@ -161,7 +161,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           onSelect?.(country);
         }}
         selectedCountry={selectedCountry}
-        onEscapePress={() => {
+        onClose={() => {
           setShowDropdown(false);
         }}
         {...styleProps.dropdownStyleProps}

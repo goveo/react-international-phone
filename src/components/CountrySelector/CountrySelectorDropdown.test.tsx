@@ -99,19 +99,16 @@ describe('CountrySelectorDropdown', () => {
   });
 
   test('should track escape press', () => {
-    const onEscapePress = jest.fn();
+    const onClose = jest.fn();
     const { rerender } = render(
-      <CountrySelectorDropdown
-        {...defaultDropdownProps}
-        onEscapePress={onEscapePress}
-      />,
+      <CountrySelectorDropdown {...defaultDropdownProps} onClose={onClose} />,
     );
     fireEvent.keyDown(getDropdownOption('ua'), {
       key: 'Escape',
       code: 'Escape',
       charCode: 27,
     });
-    expect(onEscapePress.mock.calls.length).toBe(1);
+    expect(onClose.mock.calls.length).toBe(1);
 
     // should not break without passing a callback
     rerender(<CountrySelectorDropdown {...defaultDropdownProps} />);
