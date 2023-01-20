@@ -156,7 +156,10 @@ export const CountrySelectorDropdown: React.FC<
       })}
       style={{ display: show ? 'block' : 'none', ...styleProps.style }}
       onKeyDown={handleKeyDown}
-      tabIndex={0}
+      tabIndex={-1}
+      aria-activedescendant={`${
+        parseCountry(countries[activeItemIndex]).iso2
+      }-option`}
     >
       {countries.map((c, index) => {
         const country = parseCountry(c);
@@ -168,6 +171,9 @@ export const CountrySelectorDropdown: React.FC<
             key={country.iso2}
             data-country={country.iso2}
             role="option"
+            aria-selected={isSelected}
+            aria-label={`${country.name} ${dialCodePrefix}${country.dialCode}`}
+            id={`${country.iso2}-option`}
             className={buildClassNames({
               addPrefix: [
                 'country-selector-dropdown__list-item',

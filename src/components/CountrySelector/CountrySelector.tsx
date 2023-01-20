@@ -131,8 +131,10 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           rawClassNames: [styleProps.buttonClassName],
         })}
         disabled={hideDropdown || disabled}
+        role="combobox"
+        aria-label="Country selector"
         aria-haspopup="listbox"
-        aria-expanded={hideDropdown}
+        aria-expanded={showDropdown}
         data-country={selectedCountry}
         style={styleProps.buttonStyle}
       >
