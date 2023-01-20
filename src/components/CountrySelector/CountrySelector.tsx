@@ -33,6 +33,18 @@ export interface CountrySelectorStyleProps {
   dropdownStyleProps?: CountrySelectorDropdownStyleProps;
 }
 
+type RenderButtonWrapperRootProps = Pick<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  | 'onClick'
+  | 'onKeyDown'
+  | 'title'
+  | 'disabled'
+  | 'role'
+  | 'aria-label'
+  | 'aria-haspopup'
+  | 'aria-expanded'
+>;
+
 export interface CountrySelectorProps extends CountrySelectorStyleProps {
   selectedCountry: CountryIso2;
   onSelect?: CountrySelectorDropdownProps['onSelect'];
@@ -41,7 +53,7 @@ export interface CountrySelectorProps extends CountrySelectorStyleProps {
   countries?: CountryData[];
   renderButtonWrapper?: (props: {
     children: React.ReactNode;
-    onClick: () => void;
+    rootProps: RenderButtonWrapperRootProps;
   }) => React.ReactNode;
 }
 
@@ -72,8 +84,26 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     onClickOutside: () => setShowDropdown(false),
   });
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!e.key) return;
+
+    if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
+      e.preventDefault();
+      setShowDropdown(true);
+    }
+  };
+
   const renderSelectorButton = () => {
-    const onClick = () => setShowDropdown((v) => !v);
+    const rootProps: RenderButtonWrapperRootProps = {
+      title: fullSelectedCountry?.name,
+      onClick: () => setShowDropdown((v) => !v),
+      onKeyDown: handleKeyDown,
+      disabled: hideDropdown || disabled,
+      role: 'combobox',
+      'aria-label': 'Country selector',
+      'aria-haspopup': 'listbox',
+      'aria-expanded': showDropdown,
+    };
 
     const buttonContent = (
       <div
@@ -114,13 +144,15 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       </div>
     );
     if (renderButtonWrapper) {
-      return renderButtonWrapper({ children: buttonContent, onClick });
+      return renderButtonWrapper({
+        children: buttonContent,
+        rootProps: rootProps,
+      });
     }
     return (
       <button
+        {...rootProps}
         type="button"
-        title={fullSelectedCountry?.name}
-        onClick={onClick}
         className={buildClassNames({
           addPrefix: [
             'country-selector-button',
@@ -130,11 +162,6 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           ],
           rawClassNames: [styleProps.buttonClassName],
         })}
-        disabled={hideDropdown || disabled}
-        role="combobox"
-        aria-label="Country selector"
-        aria-haspopup="listbox"
-        aria-expanded={showDropdown}
         data-country={selectedCountry}
         style={styleProps.buttonStyle}
       >

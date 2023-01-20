@@ -22,9 +22,9 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
       <CountrySelector
         selectedCountry={phoneInput.country}
         onSelect={(country) => phoneInput.setCountry(country.iso2)}
-        renderButtonWrapper={({ children, onClick }) => (
+        renderButtonWrapper={({ children, rootProps }) => (
           <Button
-            onClick={onClick}
+            {...rootProps}
             color="primary"
             style={{
               height: '32px',

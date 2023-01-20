@@ -25,7 +25,7 @@ export const ChakraUI = () => {
   return <ChakraPhone value={phone} onChange={setPhone} />;
 };
 
-export const AndDesign = () => {
+export const AntDesign = () => {
   const [phone, setPhone] = useState('+1 (123)');
   return <AntPhone value={phone} onChange={setPhone} />;
 };

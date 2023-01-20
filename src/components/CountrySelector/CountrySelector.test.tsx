@@ -113,26 +113,19 @@ describe('CountrySelector', () => {
     render(
       <CountrySelector
         selectedCountry="us"
-        renderButtonWrapper={({ children, onClick }) => (
-          <div onClick={onClick} className="custom-wrapper">
+        renderButtonWrapper={({ children, rootProps }) => (
+          <button {...rootProps} className="custom-wrapper">
             {children}
-          </div>
+          </button>
         )}
       />,
     );
-    let countrySelector = null;
-    try {
-      // Button should not be found
-      countrySelector = screen.getByText((content, element) => {
-        return element?.tagName.toLowerCase() === 'button';
-      });
-    } catch {
-      expect(countrySelector).toBe(null);
-    }
 
-    countrySelector = screen.getByText((content, element) => {
+    expect(getCountrySelector()).toHaveClass('custom-wrapper');
+
+    const countrySelector = screen.getByText((content, element) => {
       return (
-        element?.tagName.toLowerCase() === 'div' &&
+        element?.tagName.toLowerCase() === 'button' &&
         element.className === 'custom-wrapper'
       );
     });

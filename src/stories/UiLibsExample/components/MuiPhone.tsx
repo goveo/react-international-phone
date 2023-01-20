@@ -21,9 +21,9 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
       <CountrySelector
         selectedCountry={country}
         onSelect={(country) => setCountry(country.iso2)}
-        renderButtonWrapper={({ children, onClick }) => (
+        renderButtonWrapper={({ children, rootProps }) => (
           <IconButton
-            onClick={onClick}
+            {...rootProps}
             color="primary"
             sx={{ mr: '4px', height: '48px', width: '48px' }}
           >
