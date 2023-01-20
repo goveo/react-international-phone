@@ -134,4 +134,38 @@ describe('CountrySelector', () => {
     fireEvent.click(countrySelector);
     expect(getCountrySelectorDropdown()).toBeVisible();
   });
+
+  describe('accessibility', () => {
+    test('should open selector using enter', async () => {
+      render(<CountrySelector selectedCountry="us" />);
+      expect(getCountrySelectorDropdown()).not.toBeVisible();
+
+      await userEvent.tab();
+      expect(getCountrySelector()).toHaveFocus();
+
+      await userEvent.keyboard('{enter}');
+      expect(getCountrySelectorDropdown()).toBeVisible();
+    });
+
+    test('should open selector using arrow keys', async () => {
+      const { rerender } = render(<CountrySelector selectedCountry="us" />);
+      expect(getCountrySelectorDropdown()).not.toBeVisible();
+
+      await userEvent.tab();
+      expect(getCountrySelector()).toHaveFocus();
+
+      await userEvent.keyboard('{arrowUp}');
+      expect(getCountrySelectorDropdown()).toBeVisible();
+
+      // move focus back
+      await userEvent.tab({ shift: true });
+
+      rerender(<CountrySelector selectedCountry="us" />);
+      expect(getCountrySelector()).toHaveFocus();
+      expect(getCountrySelectorDropdown()).not.toBeVisible();
+
+      await userEvent.keyboard('{arrowDown}');
+      expect(getCountrySelectorDropdown()).toBeVisible();
+    });
+  });
 });

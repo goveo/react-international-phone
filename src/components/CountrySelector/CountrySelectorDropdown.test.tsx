@@ -25,6 +25,8 @@ const selectedItemClass =
   'react-international-phone-country-selector-dropdown__list-item--selected';
 
 describe('CountrySelectorDropdown', () => {
+  const user = userEvent.setup();
+
   test('render CountrySelectorDropdown', () => {
     render(<CountrySelectorDropdown {...defaultDropdownProps} />);
     expect(getCountrySelectorDropdown()).toBeVisible();
@@ -180,54 +182,20 @@ describe('CountrySelectorDropdown', () => {
       expect(scrollToChildSpy).toBeCalledTimes(2);
     });
 
-    // FIXME:
-    test('should not scroll to selected country if user selected it manually', () => {
-      const { rerender } = render(
+    test('should scroll to selected country by keyboard', async () => {
+      render(
         <CountrySelectorDropdown
           {...defaultDropdownProps}
           selectedCountry="ua"
         />,
       );
       expect(scrollToChildSpy).toBeCalledTimes(1);
-
-      fireEvent.click(getDropdownOption('us'));
-      rerender(
-        <CountrySelectorDropdown
-          {...defaultDropdownProps}
-          selectedCountry="us"
-        />,
-      );
-      expect(scrollToChildSpy).toBeCalledTimes(2);
-
-      fireEvent.click(getDropdownOption('ee'));
-      rerender(
-        <CountrySelectorDropdown
-          {...defaultDropdownProps}
-          selectedCountry="ee"
-        />,
-      );
-      expect(scrollToChildSpy).toBeCalledTimes(3);
-
-      rerender(
-        <CountrySelectorDropdown
-          {...defaultDropdownProps}
-          selectedCountry="pl"
-        />,
-      );
-      expect(scrollToChildSpy).toBeCalledTimes(4);
-
-      rerender(
-        <CountrySelectorDropdown
-          {...defaultDropdownProps}
-          selectedCountry="ee"
-        />,
-      );
-      expect(scrollToChildSpy).toBeCalledTimes(5);
+      await user.keyboard('{arrowup>10}');
+      expect(scrollToChildSpy).toBeCalledTimes(11);
     });
   });
 
   describe('accessibility', () => {
-    const user = userEvent.setup();
     test('should select country by keyboard arrows', async () => {
       const onSelect = jest.fn();
 
@@ -272,6 +240,25 @@ describe('CountrySelectorDropdown', () => {
       expect(getDropdownOption('se')).toHaveClass(activeItemClass);
       expect(getDropdownOption('se')).not.toHaveClass(selectedItemClass);
       expect(getDropdownOption('se')).toBeVisible();
+    });
+
+    test('should close dropdown on blur', async () => {
+      const onClose = jest.fn();
+
+      render(
+        <CountrySelectorDropdown
+          {...defaultDropdownProps}
+          selectedCountry="us"
+          onClose={onClose}
+        />,
+      );
+      await userEvent.tab();
+      await userEvent.keyboard('{enter}');
+
+      expect(getCountrySelectorDropdown()).toBeVisible();
+      await userEvent.tab();
+
+      expect(onClose).toBeCalledTimes(1);
     });
   });
 });
