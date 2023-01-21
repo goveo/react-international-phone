@@ -19,8 +19,8 @@ const defaultDropdownProps: CountrySelectorDropdownProps = {
   show: true,
 };
 
-const activeItemClass =
-  'react-international-phone-country-selector-dropdown__list-item--active';
+const focusedItemClass =
+  'react-international-phone-country-selector-dropdown__list-item--focused';
 const selectedItemClass =
   'react-international-phone-country-selector-dropdown__list-item--selected';
 
@@ -208,18 +208,18 @@ describe('CountrySelectorDropdown', () => {
       );
       expect(getCountrySelectorDropdown()).toBeVisible();
 
-      expect(getDropdownOption('us')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('us')).toHaveClass(focusedItemClass);
       expect(getDropdownOption('us')).toHaveClass(selectedItemClass);
 
-      expect(getDropdownOption('ua')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('ua')).not.toHaveClass(focusedItemClass);
       expect(getDropdownOption('ua')).not.toHaveClass(selectedItemClass);
 
       await user.keyboard('{arrowup}{arrowup}{arrowup}');
 
       expect(getDropdownOption('us')).toHaveClass(selectedItemClass);
-      expect(getDropdownOption('us')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('us')).not.toHaveClass(focusedItemClass);
 
-      expect(getDropdownOption('ua')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('ua')).toHaveClass(focusedItemClass);
       expect(getDropdownOption('ua')).not.toHaveClass(selectedItemClass);
 
       await user.keyboard('{enter}');
@@ -228,7 +228,7 @@ describe('CountrySelectorDropdown', () => {
       expect(onSelect.mock.calls[0][0]).toMatchObject({ name: 'Ukraine' });
     });
 
-    test('should move active item on pageUp and pageDown', async () => {
+    test('should move item focus on pageUp and pageDown', async () => {
       render(
         <CountrySelectorDropdown
           {...defaultDropdownProps}
@@ -236,22 +236,22 @@ describe('CountrySelectorDropdown', () => {
         />,
       );
       expect(getCountrySelectorDropdown()).toBeVisible();
-      expect(getDropdownOption('us')).toHaveClass(activeItemClass);
-      expect(getDropdownOption('af')).not.toHaveClass(activeItemClass);
-      expect(getDropdownOption('zw')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('us')).toHaveClass(focusedItemClass);
+      expect(getDropdownOption('af')).not.toHaveClass(focusedItemClass);
+      expect(getDropdownOption('zw')).not.toHaveClass(focusedItemClass);
 
       await user.keyboard('{pageup}');
-      expect(getDropdownOption('us')).not.toHaveClass(activeItemClass);
-      expect(getDropdownOption('af')).toHaveClass(activeItemClass);
-      expect(getDropdownOption('zw')).not.toHaveClass(activeItemClass);
+      expect(getDropdownOption('us')).not.toHaveClass(focusedItemClass);
+      expect(getDropdownOption('af')).toHaveClass(focusedItemClass);
+      expect(getDropdownOption('zw')).not.toHaveClass(focusedItemClass);
 
       await user.keyboard('{pagedown}');
-      expect(getDropdownOption('us')).not.toHaveClass(activeItemClass);
-      expect(getDropdownOption('af')).not.toHaveClass(activeItemClass);
-      expect(getDropdownOption('zw')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('us')).not.toHaveClass(focusedItemClass);
+      expect(getDropdownOption('af')).not.toHaveClass(focusedItemClass);
+      expect(getDropdownOption('zw')).toHaveClass(focusedItemClass);
     });
 
-    test('should scroll to active item', async () => {
+    test('should scroll to focused item', async () => {
       render(
         <CountrySelectorDropdown
           {...defaultDropdownProps}
@@ -260,7 +260,7 @@ describe('CountrySelectorDropdown', () => {
       );
       await user.keyboard('{arrowup>19}');
 
-      expect(getDropdownOption('se')).toHaveClass(activeItemClass);
+      expect(getDropdownOption('se')).toHaveClass(focusedItemClass);
       expect(getDropdownOption('se')).not.toHaveClass(selectedItemClass);
       expect(getDropdownOption('se')).toBeVisible();
     });

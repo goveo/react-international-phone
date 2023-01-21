@@ -61,14 +61,15 @@ import { CountrySelectorDropdown } from 'react-international-phone';
 
 ### CSS variables
 
-| Variable                                                            | Default value                                            |
-| ------------------------------------------------------------------- | -------------------------------------------------------- |
-| --react-international-phone-dropdown-item-font-size                 | `14px`                                                   |
-| --react-international-phone-dropdown-item-text-color                | --react-international-phone-text-color                   |
-| --react-international-phone-dropdown-item-height                    | `28px`                                                   |
-| --react-international-phone-dropdown-item-background-color          | --react-international-phone-background-color             |
-| --react-international-phone-dropdown-item-dial-code-color           | `gray`                                                   |
-| --react-international-phone-selected-dropdown-item-text-color       | --react-international-phone-text-color                   |
-| --react-international-phone-selected-dropdown-item-background-color | `whitesmoke`                                             |
-| --react-international-phone-selected-dropdown-item-dial-code-color  | -react-international-phone-dropdown-item-dial-code-color |
-| --react-international-phone-dropdown-shadow                         | `2px 2px 16px rgb(0 0 0 / 25%)`                          |
+| Variable                                                            | Default value                                                       |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| --react-international-phone-dropdown-item-font-size                 | `14px`                                                              |
+| --react-international-phone-dropdown-item-text-color                | --react-international-phone-text-color                              |
+| --react-international-phone-dropdown-item-height                    | `28px`                                                              |
+| --react-international-phone-dropdown-item-background-color          | --react-international-phone-background-color                        |
+| --react-international-phone-dropdown-item-dial-code-color           | `gray`                                                              |
+| --react-international-phone-selected-dropdown-item-text-color       | --react-international-phone-text-color                              |
+| --react-international-phone-selected-dropdown-item-background-color | `whitesmoke`                                                        |
+| --react-international-phone-selected-dropdown-item-dial-code-color  | -react-international-phone-dropdown-item-dial-code-color            |
+| --react-international-phone-focused-dropdown-item-background-color  | --react-international-phone-selected-dropdown-item-background-color |
+| --react-international-phone-dropdown-shadow                         | `2px 2px 16px rgb(0 0 0 / 25%)`                                     |

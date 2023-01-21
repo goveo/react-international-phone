@@ -56,24 +56,24 @@ export const CountrySelectorDropdown: React.FC<
     [countries],
   );
 
-  const [activeItemIndex, setActiveItemIndex] = useState(
+  const [focusedItemIndex, setFocusedItemIndex] = useState(
     getCountryIndex(selectedCountry),
   );
 
-  const resetActiveItemIndex = () => {
+  const resetFocusedItemIndex = () => {
     if (lastScrolledCountry.current === selectedCountry) return;
-    setActiveItemIndex(getCountryIndex(selectedCountry));
+    setFocusedItemIndex(getCountryIndex(selectedCountry));
   };
 
   const handleCountrySelect = useCallback(
     (country: ParsedCountry) => {
-      setActiveItemIndex(getCountryIndex(country.iso2));
+      setFocusedItemIndex(getCountryIndex(country.iso2));
       onSelect?.(country);
     },
     [onSelect, getCountryIndex],
   );
 
-  const moveActiveItem = (to: 'prev' | 'next' | 'first' | 'last') => {
+  const moveFocusedItem = (to: 'prev' | 'next' | 'first' | 'last') => {
     const lastPossibleIndex = countries.length - 1;
 
     const getNewIndex = (currentIndex: number) => {
@@ -83,7 +83,7 @@ export const CountrySelectorDropdown: React.FC<
       return 0;
     };
 
-    setActiveItemIndex((v) => {
+    setFocusedItemIndex((v) => {
       const newIndex = getNewIndex(v);
       if (newIndex < 0) return 0;
       if (newIndex > lastPossibleIndex) return lastPossibleIndex;
@@ -93,8 +93,8 @@ export const CountrySelectorDropdown: React.FC<
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
     if (e.key === 'Enter') {
-      const activeCountry = parseCountry(countries[activeItemIndex]);
-      handleCountrySelect(activeCountry);
+      const focusedCountry = parseCountry(countries[focusedItemIndex]);
+      handleCountrySelect(focusedCountry);
       return;
     }
 
@@ -105,48 +105,48 @@ export const CountrySelectorDropdown: React.FC<
 
     if (e.key === 'ArrowUp') {
       e.preventDefault();
-      moveActiveItem('prev');
+      moveFocusedItem('prev');
       return;
     }
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      moveActiveItem('next');
+      moveFocusedItem('next');
       return;
     }
 
     if (e.key === 'PageUp') {
       e.preventDefault();
-      moveActiveItem('first');
+      moveFocusedItem('first');
       return;
     }
 
     if (e.key === 'PageDown') {
       e.preventDefault();
-      moveActiveItem('last');
+      moveFocusedItem('last');
       return;
     }
   };
 
-  const scrollToActiveCountry = useCallback(() => {
-    if (!listRef.current || activeItemIndex === undefined) return;
+  const scrollToFocusedCountry = useCallback(() => {
+    if (!listRef.current || focusedItemIndex === undefined) return;
 
-    const activeCountry = parseCountry(countries[activeItemIndex]).iso2;
-    if (activeCountry === lastScrolledCountry.current) return;
+    const focusedCountry = parseCountry(countries[focusedItemIndex]).iso2;
+    if (focusedCountry === lastScrolledCountry.current) return;
 
     const element = listRef.current.querySelector(
-      `[data-country="${activeCountry}"]`,
+      `[data-country="${focusedCountry}"]`,
     );
     if (!element) return;
     scrollToChild(listRef.current, element as HTMLElement);
 
-    lastScrolledCountry.current = activeCountry;
-  }, [activeItemIndex, countries]);
+    lastScrolledCountry.current = focusedCountry;
+  }, [focusedItemIndex, countries]);
 
-  // Scroll to active item on change
+  // Scroll to focused item on change
   useEffect(() => {
-    scrollToActiveCountry();
-  }, [activeItemIndex, scrollToActiveCountry]);
+    scrollToFocusedCountry();
+  }, [focusedItemIndex, scrollToFocusedCountry]);
 
   useEffect(() => {
     if (!listRef.current) return;
@@ -155,14 +155,14 @@ export const CountrySelectorDropdown: React.FC<
       // Autofocus on open dropdown
       listRef.current.focus();
     } else {
-      resetActiveItemIndex();
+      resetFocusedItemIndex();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show]);
 
-  // Update activeItemIndex on selectedCountry prop change
+  // Update focusedItemIndex on selectedCountry prop change
   useEffect(() => {
-    resetActiveItemIndex();
+    resetFocusedItemIndex();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCountry]);
 
@@ -179,13 +179,13 @@ export const CountrySelectorDropdown: React.FC<
       onBlur={onClose}
       tabIndex={-1}
       aria-activedescendant={`${
-        parseCountry(countries[activeItemIndex]).iso2
+        parseCountry(countries[focusedItemIndex]).iso2
       }-option`}
     >
       {countries.map((c, index) => {
         const country = parseCountry(c);
         const isSelected = country.iso2 === selectedCountry;
-        const isActive = index === activeItemIndex;
+        const isFocused = index === focusedItemIndex;
 
         return (
           <li
@@ -199,7 +199,7 @@ export const CountrySelectorDropdown: React.FC<
               addPrefix: [
                 'country-selector-dropdown__list-item',
                 isSelected && 'country-selector-dropdown__list-item--selected',
-                isActive && 'country-selector-dropdown__list-item--active',
+                isFocused && 'country-selector-dropdown__list-item--focused',
               ],
               rawClassNames: [styleProps.listItemClassName],
             })}
