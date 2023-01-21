@@ -24,8 +24,8 @@ export const ChakraPhone: React.FC<ChakraPhoneProps> = ({
         <CountrySelector
           selectedCountry={phoneInput.country}
           onSelect={(country) => phoneInput.setCountry(country.iso2)}
-          renderButtonWrapper={({ children, onClick }) => (
-            <Button variant="outline" px="4px" mr="8px" onClick={onClick}>
+          renderButtonWrapper={({ children, rootProps }) => (
+            <Button {...rootProps} variant="outline" px="4px" mr="8px">
               {children}
             </Button>
           )}

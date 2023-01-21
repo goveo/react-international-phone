@@ -1,6 +1,6 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
@@ -29,10 +29,10 @@ export interface CountrySelectorDropdownProps
   extends CountrySelectorDropdownStyleProps {
   show: boolean;
   dialCodePrefix?: string;
-  selectedCountry?: CountryIso2;
+  selectedCountry: CountryIso2;
   countries?: CountryData[];
   onSelect?: (country: ParsedCountry) => void;
-  onEscapePress?: () => void;
+  onClose?: () => void;
 }
 
 export const CountrySelectorDropdown: React.FC<
@@ -43,49 +43,127 @@ export const CountrySelectorDropdown: React.FC<
   selectedCountry,
   countries = defaultCountries,
   onSelect,
-  onEscapePress,
+  onClose,
   ...styleProps
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
-  const lastSelectedCountry = useRef<CountryIso2>();
+  const lastScrolledCountry = useRef<CountryIso2>();
+
+  const getCountryIndex = useCallback(
+    (country: CountryIso2) => {
+      return countries.findIndex((c) => parseCountry(c).iso2 === country);
+    },
+    [countries],
+  );
+
+  const [focusedItemIndex, setFocusedItemIndex] = useState(
+    getCountryIndex(selectedCountry),
+  );
+
+  const resetFocusedItemIndex = () => {
+    if (lastScrolledCountry.current === selectedCountry) return;
+    setFocusedItemIndex(getCountryIndex(selectedCountry));
+  };
 
   const handleCountrySelect = useCallback(
     (country: ParsedCountry) => {
-      lastSelectedCountry.current = country.iso2;
+      setFocusedItemIndex(getCountryIndex(country.iso2));
       onSelect?.(country);
     },
-    [onSelect],
+    [onSelect, getCountryIndex],
   );
 
-  const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLLIElement>, country: ParsedCountry) => {
-      if (e.key === 'Enter') {
-        handleCountrySelect(country);
-      }
-      if (e.key === 'Escape') {
-        onEscapePress?.();
-      }
-    },
-    [handleCountrySelect, onEscapePress],
-  );
+  const moveFocusedItem = (to: 'prev' | 'next' | 'first' | 'last') => {
+    const lastPossibleIndex = countries.length - 1;
 
-  // Scroll to selected country
-  useEffect(() => {
-    if (
-      !listRef.current ||
-      !selectedCountry ||
-      // Don't scroll if user selected country by clicking dropdown item
-      selectedCountry === lastSelectedCountry.current
-    )
+    const getNewIndex = (currentIndex: number) => {
+      if (to === 'prev') return currentIndex - 1;
+      if (to === 'next') return currentIndex + 1;
+      if (to === 'last') return lastPossibleIndex;
+      return 0;
+    };
+
+    setFocusedItemIndex((v) => {
+      const newIndex = getNewIndex(v);
+      if (newIndex < 0) return 0;
+      if (newIndex > lastPossibleIndex) return lastPossibleIndex;
+      return newIndex;
+    });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    if (e.key === 'Enter') {
+      const focusedCountry = parseCountry(countries[focusedItemIndex]);
+      handleCountrySelect(focusedCountry);
       return;
+    }
+
+    if (e.key === 'Escape') {
+      onClose?.();
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      moveFocusedItem('prev');
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      moveFocusedItem('next');
+      return;
+    }
+
+    if (e.key === 'PageUp') {
+      e.preventDefault();
+      moveFocusedItem('first');
+      return;
+    }
+
+    if (e.key === 'PageDown') {
+      e.preventDefault();
+      moveFocusedItem('last');
+      return;
+    }
+  };
+
+  const scrollToFocusedCountry = useCallback(() => {
+    if (!listRef.current || focusedItemIndex === undefined) return;
+
+    const focusedCountry = parseCountry(countries[focusedItemIndex]).iso2;
+    if (focusedCountry === lastScrolledCountry.current) return;
 
     const element = listRef.current.querySelector(
-      `[data-country="${selectedCountry}"]`,
+      `[data-country="${focusedCountry}"]`,
     );
     if (!element) return;
-
     scrollToChild(listRef.current, element as HTMLElement);
-    lastSelectedCountry.current = selectedCountry;
+
+    lastScrolledCountry.current = focusedCountry;
+  }, [focusedItemIndex, countries]);
+
+  // Scroll to focused item on change
+  useEffect(() => {
+    scrollToFocusedCountry();
+  }, [focusedItemIndex, scrollToFocusedCountry]);
+
+  useEffect(() => {
+    if (!listRef.current) return;
+
+    if (show) {
+      // Autofocus on open dropdown
+      listRef.current.focus();
+    } else {
+      resetFocusedItemIndex();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
+  // Update focusedItemIndex on selectedCountry prop change
+  useEffect(() => {
+    resetFocusedItemIndex();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCountry]);
 
   return (
@@ -97,28 +175,35 @@ export const CountrySelectorDropdown: React.FC<
         rawClassNames: [styleProps.className],
       })}
       style={{ display: show ? 'block' : 'none', ...styleProps.style }}
+      onKeyDown={handleKeyDown}
+      onBlur={onClose}
+      tabIndex={-1}
+      aria-activedescendant={`${
+        parseCountry(countries[focusedItemIndex]).iso2
+      }-option`}
     >
-      {countries.map((c) => {
+      {countries.map((c, index) => {
         const country = parseCountry(c);
         const isSelected = country.iso2 === selectedCountry;
+        const isFocused = index === focusedItemIndex;
 
         return (
           <li
             key={country.iso2}
             data-country={country.iso2}
-            tabIndex={0}
             role="option"
+            aria-selected={isSelected}
+            aria-label={`${country.name} ${dialCodePrefix}${country.dialCode}`}
+            id={`${country.iso2}-option`}
             className={buildClassNames({
               addPrefix: [
                 'country-selector-dropdown__list-item',
                 isSelected && 'country-selector-dropdown__list-item--selected',
+                isFocused && 'country-selector-dropdown__list-item--focused',
               ],
               rawClassNames: [styleProps.listItemClassName],
             })}
             onClick={() => handleCountrySelect(country)}
-            onKeyDown={(e) => {
-              handleKeyPress(e, country);
-            }}
             style={styleProps.listItemStyle}
           >
             <FlagEmoji

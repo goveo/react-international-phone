@@ -54,9 +54,9 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
             <CountrySelector
               selectedCountry={country}
               onSelect={(country) => setCountry(country.iso2)}
-              renderButtonWrapper={({ children, onClick }) => (
+              renderButtonWrapper={({ children, rootProps }) => (
                 <Button
-                  onClick={onClick}
+                  {...rootProps}
                   color="primary"
                   sx={{
                     margin: '0 4px 0 -4px',

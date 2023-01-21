@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import {
@@ -12,7 +13,7 @@ import { CountrySelector } from './CountrySelector';
 
 describe('CountrySelector', () => {
   test('render CountrySelector', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     expect(getCountrySelector()).toBeVisible();
   });
 
@@ -25,7 +26,7 @@ describe('CountrySelector', () => {
   });
 
   test('open dropdown on click', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
     expect(getDropdownOption('ua')).toBeVisible();
@@ -54,7 +55,7 @@ describe('CountrySelector', () => {
   });
 
   test('contain active class when open', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelector().className).toMatch(/active/);
     expect(getDropdownArrow()?.className).toMatch(/active/);
@@ -65,7 +66,7 @@ describe('CountrySelector', () => {
   });
 
   test('close dropdown on click outside', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
 
@@ -74,7 +75,7 @@ describe('CountrySelector', () => {
   });
 
   test('close dropdown on click while dropdown is open', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="ua" />);
     fireEvent.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
 
@@ -83,7 +84,7 @@ describe('CountrySelector', () => {
   });
 
   test('close dropdown on escape press', () => {
-    render(<CountrySelector />);
+    render(<CountrySelector selectedCountry="us" />);
     fireEvent.click(getCountrySelector());
     fireEvent.focus(getDropdownOption('ua'));
     expect(getCountrySelectorDropdown()).toBeVisible();
@@ -95,17 +96,14 @@ describe('CountrySelector', () => {
     expect(getCountrySelectorDropdown()).not.toBeVisible();
   });
 
-  test('select country option on enter press', () => {
+  test('select country option on enter press', async () => {
+    const user = userEvent.setup();
+
     const onSelect = jest.fn();
     render(<CountrySelector selectedCountry="us" onSelect={onSelect} />);
-    fireEvent.click(getCountrySelector());
-    fireEvent.focus(getDropdownOption('ua'));
+    await user.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
-    fireEvent.keyDown(getDropdownOption('ua'), {
-      key: 'Enter',
-      code: 'Enter',
-      charCode: 13,
-    });
+    await user.keyboard('{arrowup}{arrowup}{arrowup}{enter}');
     expect(getCountrySelectorDropdown()).not.toBeVisible();
     expect(onSelect.mock.calls.length).toBe(1);
     expect(onSelect.mock.calls[0][0]).toMatchObject({ name: 'Ukraine' });
@@ -115,26 +113,19 @@ describe('CountrySelector', () => {
     render(
       <CountrySelector
         selectedCountry="us"
-        renderButtonWrapper={({ children, onClick }) => (
-          <div onClick={onClick} className="custom-wrapper">
+        renderButtonWrapper={({ children, rootProps }) => (
+          <button {...rootProps} className="custom-wrapper">
             {children}
-          </div>
+          </button>
         )}
       />,
     );
-    let countrySelector = null;
-    try {
-      // Button should not be found
-      countrySelector = screen.getByText((content, element) => {
-        return element?.tagName.toLowerCase() === 'button';
-      });
-    } catch {
-      expect(countrySelector).toBe(null);
-    }
 
-    countrySelector = screen.getByText((content, element) => {
+    expect(getCountrySelector()).toHaveClass('custom-wrapper');
+
+    const countrySelector = screen.getByText((content, element) => {
       return (
-        element?.tagName.toLowerCase() === 'div' &&
+        element?.tagName.toLowerCase() === 'button' &&
         element.className === 'custom-wrapper'
       );
     });
@@ -142,5 +133,39 @@ describe('CountrySelector', () => {
     expect(countrySelector).not.toBe(null);
     fireEvent.click(countrySelector);
     expect(getCountrySelectorDropdown()).toBeVisible();
+  });
+
+  describe('accessibility', () => {
+    test('should open selector using enter', async () => {
+      render(<CountrySelector selectedCountry="us" />);
+      expect(getCountrySelectorDropdown()).not.toBeVisible();
+
+      await userEvent.tab();
+      expect(getCountrySelector()).toHaveFocus();
+
+      await userEvent.keyboard('{enter}');
+      expect(getCountrySelectorDropdown()).toBeVisible();
+    });
+
+    test('should open selector using arrow keys', async () => {
+      const { rerender } = render(<CountrySelector selectedCountry="us" />);
+      expect(getCountrySelectorDropdown()).not.toBeVisible();
+
+      await userEvent.tab();
+      expect(getCountrySelector()).toHaveFocus();
+
+      await userEvent.keyboard('{arrowUp}');
+      expect(getCountrySelectorDropdown()).toBeVisible();
+
+      // move focus back
+      await userEvent.tab({ shift: true });
+
+      rerender(<CountrySelector selectedCountry="us" />);
+      expect(getCountrySelector()).toHaveFocus();
+      expect(getCountrySelectorDropdown()).not.toBeVisible();
+
+      await userEvent.keyboard('{arrowDown}');
+      expect(getCountrySelectorDropdown()).toBeVisible();
+    });
   });
 });
