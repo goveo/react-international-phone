@@ -1,3 +1,17 @@
+# [1.7.0](https://github.com/goveo/react-international-phone/compare/v1.6.5...v1.7.0) (2023-01-21)
+
+
+### Bug Fixes
+
+* improve auto-scrolling of the dropdown ([b17f2fa](https://github.com/goveo/react-international-phone/commit/b17f2fa10a22d1e207d9237e905e46be6024c35e))
+
+
+### Features
+
+* add accessibility for country-selector dropdown ([08e414f](https://github.com/goveo/react-international-phone/commit/08e414f16c7d02aa489ea9c9f83b0ea2dac9b100))
+* **CountrySelector:** change onEscapePress callback with onClose, call it on dropdown blur ([bda69a2](https://github.com/goveo/react-international-phone/commit/bda69a2f8d5276d6aa0ac38eeed9d1771c82d18a))
+* **CountrySelector:** pass rootProps to renderButtonWrapper callback ([2fabc58](https://github.com/goveo/react-international-phone/commit/2fabc582675db79b252277e625a3a9fb5291a3a4))
+
 ## [1.6.5](https://github.com/goveo/react-international-phone/compare/v1.6.4...v1.6.5) (2023-01-14)
 
 
