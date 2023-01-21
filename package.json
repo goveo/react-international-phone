@@ -54,6 +54,7 @@
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
+  "dependencies": {},
   "devDependencies": {
     "@chakra-ui/react": "^1.8.9",
     "@commitlint/cli": "^17.4.1",
