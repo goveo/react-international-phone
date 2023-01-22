@@ -44,6 +44,12 @@ export const MuiPhoneWithAdornment: React.FC<MUIPhoneProps> = ({
                 {children}
               </Button>
             )}
+            dropdownStyleProps={{
+              style: {
+                top: '42px',
+                left: '-14px',
+              },
+            }}
           />
         ),
       }}
