@@ -139,7 +139,7 @@
     ]
   },
   "engines": {
-    "node": ">=16.14"
+    "node": "16.x"
   },
   "publishConfig": {
     "access": "public"
