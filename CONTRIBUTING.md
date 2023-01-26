@@ -9,7 +9,7 @@ More info about forking and branching you can find on [GitHub Docs](https://docs
 - Run tests by `pnpm test` command and make sure that they are passing.
 - Lint and format code by running `pnpm lint` and `pnpm format`.
 - Build package by `pnpm build` and make sure that build is working.
-- Test documentation by `pnpm docs:build` and `pnpm docs:test`.
+- Test documentation by `pnpm docs:test`.
 
 ## Commit titles
 

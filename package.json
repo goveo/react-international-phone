@@ -49,7 +49,8 @@
     "semantic-release": "semantic-release",
     "docs:dev": "cd packages/docs && pnpm start",
     "docs:build": "cd packages/docs && pnpm build",
-    "docs:test": "cd packages/docs && pnpm serve"
+    "docs:serve": "cd packages/docs && pnpm serve",
+    "docs:test": "pnpm build && pnpm docs:build && pnpm docs:serve"
   },
   "repository": {
     "type": "git",
