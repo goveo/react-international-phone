@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { AntPhone } from './components/AntPhone';
 import { ChakraPhone } from './components/ChakraPhone';
 import { MuiPhone } from './components/MuiPhone';
-import { MuiPhoneWithAdornment } from './components/MuiPhoneWithAdornment';
+import { MuiPhone2 } from './components/MuiPhone2';
 
 export default {
   title: 'Using with UI libs',
@@ -16,9 +16,9 @@ export const MaterialUI = () => {
 
 export const MaterialUIStyle2 = () => {
   const [phone, setPhone] = useState('+1 (123)');
-  return <MuiPhoneWithAdornment value={phone} onChange={setPhone} />;
+  return <MuiPhone2 value={phone} onChange={setPhone} />;
 };
-MaterialUIStyle2.storyName = 'Material UI (With adornment)';
+MaterialUIStyle2.storyName = 'Material UI (With button)';
 
 export const ChakraUI = () => {
   const [phone, setPhone] = useState('+1 (123)');

@@ -4,7 +4,7 @@ You can build phone input by combination of **input component** (that you want t
 
 ## Material UI Example
 
-import { MuiPhone } from '@site/src/components/MuiPhone/MuiPhone'
+import { MuiPhone } from '@site/src/components/MuiPhone'
 
 <div style={{ margin: "3rem 0 2rem" }}>
 <MuiPhone />
@@ -18,17 +18,31 @@ import TabItem from '@theme/TabItem';
 <TabItem value="jsx" label="JavaScript">
 
 ```jsx
-import { Button, TextField } from '@mui/material';
-import React from 'react';
-import { CountrySelector, usePhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
-export const MuiPhoneInput = ({ value, onChange }) => {
+import {
+  InputAdornment,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
+import React from 'react';
+import {
+  CountryIso2,
+  defaultCountries,
+  FlagEmoji,
+  parseCountry,
+  usePhoneInput,
+} from 'react-international-phone';
+
+export const MuiPhone = ({ value, onChange }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
       value,
       onCountryChange: onChange,
+      countries: defaultCountries,
     });
 
   return (
@@ -44,28 +58,64 @@ export const MuiPhoneInput = ({ value, onChange }) => {
       inputRef={inputRef}
       InputProps={{
         startAdornment: (
-          <CountrySelector
-            selectedCountry={country}
-            onSelect={(country) => setCountry(country.iso2)}
-            renderButtonWrapper={({ children, rootProps }) => (
-              <Button
-                {...rootProps}
-                color="primary"
-                sx={{
-                  margin: '0 4px 0 -4px',
-                  padding: '2px',
-                  minWidth: '0',
-                }}
-              >
-                {children}
-              </Button>
-            )}
-          />
+          <InputAdornment
+            position="start"
+            style={{ marginRight: '2px', marginLeft: '-8px' }}
+          >
+            <Select
+              MenuProps={{
+                style: {
+                  height: '300px',
+                  width: '360px',
+                  top: '10px',
+                },
+              }}
+              sx={{
+                // Remove default outline (display only on hover)
+                fieldset: {
+                  display: 'none',
+                },
+                '&.Mui-focused': {
+                  fieldset: {
+                    display: 'block',
+                  },
+                },
+                // Update default spacing
+                '.MuiSelect-select': {
+                  padding: '8px',
+                  paddingRight: '24px !important',
+                },
+                svg: {
+                  right: 0,
+                },
+              }}
+              value={country}
+              onChange={(e) => setCountry(e.target.value as CountryIso2)}
+              renderValue={(value) => (
+                <FlagEmoji iso2={value} style={{ display: 'flex' }} />
+              )}
+            >
+              {defaultCountries.map((c) => {
+                const country = parseCountry(c);
+                return (
+                  <MenuItem key={country.iso2} value={country.iso2}>
+                    <FlagEmoji
+                      iso2={country.iso2}
+                      style={{ marginRight: '8px' }}
+                    />
+                    <Typography marginRight="8px">{country.name}</Typography>
+                    <Typography color="gray">+{country.dialCode}</Typography>
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </InputAdornment>
         ),
       }}
     />
   );
 };
+
 ```
 
   </TabItem>
@@ -73,25 +123,36 @@ export const MuiPhoneInput = ({ value, onChange }) => {
   <TabItem value="tsx" label="TypeScript">
 
 ```tsx
-import { Button, TextField } from '@mui/material';
-import React from 'react';
-import { CountrySelector, usePhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
-interface MuiPhoneInputProps {
+import {
+  InputAdornment,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
+import React from 'react';
+import {
+  CountryIso2,
+  defaultCountries,
+  FlagEmoji,
+  parseCountry,
+  usePhoneInput,
+} from 'react-international-phone';
+
+export interface MUIPhoneProps {
   value: string;
   onChange: (phone: string) => void;
 }
 
-export const MuiPhoneInput: React.FC<MuiPhoneInputProps> = ({
-  value,
-  onChange,
-}) => {
+export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
       value,
       onCountryChange: onChange,
+      countries: defaultCountries,
     });
 
   return (
@@ -107,23 +168,58 @@ export const MuiPhoneInput: React.FC<MuiPhoneInputProps> = ({
       inputRef={inputRef}
       InputProps={{
         startAdornment: (
-          <CountrySelector
-            selectedCountry={country}
-            onSelect={(country) => setCountry(country.iso2)}
-            renderButtonWrapper={({ children, rootProps }) => (
-              <Button
-                {...rootProps}
-                color="primary"
-                sx={{
-                  margin: '0 4px 0 -4px',
-                  padding: '2px',
-                  minWidth: '0',
-                }}
-              >
-                {children}
-              </Button>
-            )}
-          />
+          <InputAdornment
+            position="start"
+            style={{ marginRight: '2px', marginLeft: '-8px' }}
+          >
+            <Select
+              MenuProps={{
+                style: {
+                  height: '300px',
+                  width: '360px',
+                  top: '10px',
+                },
+              }}
+              sx={{
+                // Remove default outline (display only on hover)
+                fieldset: {
+                  display: 'none',
+                },
+                '&.Mui-focused': {
+                  fieldset: {
+                    display: 'block',
+                  },
+                },
+                // Update default spacing
+                '.MuiSelect-select': {
+                  padding: '8px',
+                  paddingRight: '24px !important',
+                },
+                svg: {
+                  right: 0,
+                },
+              }}
+              value={country}
+              onChange={(e) => setCountry(e.target.value as CountryIso2)}
+              renderValue={(value) => (
+                <FlagEmoji iso2={value} style={{ display: 'flex' }} />
+              )}
+            >
+              {defaultCountries.map((c) => {
+                const country = parseCountry(c);
+                return (
+                  <MenuItem key={country.iso2} value={country.iso2}>
+                    <FlagEmoji
+                      iso2={country.iso2}
+                      style={{ marginRight: '8px' }}
+                    />
+                    <Typography marginRight="8px">{country.name}</Typography>
+                    <Typography color="gray">+{country.dialCode}</Typography>
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </InputAdornment>
         ),
       }}
     />
