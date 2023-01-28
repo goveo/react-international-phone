@@ -33,9 +33,11 @@ export interface CountrySelectorStyleProps {
   dropdownStyleProps?: CountrySelectorDropdownStyleProps;
 }
 
-type RenderButtonWrapperRootProps = Pick<
+type RenderButtonWrapperRootProps = {
+  // Omit the event argument to prevent errors on event mistype
+  onClick: () => void;
+} & Pick<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
-  | 'onClick'
   | 'onKeyDown'
   | 'title'
   | 'disabled'
