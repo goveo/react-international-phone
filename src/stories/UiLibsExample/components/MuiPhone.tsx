@@ -36,6 +36,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
 
   return (
     <TextField
+      variant="outlined"
       label="Phone number"
       color="primary"
       placeholder="Phone number"
@@ -44,6 +45,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
         const value = handlePhoneValueChange(e);
         onChange(value);
       }}
+      type="tel"
       inputRef={inputRef}
       InputProps={{
         startAdornment: (

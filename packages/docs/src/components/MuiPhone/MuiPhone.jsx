@@ -1,12 +1,11 @@
 /**
- * ! MuiPhone component is a copypaste of component -> src\stories\UiLibsExample\components\MuiPhone
+ * ! This is a copypaste of MuiPhone.tsx
  * Make sure that the original component is updated if wanna make changes here
  */
 
 import 'react-international-phone/style.css';
 
 import {
-  BaseTextFieldProps,
   InputAdornment,
   MenuItem,
   Select,
@@ -15,23 +14,13 @@ import {
 } from '@mui/material';
 import React from 'react';
 import {
-  CountryIso2,
   defaultCountries,
   FlagEmoji,
   parseCountry,
   usePhoneInput,
 } from 'react-international-phone';
 
-export interface MUIPhoneProps extends BaseTextFieldProps {
-  value: string;
-  onChange: (phone: string) => void;
-}
-
-export const MuiPhone: React.FC<MUIPhoneProps> = ({
-  value,
-  onChange,
-  ...restProps
-}) => {
+export const MuiPhone = ({ value, onChange, ...restProps }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
@@ -93,7 +82,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
                 },
               }}
               value={country}
-              onChange={(e) => setCountry(e.target.value as CountryIso2)}
+              onChange={(e) => setCountry(e.target.value)}
               renderValue={(value) => (
                 <FlagEmoji iso2={value} style={{ display: 'flex' }} />
               )}

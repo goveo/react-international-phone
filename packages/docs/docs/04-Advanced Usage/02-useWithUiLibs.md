@@ -29,14 +29,13 @@ import {
 } from '@mui/material';
 import React from 'react';
 import {
-  CountryIso2,
   defaultCountries,
   FlagEmoji,
   parseCountry,
   usePhoneInput,
 } from 'react-international-phone';
 
-export const MuiPhone = ({ value, onChange }) => {
+export const MuiPhone = ({ value, onChange, ...restProps }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
@@ -47,6 +46,7 @@ export const MuiPhone = ({ value, onChange }) => {
 
   return (
     <TextField
+      variant="outlined"
       label="Phone number"
       color="primary"
       placeholder="Phone number"
@@ -55,6 +55,7 @@ export const MuiPhone = ({ value, onChange }) => {
         const value = handlePhoneValueChange(e);
         onChange(value);
       }}
+      type="tel"
       inputRef={inputRef}
       InputProps={{
         startAdornment: (
@@ -68,14 +69,20 @@ export const MuiPhone = ({ value, onChange }) => {
                   height: '300px',
                   width: '360px',
                   top: '10px',
+                  left: '-34px',
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left',
                 },
               }}
               sx={{
-                // Remove default outline (display only on hover)
+                width: 'max-content',
+                // Remove default outline (display only on focus)
                 fieldset: {
                   display: 'none',
                 },
-                '&.Mui-focused': {
+                '&.Mui-focused:has(div[aria-expanded="false"])': {
                   fieldset: {
                     display: 'block',
                   },
@@ -90,7 +97,7 @@ export const MuiPhone = ({ value, onChange }) => {
                 },
               }}
               value={country}
-              onChange={(e) => setCountry(e.target.value as CountryIso2)}
+              onChange={(e) => setCountry(e.target.value)}
               renderValue={(value) => (
                 <FlagEmoji iso2={value} style={{ display: 'flex' }} />
               )}
@@ -112,10 +119,10 @@ export const MuiPhone = ({ value, onChange }) => {
           </InputAdornment>
         ),
       }}
+      {...restProps}
     />
   );
 };
-
 ```
 
   </TabItem>
@@ -126,6 +133,7 @@ export const MuiPhone = ({ value, onChange }) => {
 import 'react-international-phone/style.css';
 
 import {
+  BaseTextFieldProps,
   InputAdornment,
   MenuItem,
   Select,
@@ -141,12 +149,16 @@ import {
   usePhoneInput,
 } from 'react-international-phone';
 
-export interface MUIPhoneProps {
+export interface MUIPhoneProps extends BaseTextFieldProps {
   value: string;
   onChange: (phone: string) => void;
 }
 
-export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
+export const MuiPhone: React.FC<MUIPhoneProps> = ({
+  value,
+  onChange,
+  ...restProps
+}) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
@@ -157,6 +169,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
 
   return (
     <TextField
+      variant="outlined"
       label="Phone number"
       color="primary"
       placeholder="Phone number"
@@ -165,6 +178,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
         const value = handlePhoneValueChange(e);
         onChange(value);
       }}
+      type="tel"
       inputRef={inputRef}
       InputProps={{
         startAdornment: (
@@ -178,14 +192,20 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
                   height: '300px',
                   width: '360px',
                   top: '10px',
+                  left: '-34px',
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left',
                 },
               }}
               sx={{
-                // Remove default outline (display only on hover)
+                width: 'max-content',
+                // Remove default outline (display only on focus)
                 fieldset: {
                   display: 'none',
                 },
-                '&.Mui-focused': {
+                '&.Mui-focused:has(div[aria-expanded="false"])': {
                   fieldset: {
                     display: 'block',
                   },
@@ -222,6 +242,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
           </InputAdornment>
         ),
       }}
+      {...restProps}
     />
   );
 };
