@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/goveo/react-international-phone/compare/v1.8.0...v1.8.1) (2023-01-29)
+
+
+### Bug Fixes
+
+* **build:** switch back to webpack builder ([934090c](https://github.com/goveo/react-international-phone/commit/934090cd6d58e7c203215a47b4677c297ce5c8fe))
+
 # [1.8.0](https://github.com/goveo/react-international-phone/compare/v1.7.0...v1.8.0) (2023-01-29)
 
 
