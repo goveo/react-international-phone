@@ -44,10 +44,14 @@ $dropdown-shadow: var(
   2px 2px 16px rgb(0 0 0 / 25%)
 );
 
+$dropdown-left: var(--react-international-phone-dropdown-left, 0);
+$dropdown-top: var(--react-international-phone-dropdown-left, 44px);
+
 .react-international-phone-country-selector-dropdown {
   position: absolute;
   z-index: 1;
-  top: 44px;
+  top: $dropdown-top;
+  left: $dropdown-left;
   display: flex;
   width: 300px;
   max-height: 200px;

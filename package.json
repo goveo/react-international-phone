@@ -19,17 +19,22 @@
   "private": false,
   "author": "Yurii Brusentsov <yuriybrusentsov@gmail.com>",
   "license": "MIT",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "type": "module",
+  "main": "dist/index.umd.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "build"
+    "dist"
   ],
   "exports": {
-    ".": "./build/index.js",
-    "./style.css": "./build/index.css"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    },
+    "./style.css": "./dist/style.css"
   },
   "scripts": {
-    "build": "webpack",
+    "build": "tsc && vite build",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "storybook": "start-storybook -p 6006",
@@ -45,7 +50,8 @@
     "semantic-release": "semantic-release",
     "docs:dev": "cd packages/docs && pnpm start",
     "docs:build": "cd packages/docs && pnpm build",
-    "docs:test": "cd packages/docs && pnpm serve"
+    "docs:serve": "cd packages/docs && pnpm serve",
+    "docs:test": "pnpm build && pnpm docs:build && pnpm docs:serve"
   },
   "repository": {
     "type": "git",
@@ -68,23 +74,20 @@
     "@semantic-release/github": "^8.0.6",
     "@semantic-release/npm": "^9.0.1",
     "@semantic-release/release-notes-generator": "^10.0.3",
-    "@storybook/addon-controls": "^6.5.12",
-    "@storybook/builder-webpack5": "^6.5.12",
-    "@storybook/manager-webpack5": "^6.5.12",
-    "@storybook/preset-scss": "^1.0.3",
-    "@storybook/react": "^6.5.12",
+    "@storybook/addon-controls": "^6.5.16",
+    "@storybook/builder-vite": "0.3.0",
+    "@storybook/react": "^6.5.16",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.1.1",
     "@types/node": "^18.8.5",
-    "@types/react": "^16.14.32",
+    "@types/react": "^17.0.53",
     "@types/testing-library__jest-dom": "^5.14.5",
-    "@typescript-eslint/eslint-plugin": "^5.38.1",
-    "@typescript-eslint/parser": "^4.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
     "antd": "^5.0.2",
-    "css-loader": "^6.7.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -98,7 +101,6 @@
     "jest": "^29.1.2",
     "jest-environment-jsdom": "^29.1.2",
     "lint-staged": "^13.0.3",
-    "mini-css-extract-plugin": "^2.7.1",
     "postcss": "^8.4.17",
     "postcss-scss": "^4.0.5",
     "prettier": "^2.7.1",
@@ -106,10 +108,9 @@
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.41.1",
     "sass": "^1.55.0",
-    "sass-loader": "^13.0.2",
     "semantic-release": "^19.0.5",
-    "storybook": "^6.5.12",
-    "style-loader": "^3.3.1",
+    "storybook": "^6.5.16",
+    "storybook-builder-vite": "^0.1.23",
     "stylelint": "^14.13.0",
     "stylelint-config-idiomatic-order": "^9.0.0",
     "stylelint-config-prettier": "^9.0.3",
@@ -119,11 +120,10 @@
     "stylelint-prettier": "^2.0.0",
     "stylelint-scss": "^4.3.0",
     "ts-jest": "^29.0.3",
-    "ts-loader": "^8.4.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.0.5",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0",
+    "typescript": "^4.9.4",
+    "vite": "^4.0.4",
+    "vite-plugin-dts": "^1.7.1",
     "yup": "^0.32.11"
   },
   "husky": {
@@ -141,7 +141,7 @@
     ]
   },
   "engines": {
-    "node": ">=16.14"
+    "node": "16.x"
   },
   "publishConfig": {
     "access": "public"

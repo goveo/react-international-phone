@@ -10,7 +10,7 @@
 
 [Live demo: Storybook](https://react-international-phone-storybook.vercel.app)
 
-![demo-gif](https://user-images.githubusercontent.com/25800848/210026141-d78e882c-1728-44be-b82c-f35ebfba518e.gif)
+![demo-gif](https://user-images.githubusercontent.com/25800848/215350455-0d362e64-d621-4856-a384-ab18d4a0d5fa.gif)
 
 ## Features
 
