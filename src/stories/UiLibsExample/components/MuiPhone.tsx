@@ -1,4 +1,5 @@
 import {
+  BaseTextFieldProps,
   InputAdornment,
   MenuItem,
   Select,
@@ -15,12 +16,16 @@ import {
   usePhoneInput,
 } from '../../../index';
 
-export interface MUIPhoneProps {
+export interface MUIPhoneProps extends BaseTextFieldProps {
   value: string;
   onChange: (phone: string) => void;
 }
 
-export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
+export const MuiPhone: React.FC<MUIPhoneProps> = ({
+  value,
+  onChange,
+  ...restProps
+}) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',
@@ -102,6 +107,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
           </InputAdornment>
         ),
       }}
+      {...restProps}
     />
   );
 };
