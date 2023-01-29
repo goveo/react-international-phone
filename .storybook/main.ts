@@ -1,11 +1,8 @@
-import type { StorybookViteConfig } from '@storybook/builder-vite';
-import { dirname } from 'path';
-
 export default {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-controls'],
+  addons: ['@storybook/addon-controls', '@storybook/preset-scss'],
   core: {
-    builder: '@storybook/builder-vite',
+    builder: '@storybook/builder-webpack5',
   },
   refs: {
     '@chakra-ui/react': { disable: true },
@@ -16,11 +13,4 @@ export default {
     storyStoreV7: true,
   },
   framework: '@storybook/react',
-
-  // @FIXME: remove after switch to storybook v7
-  // https://github.com/eirslett/storybook-builder-vite/issues/55
-  async viteFinal(config) {
-    config.root = dirname(require.resolve('storybook-builder-vite'));
-    return config;
-  },
-} as StorybookViteConfig;
+};
