@@ -1,3 +1,15 @@
+# [1.8.0](https://github.com/goveo/react-international-phone/compare/v1.7.0...v1.8.0) (2023-01-29)
+
+
+### Bug Fixes
+
+* **CountrySelector:** omit onClick event type ([28e4e48](https://github.com/goveo/react-international-phone/commit/28e4e4817b32c3b6808ddbc9b7d9a3de6df2c625))
+
+
+### Features
+
+* **CountrySelectorDropdown:** add css variables for top and left properties ([13660bb](https://github.com/goveo/react-international-phone/commit/13660bb10e192fedd437758dd7065c638b0d2e86))
+
 # [1.7.0](https://github.com/goveo/react-international-phone/compare/v1.6.5...v1.7.0) (2023-01-21)
 
 
