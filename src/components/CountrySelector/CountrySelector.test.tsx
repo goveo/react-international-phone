@@ -12,6 +12,7 @@ import {
 import { CountrySelector } from './CountrySelector';
 
 describe('CountrySelector', () => {
+  const user = userEvent.setup();
   test('render CountrySelector', () => {
     render(<CountrySelector selectedCountry="ua" />);
     expect(getCountrySelector()).toBeVisible();
@@ -54,32 +55,32 @@ describe('CountrySelector', () => {
     expect(getCountrySelectorDropdown()).not.toBeVisible();
   });
 
-  test('contain active class when open', () => {
+  test('contain active class when open', async () => {
     render(<CountrySelector selectedCountry="ua" />);
-    fireEvent.click(getCountrySelector());
+    await user.click(getCountrySelector());
     expect(getCountrySelector().className).toMatch(/active/);
     expect(getDropdownArrow()?.className).toMatch(/active/);
 
-    fireEvent.mouseDown(document.body);
+    await user.click(document.body);
     expect(getCountrySelector().className).not.toMatch(/active/);
     expect(getDropdownArrow()?.className).not.toMatch(/active/);
   });
 
-  test('close dropdown on click outside', () => {
+  test('close dropdown on click outside', async () => {
     render(<CountrySelector selectedCountry="ua" />);
-    fireEvent.click(getCountrySelector());
+    await user.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
 
-    fireEvent.mouseDown(document.body);
+    await user.click(document.body);
     expect(getCountrySelectorDropdown()).not.toBeVisible();
   });
 
-  test('close dropdown on click while dropdown is open', () => {
+  test('close dropdown on click while dropdown is open', async () => {
     render(<CountrySelector selectedCountry="ua" />);
-    fireEvent.click(getCountrySelector());
+    await user.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
 
-    fireEvent.click(getCountrySelector());
+    await user.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).not.toBeVisible();
   });
 
@@ -97,8 +98,6 @@ describe('CountrySelector', () => {
   });
 
   test('select country option on enter press', async () => {
-    const user = userEvent.setup();
-
     const onSelect = jest.fn();
     render(<CountrySelector selectedCountry="us" onSelect={onSelect} />);
     await user.click(getCountrySelector());
@@ -140,10 +139,10 @@ describe('CountrySelector', () => {
       render(<CountrySelector selectedCountry="us" />);
       expect(getCountrySelectorDropdown()).not.toBeVisible();
 
-      await userEvent.tab();
+      await user.tab();
       expect(getCountrySelector()).toHaveFocus();
 
-      await userEvent.keyboard('{enter}');
+      await user.keyboard('{enter}');
       expect(getCountrySelectorDropdown()).toBeVisible();
     });
 
@@ -151,20 +150,20 @@ describe('CountrySelector', () => {
       const { rerender } = render(<CountrySelector selectedCountry="us" />);
       expect(getCountrySelectorDropdown()).not.toBeVisible();
 
-      await userEvent.tab();
+      await user.tab();
       expect(getCountrySelector()).toHaveFocus();
 
-      await userEvent.keyboard('{arrowUp}');
+      await user.keyboard('{arrowUp}');
       expect(getCountrySelectorDropdown()).toBeVisible();
 
       // move focus back
-      await userEvent.tab({ shift: true });
+      await user.tab({ shift: true });
 
       rerender(<CountrySelector selectedCountry="us" />);
       expect(getCountrySelector()).toHaveFocus();
       expect(getCountrySelectorDropdown()).not.toBeVisible();
 
-      await userEvent.keyboard('{arrowDown}');
+      await user.keyboard('{arrowDown}');
       expect(getCountrySelectorDropdown()).toBeVisible();
     });
   });

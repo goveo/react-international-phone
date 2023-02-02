@@ -275,11 +275,11 @@ describe('CountrySelectorDropdown', () => {
           onClose={onClose}
         />,
       );
-      await userEvent.tab();
-      await userEvent.keyboard('{enter}');
+      await user.tab();
+      await user.keyboard('{enter}');
 
       expect(getCountrySelectorDropdown()).toBeVisible();
-      await userEvent.tab();
+      await user.tab();
 
       expect(onClose).toBeCalledTimes(1);
     });
