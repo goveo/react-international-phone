@@ -3,7 +3,6 @@ import './CountrySelector.style.scss';
 import React, { useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
-import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
@@ -39,6 +38,7 @@ type RenderButtonWrapperRootProps = {
 } & Pick<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   | 'onKeyDown'
+  | 'onMouseDown'
   | 'title'
   | 'disabled'
   | 'role'
@@ -81,11 +81,6 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
 
   const countrySelectorRef = useRef<HTMLDivElement>(null);
 
-  useOnClickOutside({
-    ref: countrySelectorRef,
-    onClickOutside: () => setShowDropdown(false),
-  });
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!e.key) return;
 
@@ -99,6 +94,9 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     const rootProps: RenderButtonWrapperRootProps = {
       title: fullSelectedCountry?.name,
       onClick: () => setShowDropdown((v) => !v),
+      // Need this to close dropdown on selector button click
+      // https://stackoverflow.com/a/28963938
+      onMouseDown: (e) => e.preventDefault(),
       onKeyDown: handleKeyDown,
       disabled: hideDropdown || disabled,
       role: 'combobox',
