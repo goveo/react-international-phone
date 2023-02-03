@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/goveo/react-international-phone/compare/v1.8.1...v1.8.2) (2023-02-03)
+
+
+### Bug Fixes
+
+* **CountrySelector:** fix dropdown closing by clicking on the selector button ([b149f6d](https://github.com/goveo/react-international-phone/commit/b149f6d505eaed71f5fc6f89ff536d2de94bc025))
+
 ## [1.8.1](https://github.com/goveo/react-international-phone/compare/v1.8.0...v1.8.1) (2023-01-29)
 
 
