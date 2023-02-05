@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/goveo/react-international-phone/compare/v1.8.2...v1.8.3) (2023-02-05)
+
+
+### Bug Fixes
+
+* **CountrySelectorDropdown:** re-implement scrolling using the native scrollIntoView function ([df3da41](https://github.com/goveo/react-international-phone/commit/df3da417d1f296f280d04db6c2c2818e7ad1eed6))
+
 ## [1.8.2](https://github.com/goveo/react-international-phone/compare/v1.8.1...v1.8.2) (2023-02-03)
 
 
