@@ -10,7 +10,7 @@ enum HookIndex {
 }
 
 describe('useHistoryState', () => {
-  it('Should set initial value', () => {
+  test('Should set initial value', () => {
     const initialValue = 'Some test value';
     const { result } = renderHook(() => useHistoryState(initialValue));
 
@@ -19,7 +19,7 @@ describe('useHistoryState', () => {
     expect(state).toBe(initialValue);
   });
 
-  it('Should update state', () => {
+  test('Should update state', () => {
     const { result } = renderHook(() => useHistoryState(''));
     const newValue = 'New value';
 
@@ -30,7 +30,7 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe(newValue);
   });
 
-  it('Should support undo/redo', () => {
+  test('Should support undo/redo', () => {
     const { result } = renderHook(() => useHistoryState('1'));
 
     act(() => {
@@ -85,7 +85,7 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe('100');
   });
 
-  it('Should handle history size', () => {
+  test('Should handle history size', () => {
     const { result } = renderHook(() => useHistoryState('0', { size: 2 }));
 
     act(() => {
@@ -109,7 +109,7 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe('2');
   });
 
-  it('Should handle skipHistorySave setState option', () => {
+  test('Should handle skipHistorySave setState option', () => {
     const { result } = renderHook(() => useHistoryState('0', { size: 2 }));
 
     act(() => {
@@ -134,7 +134,7 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe('1');
   });
 
-  it('Should not update history if same value have been set', () => {
+  test('Should not update history if same value have been set', () => {
     const { result } = renderHook(() => useHistoryState('1'));
 
     act(() => {

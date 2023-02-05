@@ -8,7 +8,7 @@ import { usePhoneValidation } from '../usePhoneValidation';
 describe('usePhoneValidation', () => {
   const validatePhoneSpy = jest.spyOn(validatePhoneModule, 'validatePhone');
 
-  it('should call validatePhone util function', () => {
+  test('should call validatePhone util function', () => {
     const phone = '+1 (444) 444-4444';
     const config: ValidatePhoneConfig = {
       prefix: '',

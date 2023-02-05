@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react-hooks/dom';
 import { usePhone } from '../usePhone';
 
 describe('usePhone', () => {
-  it('Should set initial value', () => {
+  test('Should set initial value', () => {
     const { result: fullPhone } = renderHook(() =>
       usePhone('+1 (444) 444-4444'),
     );
@@ -14,7 +14,7 @@ describe('usePhone', () => {
     expect(notFullPhone.current.phone).toBe('+1 (444) ');
   });
 
-  it('Should format phone with handleValueChange', () => {
+  test('Should format phone with handleValueChange', () => {
     const { result } = renderHook(() => usePhone(''));
 
     act(() => {
@@ -43,7 +43,7 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('');
   });
 
-  it('Should handle charAfterDialCode config prop', () => {
+  test('Should handle charAfterDialCode config prop', () => {
     // with space
     const { result: resultWithSpace } = renderHook(() =>
       usePhone('', { country: 'us', charAfterDialCode: ' ' }),
@@ -83,7 +83,7 @@ describe('usePhone', () => {
     expect(resultWithoutSpace.current.phone).toBe('+380(99) 111 22 33');
   });
 
-  it('Should handle disableCountryGuess config prop', () => {
+  test('Should handle disableCountryGuess config prop', () => {
     const { result } = renderHook(() =>
       usePhone('+123', { country: 'us', disableCountryGuess: true }),
     );
@@ -105,7 +105,7 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('+3 (876) 543-210');
   });
 
-  it('Should handle disableDialCodePrefill config prop', () => {
+  test('Should handle disableDialCodePrefill config prop', () => {
     const { result: resultWithoutPrefill } = renderHook(() =>
       usePhone('', { country: 'us', disableDialCodePrefill: true }),
     );
@@ -148,7 +148,7 @@ describe('usePhone', () => {
       });
     });
 
-    it('should not allow dial code change', () => {
+    test('should not allow dial code change', () => {
       const { result } = renderHook(() =>
         usePhone('', { country: 'us', forceDialCode: true }),
       );
@@ -165,7 +165,7 @@ describe('usePhone', () => {
       expect(result.current.phone).toBe('+1 ');
     });
 
-    it('allow dial code change if a new phone was pasted', () => {
+    test('allow dial code change if a new phone was pasted', () => {
       const { result } = renderHook(() =>
         usePhone('', { country: 'us', forceDialCode: true }),
       );
@@ -198,7 +198,7 @@ describe('usePhone', () => {
     });
   });
 
-  it('Should handle disableDialCodeAndPrefix config prop', () => {
+  test('Should handle disableDialCodeAndPrefix config prop', () => {
     const { result } = renderHook(() =>
       usePhone('+12345', { country: 'us', disableDialCodeAndPrefix: true }),
     );
@@ -215,7 +215,7 @@ describe('usePhone', () => {
     expect(result.current.phone).toBe('(380) 994-5678');
   });
 
-  it('disableDialCodeAndPrefix should ignore disableCountryGuess and forceDialCode', () => {
+  test('disableDialCodeAndPrefix should ignore disableCountryGuess and forceDialCode', () => {
     // forceDialCode
     const { result: withForceDialCode } = renderHook(() =>
       usePhone('+12345', {
