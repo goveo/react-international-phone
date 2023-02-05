@@ -12,6 +12,7 @@ import {
   getDropdownArrow,
   getDropdownOption,
   getInput,
+  mockScrollIntoView,
 } from '../../utils/test-utils';
 import { PhoneInput } from './PhoneInput';
 
@@ -36,6 +37,10 @@ export const fireChangeEvent = (
 };
 
 describe('PhoneInput', () => {
+  beforeAll(() => {
+    mockScrollIntoView();
+  });
+
   test('should set phone value', () => {
     render(<PhoneInput value="+38099109" initialCountry="ua" />);
     expect(getInput().value).toBe('+380 (99) 109 ');

@@ -8,6 +8,7 @@ import {
   getCountryFlag,
   getCountrySelectorDropdown,
   getDropdownOption,
+  mockScrollIntoView,
 } from '../../utils/test-utils';
 import {
   CountrySelectorDropdown,
@@ -26,6 +27,10 @@ const selectedItemClass =
 
 describe('CountrySelectorDropdown', () => {
   const user = userEvent.setup();
+
+  beforeAll(() => {
+    mockScrollIntoView();
+  });
 
   test('render CountrySelectorDropdown', () => {
     render(<CountrySelectorDropdown {...defaultDropdownProps} />);

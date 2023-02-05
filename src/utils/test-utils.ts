@@ -67,3 +67,10 @@ export const getCountryFlag = (country: CountryIso2) =>
       element.getAttribute('data-country') === country
     );
   }) as HTMLLIElement;
+
+export const mockScrollIntoView = () => {
+  const mock = jest.fn();
+  window.HTMLElement.prototype.scrollIntoView = mock;
+
+  return mock;
+};
