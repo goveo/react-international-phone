@@ -89,6 +89,10 @@ const config = {
                 label: 'Subcomponents API',
                 to: '/docs/Subcomponents%20API/',
               },
+              {
+                label: 'Advanced Usage',
+                to: '/docs/Advanced%20Usage/usePhoneInput',
+              },
             ],
           },
           {

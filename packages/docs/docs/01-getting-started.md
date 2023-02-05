@@ -6,9 +6,36 @@ sidebar_position: 1
 
 ## Installation
 
-```sh
-npm i react-international-phone
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+
+<TabItem value="npm" label="npm">
+
+```shell
+npm install react-international-phone
 ```
+
+</TabItem>
+
+<TabItem value="yarn" label="yarn">
+
+```shell
+yarn add react-international-phone
+```
+
+</TabItem>
+
+<TabItem value="pnpm" label="pnpm">
+
+```shell
+pnpm add react-international-phone
+```
+
+</TabItem>
+
+</Tabs>
 
 ## Basic usage
 

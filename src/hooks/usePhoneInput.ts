@@ -50,7 +50,7 @@ export const usePhoneInput = ({
   onCountryChange,
   ...restConfig
 }: UsePhoneInputConfig) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [country, setCountry] = useState<CountryIso2>(initialCountry);
 
@@ -124,7 +124,7 @@ export const usePhoneInput = ({
 
   // Handle undo/redo events
   useEffect(() => {
-    const input = inputRef?.current;
+    const input = inputRef.current;
     if (!input) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -139,9 +139,9 @@ export const usePhoneInput = ({
       return shiftPressed ? redo() : undo();
     };
 
-    input?.addEventListener('keydown', onKeyDown);
+    input.addEventListener('keydown', onKeyDown);
     return () => {
-      input?.removeEventListener('keydown', onKeyDown);
+      input.removeEventListener('keydown', onKeyDown);
     };
   }, [inputRef, undo, redo]);
 

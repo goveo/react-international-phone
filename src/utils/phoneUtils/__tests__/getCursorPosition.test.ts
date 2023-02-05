@@ -164,5 +164,15 @@ describe('getCursorPosition', () => {
         deletion: 'backward',
       }),
     ).toBe(0);
+
+    expect(
+      getCursorPosition({
+        phoneBeforeInput: '+1 ',
+        phoneAfterInput: ' ',
+        cursorPositionAfterInput: 0,
+        phoneAfterFormatted: '+',
+        deletion: 'forward',
+      }),
+    ).toBe('+'.length);
   });
 });

@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react-hooks/dom';
 import { useTimer } from '../useTimer';
 
 describe('useTimer', () => {
-  it('Should return check function', () => {
+  test('Should return check function', () => {
     const DELAY_MS = 1000;
     const currentDate = new Date();
     jest.useFakeTimers().setSystemTime(currentDate.setMilliseconds(0));

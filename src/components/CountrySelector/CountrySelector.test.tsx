@@ -8,11 +8,17 @@ import {
   getCountrySelectorFlag,
   getDropdownArrow,
   getDropdownOption,
+  mockScrollIntoView,
 } from '../../utils/test-utils';
 import { CountrySelector } from './CountrySelector';
 
 describe('CountrySelector', () => {
   const user = userEvent.setup();
+
+  beforeAll(() => {
+    mockScrollIntoView();
+  });
+
   test('render CountrySelector', () => {
     render(<CountrySelector selectedCountry="ua" />);
     expect(getCountrySelector()).toBeVisible();

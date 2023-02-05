@@ -8,6 +8,7 @@ import {
   getCountryFlag,
   getCountrySelectorDropdown,
   getDropdownOption,
+  mockScrollIntoView,
 } from '../../utils/test-utils';
 import {
   CountrySelectorDropdown,
@@ -26,6 +27,10 @@ const selectedItemClass =
 
 describe('CountrySelectorDropdown', () => {
   const user = userEvent.setup();
+
+  beforeAll(() => {
+    mockScrollIntoView();
+  });
 
   test('render CountrySelectorDropdown', () => {
     render(<CountrySelectorDropdown {...defaultDropdownProps} />);
@@ -199,7 +204,7 @@ describe('CountrySelectorDropdown', () => {
     test('should select country by keyboard arrows', async () => {
       const onSelect = jest.fn();
 
-      render(
+      const { rerender } = render(
         <CountrySelectorDropdown
           {...defaultDropdownProps}
           selectedCountry="us"
@@ -226,6 +231,28 @@ describe('CountrySelectorDropdown', () => {
 
       expect(onSelect.mock.calls.length).toBe(1);
       expect(onSelect.mock.calls[0][0]).toMatchObject({ name: 'Ukraine' });
+
+      rerender(
+        <CountrySelectorDropdown
+          {...defaultDropdownProps}
+          selectedCountry="ua"
+          onSelect={onSelect}
+        />,
+      );
+
+      await user.keyboard('{arrowdown}{arrowdown}');
+
+      expect(getDropdownOption('gb')).toHaveClass(focusedItemClass);
+      expect(getDropdownOption('gb')).not.toHaveClass(selectedItemClass);
+      expect(getDropdownOption('ua')).not.toHaveClass(focusedItemClass);
+      expect(getDropdownOption('ua')).toHaveClass(selectedItemClass);
+
+      await user.keyboard('{enter}');
+
+      expect(onSelect.mock.calls.length).toBe(2);
+      expect(onSelect.mock.calls[1][0]).toMatchObject({
+        name: 'United Kingdom',
+      });
     });
 
     test('should move item focus on pageUp and pageDown', async () => {
