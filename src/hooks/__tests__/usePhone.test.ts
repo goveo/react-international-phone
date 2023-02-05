@@ -196,6 +196,18 @@ describe('usePhone', () => {
       });
       expect(result.current.phone).toBe('+380 (99) ');
     });
+
+    test('should not allow remove dial code', () => {
+      const { result } = renderHook(() =>
+        usePhone('', { country: 'us', forceDialCode: true }),
+      );
+      expect(result.current.phone).toBe('+1 ');
+
+      act(() => {
+        result.current.handleValueChange('', { deletion: 'backward' });
+      });
+      expect(result.current.phone).toBe('+1');
+    });
   });
 
   test('Should handle disableDialCodeAndPrefix config prop', () => {
