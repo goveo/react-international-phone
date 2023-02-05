@@ -50,7 +50,7 @@ export const usePhoneInput = ({
   onCountryChange,
   ...restConfig
 }: UsePhoneInputConfig) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [country, setCountry] = useState<CountryIso2>(initialCountry);
 
