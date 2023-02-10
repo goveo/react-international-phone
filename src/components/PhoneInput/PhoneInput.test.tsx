@@ -574,4 +574,37 @@ describe('PhoneInput', () => {
       expect(getCursorPosition()).toBe('+1 (111) '.length);
     });
   });
+
+  describe('autofocus', () => {
+    test('should set focus on input', () => {
+      const { rerender } = render(
+        <PhoneInput initialCountry="us" inputProps={{ autoFocus: true }} />,
+      );
+      expect(getInput()).toHaveFocus();
+
+      // unset focus
+      getInput().blur();
+
+      rerender(<PhoneInput initialCountry="us" />);
+      expect(getInput()).not.toHaveFocus();
+    });
+
+    test('should set cursor to the end', async () => {
+      render(
+        <PhoneInput
+          value="+31 "
+          initialCountry="nl"
+          inputProps={{ autoFocus: true }}
+        />,
+      );
+
+      expect(getInput().selectionStart).toBe('+31 '.length);
+      expect(getInput().selectionEnd).toBe('+31 '.length);
+
+      // Need to check next tick because of realization
+      await new Promise((r) => setTimeout(r, 0));
+      expect(getInput().selectionStart).toBe('+31 '.length);
+      expect(getInput().selectionEnd).toBe('+31 '.length);
+    });
+  });
 });
