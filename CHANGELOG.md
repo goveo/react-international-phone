@@ -1,3 +1,11 @@
+## [1.8.4](https://github.com/goveo/react-international-phone/compare/v1.8.3...v1.8.4) (2023-02-11)
+
+
+### Bug Fixes
+
+* add initial value formatting, fix flash on mount ([e67c694](https://github.com/goveo/react-international-phone/commit/e67c6942366e567ce21054a12557ee72fb62dbb2))
+* set cursor to the end on autofocus ([017b0de](https://github.com/goveo/react-international-phone/commit/017b0de4bfc0aa1d1a41b8286a0227eb8bf8400d))
+
 ## [1.8.3](https://github.com/goveo/react-international-phone/compare/v1.8.2...v1.8.3) (2023-02-05)
 
 
