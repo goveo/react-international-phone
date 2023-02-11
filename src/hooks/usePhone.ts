@@ -185,7 +185,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       trimNonDigitsEnd,
       insertDialCodeOnEmpty,
       forceDisableCountryGuess,
-    }: FormatPhoneValueFuncOptions,
+    }: FormatPhoneValueFuncOptions = {},
   ): {
     phone: string;
     countryGuessResult?: CountryGuessResult | undefined;
@@ -221,7 +221,11 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     return { phone, countryGuessResult, formatCountry };
   };
 
-  const [phone, setPhone, undo, redo] = useHistoryState('');
+  const [phone, setPhone, undo, redo] = useHistoryState(
+    formatPhoneValue(value, {
+      insertDialCodeOnEmpty: !disableDialCodePrefill,
+    }).phone,
+  );
   const [initialized, setInitialized] = useState(false);
 
   const handleValueChange = (

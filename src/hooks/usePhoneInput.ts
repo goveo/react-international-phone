@@ -97,18 +97,20 @@ export const usePhoneInput = ({
           deletion,
         },
       ) => {
-        const cursorPosition = getCursorPosition({
-          cursorPositionAfterInput,
-          phoneBeforeInput: phone,
-          phoneAfterInput: unformattedValue,
-          phoneAfterFormatted: newPhone,
-          leftOffset: restConfig.forceDialCode
-            ? prefix.length +
-              (formatCountry?.dialCode?.length ?? 0) +
-              charAfterDialCode.length
-            : 0,
-          deletion,
-        });
+        const cursorPosition = initialized
+          ? getCursorPosition({
+              cursorPositionAfterInput,
+              phoneBeforeInput: phone,
+              phoneAfterInput: unformattedValue,
+              phoneAfterFormatted: newPhone,
+              leftOffset: restConfig.forceDialCode
+                ? prefix.length +
+                  (formatCountry?.dialCode?.length ?? 0) +
+                  charAfterDialCode.length
+                : 0,
+              deletion,
+            })
+          : newPhone.length;
 
         /**
          * HACK: should set cursor on the next tick to make sure that the phone value is updated
