@@ -26,35 +26,44 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <CountrySelector
-        selectedCountry={phoneInput.country}
-        onSelect={(country) => phoneInput.setCountry(country.iso2)}
-        renderButtonWrapper={({ children, rootProps }) => (
-          <Button
-            {...rootProps}
-            color="primary"
-            style={{
-              height: '32px',
-              padding: '4px',
-              margin: '0 8px',
-            }}
-          >
-            {children}
-          </Button>
-        )}
-      />
-      <Input
-        color="primary"
-        value={phoneInput.phone}
-        onChange={(e) => {
-          const value = phoneInput.handlePhoneValueChange(e);
-          onChange(value);
-        }}
-        ref={inputRef}
-        style={{
-          width: '200px',
-        }}
-      />
+      <Input.Group compact>
+        <CountrySelector
+          selectedCountry={phoneInput.country}
+          onSelect={(country) => phoneInput.setCountry(country.iso2)}
+          renderButtonWrapper={({ children, rootProps }) => (
+            <Button
+              {...rootProps}
+              style={{
+                height: '32px',
+                padding: '4px',
+                // make the right border square
+                borderEndEndRadius: '0px',
+                borderStartEndRadius: '0px',
+                // fix on click effect overlap
+                zIndex: 1,
+              }}
+            >
+              {children}
+            </Button>
+          )}
+          dropdownStyleProps={{
+            style: {
+              top: '35px',
+            },
+          }}
+        />
+        <Input
+          value={phoneInput.phone}
+          onChange={(e) => {
+            const value = phoneInput.handlePhoneValueChange(e);
+            onChange(value);
+          }}
+          ref={inputRef}
+          style={{
+            width: '200px',
+          }}
+        />
+      </Input.Group>
     </div>
   );
 };
