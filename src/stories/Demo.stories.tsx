@@ -9,7 +9,7 @@ import { parseCountry } from '../utils';
 import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
 export default {
-  title: 'Demo',
+  title: 'Dev',
   includeStories: [], // Comment this line to show demo story
 } as Meta;
 
@@ -84,6 +84,28 @@ export const Demo = () => {
           onChange={setMuiPhone}
         />
       </PhoneWrapper>
+    </div>
+  );
+};
+
+export const RerenderTest = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [phone, setPhone] = useState('+1234567');
+
+  if (!isVisible) {
+    return <button onClick={() => setIsVisible(true)}>Show</button>;
+  }
+
+  return (
+    <div>
+      <PhoneInput
+        value={phone}
+        onChange={setPhone}
+        initialCountry="nl"
+        placeholder="Test Placeholder"
+        inputProps={{ autoFocus: true }}
+      />
+      <button onClick={() => setIsVisible(false)}>Hide</button>
     </div>
   );
 };
