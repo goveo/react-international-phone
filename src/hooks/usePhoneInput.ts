@@ -6,6 +6,7 @@ import {
   addDialCode,
   getCountry,
   getCursorPosition,
+  guessCountryByPartialNumber,
   removeDialCode,
   removeNonDigits,
 } from '../utils';
@@ -52,7 +53,10 @@ export const usePhoneInput = ({
 }: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const [country, setCountry] = useState<CountryIso2>(initialCountry);
+  const [country, setCountry] = useState<CountryIso2>(
+    guessCountryByPartialNumber({ phone: value, countries }).country?.iso2 ??
+      initialCountry,
+  );
 
   const passedCountry = useMemo(() => {
     if (!country) return;
