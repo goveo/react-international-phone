@@ -1,3 +1,11 @@
+## [1.8.5](https://github.com/goveo/react-international-phone/compare/v1.8.4...v1.8.5) (2023-02-12)
+
+
+### Bug Fixes
+
+* guess country by passed value on initial render ([98607b6](https://github.com/goveo/react-international-phone/commit/98607b67764a2292a76b9e12ce04574823a82cc5))
+* revert scrolling behaviour ([9947eeb](https://github.com/goveo/react-international-phone/commit/9947eebabe441f314aa103c7777050c62aadad2b))
+
 ## [1.8.4](https://github.com/goveo/react-international-phone/compare/v1.8.3...v1.8.4) (2023-02-11)
 
 
