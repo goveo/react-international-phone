@@ -5,6 +5,7 @@ export const scrollToChild = (parent: HTMLElement, child: HTMLElement) => {
     parent.style.display = 'block';
   }
 
+  // can't use scrollIntoView because of scroll event bubbling
   const parentPosition = parent.getBoundingClientRect();
   const childPosition = child.getBoundingClientRect();
 
