@@ -1,3 +1,10 @@
+## [1.8.6](https://github.com/goveo/react-international-phone/compare/v1.8.5...v1.8.6) (2023-02-22)
+
+
+### Bug Fixes
+
+* remove node version from package.json ([c9c4057](https://github.com/goveo/react-international-phone/commit/c9c40576760d7178a3ced62e6195407884725f0b))
+
 ## [1.8.5](https://github.com/goveo/react-international-phone/compare/v1.8.4...v1.8.5) (2023-02-12)
 
 
