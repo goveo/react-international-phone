@@ -141,9 +141,6 @@
       "pnpm lint:scss"
     ]
   },
-  "engines": {
-    "node": "16.x"
-  },
   "publishConfig": {
     "access": "public"
   },
