@@ -127,20 +127,6 @@
     "webpack-cli": "^5.0.1",
     "yup": "^0.32.11"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.(ts|tsx|js)": [
-      "pnpm lint:ts",
-      "pnpm format"
-    ],
-    "*.(css|scss)": [
-      "pnpm lint:scss"
-    ]
-  },
   "publishConfig": {
     "access": "public"
   },

@@ -1,0 +1,4 @@
+{
+  "*.(ts|tsx|js)": ["pnpm lint:ts", "pnpm format"],
+  "*.(css|scss)": ["pnpm lint:scss"]
+}
