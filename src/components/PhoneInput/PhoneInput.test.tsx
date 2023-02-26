@@ -68,8 +68,15 @@ describe('PhoneInput', () => {
   });
 
   test('should set flag to country selector', () => {
-    render(<PhoneInput value="+380" initialCountry="ua" />);
-    expect(getCountrySelector()).toHaveAttribute('title', 'Ukraine');
+    const { rerender } = render(<PhoneInput value="+1" initialCountry="ca" />);
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+    expect(getCountrySelector()).toHaveAttribute('title', 'Canada');
+
+    rerender(<PhoneInput value="+1 (201)" initialCountry="ca" />);
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+
+    rerender(<PhoneInput value="+380 (99) 999 99 99" initialCountry="ca" />);
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
   });
 
   test('should format value', () => {

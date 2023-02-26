@@ -109,3 +109,9 @@ export const RerenderTest = () => {
     </div>
   );
 };
+
+export const ControlledInputTest = () => {
+  const [phone, setPhone] = useState('+1 ');
+
+  return <PhoneInput value={phone} onChange={setPhone} initialCountry="ca" />;
+};

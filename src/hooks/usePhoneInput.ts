@@ -62,8 +62,11 @@ export const usePhoneInput = ({
   });
 
   const [country, setCountry] = useState<CountryIso2>(
-    guessCountryByPartialNumber({ phone: value, countries }).country?.iso2 ??
-      initialCountry,
+    guessCountryByPartialNumber({
+      phone: value,
+      countries,
+      currentCountryIso2: initialCountry,
+    }).country?.iso2 ?? initialCountry,
   );
 
   const passedCountry = useMemo(() => {

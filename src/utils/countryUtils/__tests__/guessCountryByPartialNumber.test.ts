@@ -201,4 +201,28 @@ describe('guessCountryByPartialNumber', () => {
       areaCodeMatch: undefined,
     });
   });
+
+  test('should return the current country if the dial code matches', () => {
+    expect(
+      guessCountryByPartialNumber({
+        phone: '+1 234567890',
+        countries: defaultCountries,
+        currentCountryIso2: 'do',
+      }),
+    ).toMatchObject({
+      country: { dialCode: '1', iso2: 'do' },
+      areaCodeMatch: false,
+    });
+
+    expect(
+      guessCountryByPartialNumber({
+        phone: '+1 204567890', // Canada area code
+        countries: defaultCountries,
+        currentCountryIso2: 'do',
+      }),
+    ).toMatchObject({
+      country: { dialCode: '1', iso2: 'ca' },
+      areaCodeMatch: true,
+    });
+  });
 });

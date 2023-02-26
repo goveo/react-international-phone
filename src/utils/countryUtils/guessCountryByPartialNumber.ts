@@ -1,13 +1,21 @@
-import { CountryData, CountryGuessResult, ParsedCountry } from '../../types';
+import {
+  CountryData,
+  CountryGuessResult,
+  CountryIso2,
+  ParsedCountry,
+} from '../../types';
 import { removeNonDigits } from '../common';
+import { getCountry } from './getCountry';
 import { parseCountry } from './parseCountry';
 
 export const guessCountryByPartialNumber = ({
   phone: partialPhone,
   countries,
+  currentCountryIso2,
 }: {
   phone: string;
   countries: CountryData[];
+  currentCountryIso2?: CountryIso2;
 }): CountryGuessResult => {
   const emptyResult = {
     country: undefined,
@@ -97,6 +105,29 @@ export const guessCountryByPartialNumber = ({
           updateResult({ country: parsedCountry, fullDialCodeMatch: false });
         }
       }
+    }
+  }
+
+  if (currentCountryIso2) {
+    const currentCountry = getCountry({
+      value: currentCountryIso2,
+      field: 'iso2',
+      countries,
+    });
+
+    // save the passed country if the dial code is the same
+    const shouldSaveDialCode =
+      !!result &&
+      !!currentCountry &&
+      // different countries with same dial code
+      result.country?.dialCode === currentCountry.dialCode &&
+      result.country !== currentCountry &&
+      // full dial code match (without area code)
+      result.fullDialCodeMatch &&
+      !result.areaCodeMatch;
+
+    if (shouldSaveDialCode) {
+      result.country = currentCountry;
     }
   }
 
