@@ -91,6 +91,29 @@ describe('PhoneInput', () => {
     expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
   });
 
+  test('should not change the country when dial code or area-code is not changed', () => {
+    // Canada and USA have "+1" as dial code
+    render(<PhoneInput initialCountry="ca" />);
+
+    fireEvent.change(getInput(), { target: { value: '+12' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+123' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+1234' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+1203' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+
+    fireEvent.change(getInput(), { target: { value: '+1204' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+1' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+  });
+
   test('should open country selector dropdown', () => {
     render(<PhoneInput initialCountry="ua" />);
     expect(getCountrySelectorDropdown()).not.toBeVisible();
@@ -104,6 +127,19 @@ describe('PhoneInput', () => {
     fireEvent.click(getDropdownOption('af'));
     expect(getCountrySelector()).toHaveAttribute('data-country', 'af');
     expect(getInput().value).toBe('+93 ');
+
+    fireEvent.click(getCountrySelector());
+    fireEvent.click(getDropdownOption('us'));
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+    expect(getInput().value).toBe('+1 ');
+
+    fireEvent.change(getInput(), { target: { value: '+1234' } });
+    expect(getInput().value).toBe('+1 (234) ');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+
+    fireEvent.click(getCountrySelector());
+    fireEvent.click(getDropdownOption('ca'));
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
   });
 
   test('should support disabled state', () => {

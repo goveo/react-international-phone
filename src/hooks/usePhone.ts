@@ -199,6 +199,21 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
           }) // FIXME: should not guess country on every change
         : undefined;
 
+    // save the passed country if the dial code is the same
+    const shouldSaveDialCode =
+      !!countryGuessResult &&
+      !!passedCountry &&
+      // different countries with same dial code
+      countryGuessResult.country?.dialCode === passedCountry.dialCode &&
+      countryGuessResult.country !== passedCountry &&
+      // full dial code match (without area code)
+      countryGuessResult.fullDialCodeMatch &&
+      !countryGuessResult.areaCodeMatch;
+
+    if (shouldSaveDialCode) {
+      countryGuessResult.country = passedCountry;
+    }
+
     const formatCountry =
       !forceDisableCountryGuess && shouldGuessCountry
         ? countryGuessResult?.country ?? passedCountry
