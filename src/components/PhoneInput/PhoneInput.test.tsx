@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
-import { parseCountry } from '../../utils';
+import { parseCountry, removeNonDigits } from '../../utils';
 import { buildCountryData } from '../../utils/countryUtils/buildCountryData';
 import {
   getCountrySelector,
@@ -642,5 +642,36 @@ describe('PhoneInput', () => {
       expect(getInput().selectionStart).toBe('+31 '.length);
       expect(getInput().selectionEnd).toBe('+31 '.length);
     });
+  });
+
+  test('should use default mask if country data does not have mask', () => {
+    render(<PhoneInput initialCountry="do" />);
+    fireChangeEvent('+1234567');
+    expect(getInput().value).toBe('+1 234567');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'do');
+  });
+
+  test('should work with every country', () => {
+    render(
+      <PhoneInput initialCountry={parseCountry(defaultCountries[0]).iso2} />,
+    );
+
+    for (const c of defaultCountries) {
+      const country = parseCountry(c);
+
+      // change country using dropdown
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption(country.iso2));
+
+      const userInput = '999999';
+      const inputValue = `${country.dialCode}${userInput}`;
+      fireChangeEvent(inputValue);
+
+      expect(removeNonDigits(getInput().value)).toBe(inputValue);
+      expect(getCountrySelector()).toHaveAttribute(
+        'data-country',
+        country.iso2,
+      );
+    }
   });
 });

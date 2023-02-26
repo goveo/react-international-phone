@@ -222,7 +222,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     const phone = formatCountry
       ? formatPhone(value, {
           prefix,
-          mask: formatCountry.format ?? defaultMask,
+          mask: formatCountry.format || defaultMask,
           maskChar: MASK_CHAR,
           dialCode: formatCountry.dialCode,
           trimNonDigitsEnd,

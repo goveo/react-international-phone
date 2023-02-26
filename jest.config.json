@@ -18,5 +18,6 @@
     "!**/*stories.{ts,tsx}",
     "!<rootDir>/src/utils/test-utils.ts"
   ],
-  "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"]
+  "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"],
+  "testTimeout": 100000
 }
