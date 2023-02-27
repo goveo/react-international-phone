@@ -490,52 +490,57 @@ describe('PhoneInput', () => {
     });
   });
 
-  test('should support countries filtering', () => {
-    const countries = defaultCountries.filter((country) => {
-      const { iso2 } = parseCountry(country);
-      return ['us', 'ua', 'cz'].includes(iso2);
+  describe('countries modification', () => {
+    test('should support countries filtering', () => {
+      const countries = defaultCountries.filter((country) => {
+        const { iso2 } = parseCountry(country);
+        return ['us', 'ua', 'cz'].includes(iso2);
+      });
+
+      render(
+        <PhoneInput initialCountry="us" value="+1234" countries={countries} />,
+      );
+
+      expect(getCountrySelectorDropdown().childNodes.length).toBe(
+        countries.length,
+      );
+
+      fireChangeEvent('44444');
+
+      // not supported country was not set (+44 should set uk by default)
+      expect(getInput().value).toBe('+4 (444) 4');
+      expect(getCountrySelector()).toHaveAttribute('title', 'United States');
+
+      fireChangeEvent('420123');
+      expect(getInput().value).toBe('+420 123 ');
+      expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+
+      fireChangeEvent('555555');
+      expect(getInput().value).toBe('+555 555 ');
+      expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
     });
 
-    render(
-      <PhoneInput initialCountry="us" value="+1234" countries={countries} />,
-    );
+    test('should support country change', () => {
+      const countries = defaultCountries.map((country) => {
+        const parsedCountry = parseCountry(country);
+        if (parsedCountry.iso2 === 'ua') {
+          return buildCountryData({
+            ...parsedCountry,
+            format: '(..) ... ....',
+          });
+        }
+        return country;
+      });
 
-    expect(getCountrySelectorDropdown().childNodes.length).toBe(
-      countries.length,
-    );
-
-    fireChangeEvent('44444');
-
-    // not supported country was not set (+44 should set uk by default)
-    expect(getInput().value).toBe('+4 (444) 4');
-    expect(getCountrySelector()).toHaveAttribute('title', 'United States');
-
-    fireChangeEvent('420123');
-    expect(getInput().value).toBe('+420 123 ');
-    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
-
-    fireChangeEvent('555555');
-    expect(getInput().value).toBe('+555 555 ');
-    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
-  });
-
-  test('should support country modifying', () => {
-    const countries = defaultCountries.map((country) => {
-      const parsedCountry = parseCountry(country);
-      if (parsedCountry.iso2 === 'ua') {
-        return buildCountryData({ ...parsedCountry, format: '(..) ... ....' });
-      }
-      return country;
+      render(
+        <PhoneInput
+          initialCountry="ua"
+          value="+380(99)9999999"
+          countries={countries}
+        />,
+      );
+      expect(getInput().value).toBe('+380 (99) 999 9999');
     });
-
-    render(
-      <PhoneInput
-        initialCountry="ua"
-        value="+380(99)9999999"
-        countries={countries}
-      />,
-    );
-    expect(getInput().value).toBe('+380 (99) 999 9999');
   });
 
   describe('cursor position', () => {
@@ -745,13 +750,20 @@ describe('PhoneInput', () => {
   });
 
   test('should use default mask if country data does not have mask', () => {
-    render(<PhoneInput initialCountry="do" />);
+    // mask is undefined
+    const { rerender } = render(<PhoneInput initialCountry="do" />);
     fireChangeEvent('+1234567');
     expect(getInput().value).toBe('+1 234567');
     expect(getCountrySelector()).toHaveAttribute('data-country', 'do');
+
+    // mask is empty string
+    rerender(<PhoneInput initialCountry="gr" />);
+    fireChangeEvent('+301234567');
+    expect(getInput().value).toBe('+30 1234567');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'gr');
   });
 
-  test('should work with every country', () => {
+  test('should display input value on every country', () => {
     render(
       <PhoneInput initialCountry={parseCountry(defaultCountries[0]).iso2} />,
     );
