@@ -230,7 +230,14 @@ export const usePhoneInput = ({
       shouldSetCursorToEnd: true,
     };
 
-    const newValue = handleValueChange(newCountry.dialCode);
+    const newValue = handleValueChange(
+      disableDialCodeAndPrefix
+        ? ''
+        : `${prefix}${charAfterDialCode}${newCountry.dialCode}`,
+      {
+        forcedCountry: newCountry,
+      },
+    );
     setCountry(newCountry.iso2);
 
     onCountryChange?.(newValue);
