@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
-import { parseCountry } from '../../utils';
+import { parseCountry, removeNonDigits } from '../../utils';
 import { buildCountryData } from '../../utils/countryUtils/buildCountryData';
 import {
   getCountrySelector,
@@ -34,6 +34,14 @@ export const fireChangeEvent = (
     },
     nativeEvent: { inputType: isDeletion ? 'delete' : 'another-type' },
   });
+};
+
+const setCursorPosition = (
+  selectionStart: number,
+  selectionEnd: number = selectionStart,
+) => {
+  getInput().selectionStart = selectionStart;
+  getInput().selectionEnd = selectionEnd;
 };
 
 describe('PhoneInput', () => {
@@ -68,8 +76,15 @@ describe('PhoneInput', () => {
   });
 
   test('should set flag to country selector', () => {
-    render(<PhoneInput value="+380" initialCountry="ua" />);
-    expect(getCountrySelector()).toHaveAttribute('title', 'Ukraine');
+    const { rerender } = render(<PhoneInput value="+1" initialCountry="ca" />);
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+    expect(getCountrySelector()).toHaveAttribute('title', 'Canada');
+
+    rerender(<PhoneInput value="+1 (201)" initialCountry="ca" />);
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+
+    rerender(<PhoneInput value="+380 (99) 999 99 99" initialCountry="ca" />);
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
   });
 
   test('should format value', () => {
@@ -91,6 +106,29 @@ describe('PhoneInput', () => {
     expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
   });
 
+  test('should not change the country when dial code or area-code is not changed', () => {
+    // Canada and USA have "+1" as dial code
+    render(<PhoneInput initialCountry="ca" />);
+
+    fireEvent.change(getInput(), { target: { value: '+12' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+123' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+1234' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+1203' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+
+    fireEvent.change(getInput(), { target: { value: '+1204' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+    fireEvent.change(getInput(), { target: { value: '+1' } });
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+  });
+
   test('should open country selector dropdown', () => {
     render(<PhoneInput initialCountry="ua" />);
     expect(getCountrySelectorDropdown()).not.toBeVisible();
@@ -104,6 +142,19 @@ describe('PhoneInput', () => {
     fireEvent.click(getDropdownOption('af'));
     expect(getCountrySelector()).toHaveAttribute('data-country', 'af');
     expect(getInput().value).toBe('+93 ');
+
+    fireEvent.click(getCountrySelector());
+    fireEvent.click(getDropdownOption('us'));
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+    expect(getInput().value).toBe('+1 ');
+
+    fireEvent.change(getInput(), { target: { value: '+1234' } });
+    expect(getInput().value).toBe('+1 (234) ');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+
+    fireEvent.click(getCountrySelector());
+    fireEvent.click(getDropdownOption('ca'));
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
   });
 
   test('should support disabled state', () => {
@@ -195,68 +246,186 @@ describe('PhoneInput', () => {
     expect(getInput().value).toBe('');
   });
 
-  test('should handle forceDialCode', () => {
-    render(
-      <PhoneInput value="12345678900" initialCountry="us" forceDialCode />,
-    );
-    expect(getInput().value).toBe('+1 (234) 567-8900');
+  describe('forceDialCode', () => {
+    test('should not allow dial code change with input', () => {
+      render(
+        <PhoneInput value="12345678900" initialCountry="us" forceDialCode />,
+      );
+      expect(getInput().value).toBe('+1 (234) 567-8900');
 
-    fireEvent.change(getInput(), { target: { value: '' } });
-    expect(getInput().value).toBe('+1 ');
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(getInput().value).toBe('+1 ');
 
-    fireEvent.change(getInput(), { target: { value: '+' } });
-    expect(getInput().value).toBe('+1 ');
+      fireEvent.change(getInput(), { target: { value: '+' } });
+      expect(getInput().value).toBe('+1 ');
+
+      fireEvent.change(getInput(), { target: { value: '+21' } });
+      expect(getInput().value).toBe('+1 ');
+    });
+
+    test('should allow change dial code with country selector', () => {
+      render(
+        <PhoneInput value="12345678900" initialCountry="us" forceDialCode />,
+      );
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+      expect(getInput().value).toBe('+1 (234) 567-8900');
+
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('ua'));
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
+      expect(getInput().value).toBe('+380 ');
+    });
+
+    test('allow dial code change if a new phone was pasted', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <PhoneInput initialCountry="us" forceDialCode onChange={onChange} />,
+      );
+      expect(getInput().value).toBe('+1 ');
+
+      setCursorPosition(0, getInput().value.length);
+      getInput().focus();
+      await user.paste('38099');
+      expect(getInput().value).toBe('+1 ');
+
+      setCursorPosition(0, getInput().value.length);
+      getInput().focus();
+      await user.paste('+38099');
+      expect(getInput().value).toBe('+380 (99) ');
+
+      // insert after prefix
+      setCursorPosition(1, getInput().value.length);
+      getInput().focus();
+      await user.paste('48 123-456-789');
+      expect(getInput().value).toBe('+48 123-456-789');
+    });
   });
 
-  test('should handle disableDialCodeAndPrefix', () => {
-    const { rerender } = render(
-      <PhoneInput initialCountry="us" disableDialCodeAndPrefix />,
-    );
-    fireEvent.change(getInput(), { target: { value: '1234567890' } });
-    expect(getInput().value).toBe('(123) 456-7890');
+  describe('disableDialCodeAndPrefix', () => {
+    test('should not include dial code inside input', () => {
+      render(<PhoneInput initialCountry="us" disableDialCodeAndPrefix />);
+      fireEvent.change(getInput(), { target: { value: '1234567890' } });
+      expect(getInput().value).toBe('(123) 456-7890');
 
-    fireEvent.change(getInput(), { target: { value: '' } });
-    expect(getInput().value).toBe('');
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(getInput().value).toBe('');
 
-    fireEvent.change(getInput(), { target: { value: '+123' } });
-    expect(getInput().value).toBe('(123) ');
+      fireEvent.change(getInput(), { target: { value: '+123' } });
+      expect(getInput().value).toBe('(123) ');
+    });
 
-    // should ignore disableCountryGuess and forceDialCode
-    rerender(
-      <PhoneInput
-        initialCountry="us"
-        disableDialCodeAndPrefix
-        forceDialCode
-        disableCountryGuess={false}
-      />,
-    );
+    test('should ignore disableCountryGuess and forceDialCode', () => {
+      const { rerender } = render(
+        <PhoneInput
+          initialCountry="us"
+          disableDialCodeAndPrefix
+          disableCountryGuess
+        />,
+      );
+      fireEvent.change(getInput(), { target: { value: '1234567890' } });
+      expect(getInput().value).toBe('(123) 456-7890');
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(getInput().value).toBe('');
+      fireEvent.change(getInput(), { target: { value: '+38099' } });
+      expect(getInput().value).toBe('(380) 99');
 
-    fireEvent.change(getInput(), { target: { value: '1234567890' } });
-    expect(getInput().value).toBe('(123) 456-7890');
-
-    fireEvent.change(getInput(), { target: { value: '' } });
-    expect(getInput().value).toBe('');
-
-    fireEvent.change(getInput(), { target: { value: '+38099' } });
-    expect(getInput().value).toBe('(380) 99');
+      rerender(
+        <PhoneInput
+          initialCountry="us"
+          disableDialCodeAndPrefix
+          forceDialCode
+        />,
+      );
+      fireEvent.change(getInput(), { target: { value: '1234567890' } });
+      expect(getInput().value).toBe('(123) 456-7890');
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(getInput().value).toBe('');
+      fireEvent.change(getInput(), { target: { value: '+38099' } });
+      expect(getInput().value).toBe('(380) 99');
+    });
   });
 
-  test('should handle showDisabledDialCodeAndPrefix', () => {
-    const { rerender } = render(
-      <PhoneInput initialCountry="us" disableDialCodeAndPrefix />,
-    );
-    fireEvent.change(getInput(), { target: { value: '1234567890' } });
-    expect(getDialCodePreview()).toBeNull();
+  describe('showDisabledDialCodeAndPrefix', () => {
+    test('should show dial code preview', () => {
+      const { rerender } = render(
+        <PhoneInput initialCountry="us" disableDialCodeAndPrefix />,
+      );
+      fireEvent.change(getInput(), { target: { value: '1234567890' } });
+      expect(getDialCodePreview()).toBeNull();
 
-    rerender(
-      <PhoneInput
-        initialCountry="us"
-        disableDialCodeAndPrefix
-        showDisabledDialCodeAndPrefix
-      />,
-    );
-    expect(getDialCodePreview()).toBeVisible();
-    expect(getDialCodePreview()?.textContent).toBe('+1');
+      rerender(
+        <PhoneInput
+          initialCountry="us"
+          disableDialCodeAndPrefix
+          showDisabledDialCodeAndPrefix
+        />,
+      );
+      expect(getDialCodePreview()).toBeVisible();
+      expect(getDialCodePreview()?.textContent).toBe('+1');
+    });
+
+    test('should not include dial code in input field', async () => {
+      const user = userEvent.setup();
+
+      render(
+        <PhoneInput
+          initialCountry="us"
+          disableDialCodeAndPrefix
+          showDisabledDialCodeAndPrefix
+        />,
+      );
+
+      expect(getDialCodePreview()).toBeVisible();
+      expect(getDialCodePreview()?.textContent).toBe('+1');
+      expect(getInput().value).toBe('');
+
+      await user.type(getInput(), '234567');
+      expect(getInput().value).toBe('(234) 567-');
+
+      await user.keyboard('{Backspace>10/}');
+      expect(getDialCodePreview()?.textContent).toBe('+1');
+      expect(getInput().value).toBe('');
+    });
+
+    test('should change country with country-selector', async () => {
+      render(
+        <PhoneInput
+          initialCountry="us"
+          disableDialCodeAndPrefix
+          showDisabledDialCodeAndPrefix
+        />,
+      );
+
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+      expect(getDialCodePreview()?.textContent).toBe('+1');
+      expect(getInput().value).toBe('');
+
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('ua'));
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
+      expect(getDialCodePreview()?.textContent).toBe('+380');
+      expect(getInput().value).toBe('');
+    });
+
+    test('should not work without disableDialCodeAndPrefix', async () => {
+      const { rerender } = render(
+        <PhoneInput initialCountry="us" showDisabledDialCodeAndPrefix />,
+      );
+
+      expect(getDialCodePreview()).toBeNull();
+      expect(getInput().value).toBe('+1 ');
+
+      rerender(
+        <PhoneInput
+          initialCountry="us"
+          disableDialCodeAndPrefix
+          showDisabledDialCodeAndPrefix
+        />,
+      );
+
+      expect(getDialCodePreview()).toBeVisible();
+    });
   });
 
   describe('undo/redo', () => {
@@ -354,52 +523,57 @@ describe('PhoneInput', () => {
     });
   });
 
-  test('should support countries filtering', () => {
-    const countries = defaultCountries.filter((country) => {
-      const { iso2 } = parseCountry(country);
-      return ['us', 'ua', 'cz'].includes(iso2);
+  describe('countries modification', () => {
+    test('should support countries filtering', () => {
+      const countries = defaultCountries.filter((country) => {
+        const { iso2 } = parseCountry(country);
+        return ['us', 'ua', 'cz'].includes(iso2);
+      });
+
+      render(
+        <PhoneInput initialCountry="us" value="+1234" countries={countries} />,
+      );
+
+      expect(getCountrySelectorDropdown().childNodes.length).toBe(
+        countries.length,
+      );
+
+      fireChangeEvent('44444');
+
+      // not supported country was not set (+44 should set uk by default)
+      expect(getInput().value).toBe('+4 (444) 4');
+      expect(getCountrySelector()).toHaveAttribute('title', 'United States');
+
+      fireChangeEvent('420123');
+      expect(getInput().value).toBe('+420 123 ');
+      expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+
+      fireChangeEvent('555555');
+      expect(getInput().value).toBe('+555 555 ');
+      expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
     });
 
-    render(
-      <PhoneInput initialCountry="us" value="+1234" countries={countries} />,
-    );
+    test('should support country change', () => {
+      const countries = defaultCountries.map((country) => {
+        const parsedCountry = parseCountry(country);
+        if (parsedCountry.iso2 === 'ua') {
+          return buildCountryData({
+            ...parsedCountry,
+            format: '(..) ... ....',
+          });
+        }
+        return country;
+      });
 
-    expect(getCountrySelectorDropdown().childNodes.length).toBe(
-      countries.length,
-    );
-
-    fireChangeEvent('44444');
-
-    // not supported country was not set (+44 should set uk by default)
-    expect(getInput().value).toBe('+4 (444) 4');
-    expect(getCountrySelector()).toHaveAttribute('title', 'United States');
-
-    fireChangeEvent('420123');
-    expect(getInput().value).toBe('+420 123 ');
-    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
-
-    fireChangeEvent('555555');
-    expect(getInput().value).toBe('+555 555 ');
-    expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
-  });
-
-  test('should support country modifying', () => {
-    const countries = defaultCountries.map((country) => {
-      const parsedCountry = parseCountry(country);
-      if (parsedCountry.iso2 === 'ua') {
-        return buildCountryData({ ...parsedCountry, format: '(..) ... ....' });
-      }
-      return country;
+      render(
+        <PhoneInput
+          initialCountry="ua"
+          value="+380(99)9999999"
+          countries={countries}
+        />,
+      );
+      expect(getInput().value).toBe('+380 (99) 999 9999');
     });
-
-    render(
-      <PhoneInput
-        initialCountry="ua"
-        value="+380(99)9999999"
-        countries={countries}
-      />,
-    );
-    expect(getInput().value).toBe('+380 (99) 999 9999');
   });
 
   describe('cursor position', () => {
@@ -407,14 +581,6 @@ describe('PhoneInput', () => {
 
     const getCursorPosition = () => {
       return getInput().selectionStart;
-    };
-
-    const setCursorPosition = (
-      selectionStart: number,
-      selectionEnd: number = selectionStart,
-    ) => {
-      getInput().selectionStart = selectionStart;
-      getInput().selectionEnd = selectionEnd;
     };
 
     test('should handle cursor when typing (end)', async () => {
@@ -606,5 +772,43 @@ describe('PhoneInput', () => {
       expect(getInput().selectionStart).toBe('+31 '.length);
       expect(getInput().selectionEnd).toBe('+31 '.length);
     });
+  });
+
+  test('should use default mask if country data does not have mask', () => {
+    // mask is undefined
+    const { rerender } = render(<PhoneInput initialCountry="do" />);
+    fireChangeEvent('+1234567');
+    expect(getInput().value).toBe('+1 234567');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'do');
+
+    // mask is empty string
+    rerender(<PhoneInput initialCountry="gr" />);
+    fireChangeEvent('+301234567');
+    expect(getInput().value).toBe('+30 1234567');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'gr');
+  });
+
+  test('should display input value on every country', () => {
+    render(
+      <PhoneInput initialCountry={parseCountry(defaultCountries[0]).iso2} />,
+    );
+
+    for (const c of defaultCountries) {
+      const country = parseCountry(c);
+
+      // change country using dropdown
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption(country.iso2));
+
+      const userInput = '999999';
+      const inputValue = `${country.dialCode}${userInput}`;
+      fireChangeEvent(inputValue);
+
+      expect(removeNonDigits(getInput().value)).toBe(inputValue);
+      expect(getCountrySelector()).toHaveAttribute(
+        'data-country',
+        country.iso2,
+      );
+    }
   });
 });

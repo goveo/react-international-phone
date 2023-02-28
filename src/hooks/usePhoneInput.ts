@@ -8,7 +8,6 @@ import {
   getCursorPosition,
   guessCountryByPartialNumber,
   removeDialCode,
-  removeNonDigits,
 } from '../utils';
 import { usePhone, UsePhoneConfig } from './usePhone';
 
@@ -53,9 +52,21 @@ export const usePhoneInput = ({
 }: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // store info in ref to pass it to onPhoneUpdate callback
+  const onPhoneUpdateRef = useRef<{
+    shouldFocus: boolean;
+    shouldSetCursorToEnd: boolean;
+  }>({
+    shouldFocus: false,
+    shouldSetCursorToEnd: false,
+  });
+
   const [country, setCountry] = useState<CountryIso2>(
-    guessCountryByPartialNumber({ phone: value, countries }).country?.iso2 ??
-      initialCountry,
+    guessCountryByPartialNumber({
+      phone: value,
+      countries,
+      currentCountryIso2: initialCountry,
+    }).country?.iso2 ?? initialCountry,
   );
 
   const passedCountry = useMemo(() => {
@@ -101,7 +112,10 @@ export const usePhoneInput = ({
           deletion,
         },
       ) => {
-        const cursorPosition = initialized
+        const shouldGetCursorPosition =
+          initialized && !onPhoneUpdateRef.current.shouldSetCursorToEnd;
+
+        const cursorPosition = shouldGetCursorPosition
           ? getCursorPosition({
               cursorPositionAfterInput,
               phoneBeforeInput: phone,
@@ -122,6 +136,15 @@ export const usePhoneInput = ({
          */
         Promise.resolve().then(() => {
           inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
+
+          if (onPhoneUpdateRef.current.shouldFocus) {
+            inputRef.current?.focus();
+          }
+
+          onPhoneUpdateRef.current = {
+            shouldFocus: false,
+            shouldSetCursorToEnd: false,
+          };
         });
       },
       ...restConfig,
@@ -192,27 +215,39 @@ export const usePhoneInput = ({
     return value;
   };
 
-  // Handle country change
-  useEffect(() => {
-    if (!passedCountry || !initialized) return;
+  const setNewCountry = (countryIso2: CountryIso2) => {
+    const newCountry = getCountry({
+      value: countryIso2,
+      field: 'iso2',
+      countries,
+    });
+    if (!newCountry) return;
 
-    if (removeNonDigits(phone).startsWith(passedCountry.dialCode)) {
-      // country was changed using input field
-      return;
-    }
+    // need to call focus inside a onPhoneUpdate callback
+    // because we need to wait phone-input's rerender to set focus properly
+    onPhoneUpdateRef.current = {
+      shouldFocus: true,
+      shouldSetCursorToEnd: true,
+    };
 
-    const newValue = handleValueChange('', { insertDialCodeOnEmpty: true });
-    inputRef.current?.focus();
+    const newValue = handleValueChange(
+      disableDialCodeAndPrefix
+        ? ''
+        : `${prefix}${charAfterDialCode}${newCountry.dialCode}`,
+      {
+        forcedCountry: newCountry,
+      },
+    );
+    setCountry(newCountry.iso2);
 
     onCountryChange?.(newValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country]);
+  };
 
   return {
     phone, // Formatted phone string.
     handlePhoneValueChange, // Change handler for input component
     inputRef, // Ref object for input component (handles caret position, focus and undo/redo).
     country, // Current country iso code.
-    setCountry, // Country setter.
+    setCountry: setNewCountry, // Country setter.
   };
 };

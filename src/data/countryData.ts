@@ -212,7 +212,7 @@ export const defaultCountries: CountryData[] = [
     'kz',
     '7',
     '... ...-..-..',
-    1,
+    0,
     [
       '310',
       '311',
@@ -311,7 +311,7 @@ export const defaultCountries: CountryData[] = [
     'ru',
     '7',
     '(...) ...-..-..',
-    0,
+    1,
   ],
   ['Rwanda', ['africa'], 'rw', '250'],
   ['Saint Kitts and Nevis', ['america', 'carribean'], 'kn', '1869'],

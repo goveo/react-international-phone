@@ -99,7 +99,7 @@ export const Formik = () => {
       if (!validationResult.lengthMatch) {
         errors.phone = 'wrong phone length';
       }
-      if (!validationResult.areaCodeMatch) {
+      if (validationResult.areaCodeMatch === false) {
         errors.phone = 'wrong area code';
       }
       if (!validationResult.country) {

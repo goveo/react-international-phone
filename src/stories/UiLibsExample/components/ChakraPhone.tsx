@@ -32,6 +32,7 @@ export const ChakraPhone: React.FC<ChakraPhoneProps> = ({
         />
         <Input
           placeholder="Phone number"
+          type="tel"
           color="primary"
           value={phoneInput.phone}
           onChange={(e) => {

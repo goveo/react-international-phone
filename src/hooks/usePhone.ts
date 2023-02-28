@@ -21,6 +21,7 @@ interface FormatPhoneValueFuncOptions {
   trimNonDigitsEnd?: boolean;
   insertDialCodeOnEmpty?: boolean;
   forceDisableCountryGuess?: boolean;
+  forcedCountry?: ParsedCountry;
 }
 
 interface HandleValueChangeFuncOptions {
@@ -28,6 +29,7 @@ interface HandleValueChangeFuncOptions {
   inserted?: boolean;
   cursorPosition?: number;
   insertDialCodeOnEmpty?: boolean;
+  forcedCountry?: ParsedCountry;
 }
 
 export const MASK_CHAR = '.';
@@ -164,7 +166,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     ...defaultPhoneConfig,
     ...config,
   };
-  const shouldGuessCountry = disableDialCodeAndPrefix
+  const countryGuessingEnabled = disableDialCodeAndPrefix
     ? false
     : !disableCountryGuess;
 
@@ -185,29 +187,31 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       trimNonDigitsEnd,
       insertDialCodeOnEmpty,
       forceDisableCountryGuess,
+      forcedCountry,
     }: FormatPhoneValueFuncOptions = {},
   ): {
     phone: string;
     countryGuessResult?: CountryGuessResult | undefined;
     formatCountry?: ParsedCountry | undefined;
   } => {
-    const countryGuessResult =
-      !forceDisableCountryGuess && shouldGuessCountry
-        ? guessCountryByPartialNumber({
-            phone: value,
-            countries: countryData,
-          }) // FIXME: should not guess country on every change
-        : undefined;
+    const shouldGuessCountry =
+      !forceDisableCountryGuess && countryGuessingEnabled && !forcedCountry;
+
+    const countryGuessResult = shouldGuessCountry
+      ? guessCountryByPartialNumber({
+          phone: value,
+          countries: countryData,
+          currentCountryIso2: passedCountry?.iso2,
+        }) // FIXME: should not guess country on every change
+      : undefined;
 
     const formatCountry =
-      !forceDisableCountryGuess && shouldGuessCountry
-        ? countryGuessResult?.country ?? passedCountry
-        : passedCountry;
+      forcedCountry ?? countryGuessResult?.country ?? passedCountry;
 
     const phone = formatCountry
       ? formatPhone(value, {
           prefix,
-          mask: formatCountry.format ?? defaultMask,
+          mask: formatCountry.format || defaultMask,
           maskChar: MASK_CHAR,
           dialCode: formatCountry.dialCode,
           trimNonDigitsEnd,
@@ -235,6 +239,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
       cursorPosition,
       insertDialCodeOnEmpty,
       inserted,
+      forcedCountry,
     }: HandleValueChangeFuncOptions = {},
   ): string => {
     let newPhoneValue = newPhone;
@@ -278,6 +283,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
         !!deletion &&
         removeNonDigits(newPhoneValue).length <
           (passedCountry?.dialCode.length ?? 0),
+      forcedCountry,
     });
 
     const timePassedSinceLastChange = timer.check();
@@ -297,7 +303,7 @@ export const usePhone = (value: string, config?: UsePhoneConfig) => {
     });
 
     if (
-      shouldGuessCountry &&
+      countryGuessingEnabled &&
       countryGuessResult?.country &&
       countryGuessResult.country.name !== country
     ) {
