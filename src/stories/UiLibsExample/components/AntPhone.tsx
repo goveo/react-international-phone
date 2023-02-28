@@ -53,6 +53,8 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
           }}
         />
         <Input
+          placeholder="Phone number"
+          type="tel"
           value={phoneInput.phone}
           onChange={(e) => {
             const value = phoneInput.handlePhoneValueChange(e);
