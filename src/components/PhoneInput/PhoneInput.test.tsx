@@ -36,6 +36,14 @@ export const fireChangeEvent = (
   });
 };
 
+const setCursorPosition = (
+  selectionStart: number,
+  selectionEnd: number = selectionStart,
+) => {
+  getInput().selectionStart = selectionStart;
+  getInput().selectionEnd = selectionEnd;
+};
+
 describe('PhoneInput', () => {
   beforeAll(() => {
     mockScrollIntoView();
@@ -266,6 +274,31 @@ describe('PhoneInput', () => {
       fireEvent.click(getDropdownOption('ua'));
       expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
       expect(getInput().value).toBe('+380 ');
+    });
+
+    test('allow dial code change if a new phone was pasted', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <PhoneInput initialCountry="us" forceDialCode onChange={onChange} />,
+      );
+      expect(getInput().value).toBe('+1 ');
+
+      setCursorPosition(0, getInput().value.length);
+      getInput().focus();
+      await user.paste('38099');
+      expect(getInput().value).toBe('+1 ');
+
+      setCursorPosition(0, getInput().value.length);
+      getInput().focus();
+      await user.paste('+38099');
+      expect(getInput().value).toBe('+380 (99) ');
+
+      // insert after prefix
+      setCursorPosition(1, getInput().value.length);
+      getInput().focus();
+      await user.paste('48 123-456-789');
+      expect(getInput().value).toBe('+48 123-456-789');
     });
   });
 
@@ -548,14 +581,6 @@ describe('PhoneInput', () => {
 
     const getCursorPosition = () => {
       return getInput().selectionStart;
-    };
-
-    const setCursorPosition = (
-      selectionStart: number,
-      selectionEnd: number = selectionStart,
-    ) => {
-      getInput().selectionStart = selectionStart;
-      getInput().selectionEnd = selectionEnd;
     };
 
     test('should handle cursor when typing (end)', async () => {
