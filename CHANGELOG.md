@@ -1,3 +1,13 @@
+## [1.8.7](https://github.com/goveo/react-international-phone/compare/v1.8.6...v1.8.7) (2023-02-28)
+
+
+### Bug Fixes
+
+* correctly set an initial-country flag when value is provided ([26c97d7](https://github.com/goveo/react-international-phone/commit/26c97d7b830cadd16bb5aadd92023cea091fc6b8))
+* handle dial code change using selector when forceDialCode is set ([541e26d](https://github.com/goveo/react-international-phone/commit/541e26dd9a09628927e3d414ef8e41d1526060ac))
+* prevent country change when dial code or area-code is not changed ([9d68653](https://github.com/goveo/react-international-phone/commit/9d686533c887cfd8b3ec372ffdd588ffa63e37c4))
+* use default mask for countries with empty mask ([b08a70c](https://github.com/goveo/react-international-phone/commit/b08a70c4d128c75cb8db9090a7a63d9795b8dc04))
+
 ## [1.8.6](https://github.com/goveo/react-international-phone/compare/v1.8.5...v1.8.6) (2023-02-22)
 
 
