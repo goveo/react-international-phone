@@ -1,3 +1,10 @@
+## [1.8.8](https://github.com/goveo/react-international-phone/compare/v1.8.7...v1.8.8) (2023-03-04)
+
+
+### Bug Fixes
+
+* update Chinese format mask ([bf264a6](https://github.com/goveo/react-international-phone/commit/bf264a6dfa71ce37321b065e4b737a6e2c57e9d4))
+
 ## [1.8.7](https://github.com/goveo/react-international-phone/compare/v1.8.6...v1.8.7) (2023-02-28)
 
 
