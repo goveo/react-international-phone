@@ -144,7 +144,7 @@ export const defaultCountries: CountryData[] = [
   ['Central African Republic', ['africa'], 'cf', '236'],
   ['Chad', ['africa'], 'td', '235'],
   ['Chile', ['america', 'south-america'], 'cl', '56'],
-  ['China', ['asia'], 'cn', '86', '..-.........'],
+  ['China', ['asia'], 'cn', '86', '... .... ....'],
   ['Colombia', ['america', 'south-america'], 'co', '57', '... ... ....'],
   ['Comoros', ['africa'], 'km', '269'],
   ['Congo', ['africa'], 'cd', '243'],
