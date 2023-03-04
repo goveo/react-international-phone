@@ -160,22 +160,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const timer = useTimer();
 
-  const [country, setCountry] = useState<CountryIso2>(
-    guessCountryByPartialNumber({
-      phone: value,
-      countries,
-      currentCountryIso2: initialCountry,
-    }).country?.iso2 ?? initialCountry,
-  );
-
-  const fullCountry = useMemo(() => {
-    return getCountry({
-      value: country,
-      field: 'iso2',
-      countries,
-    }) as ParsedCountry;
-  }, [countries, country]);
-
   const formatPhoneValue = (
     value: string,
     {
@@ -196,7 +180,7 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       ? guessCountryByPartialNumber({
           phone: value,
           countries,
-          currentCountryIso2: fullCountry.iso2,
+          currentCountryIso2: fullCountry?.iso2,
         }) // FIXME: should not guess country on every change
       : undefined;
 
@@ -220,11 +204,26 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     return { phone, countryGuessResult, formatCountry };
   };
 
-  const [phone, setPhone, undo, redo] = useHistoryState(
-    formatPhoneValue(value, {
+  const [{ phone, country }, updateHistory, undo, redo] = useHistoryState({
+    phone: formatPhoneValue(value, {
       insertDialCodeOnEmpty: !disableDialCodePrefill,
     }).phone,
-  );
+    country:
+      guessCountryByPartialNumber({
+        phone: value,
+        countries,
+        currentCountryIso2: initialCountry,
+      }).country?.iso2 ?? initialCountry,
+  });
+
+  const fullCountry = useMemo(() => {
+    return getCountry({
+      value: country,
+      field: 'iso2',
+      countries,
+    });
+  }, [countries, country]);
+
   const [initialized, setInitialized] = useState(false);
 
   const handleValueChange = (
@@ -274,19 +273,31 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
         forceDisableCountryGuess:
           forceDialCode &&
           !!deletion &&
-          removeNonDigits(newPhoneValue).length < fullCountry.dialCode.length,
+          removeNonDigits(newPhoneValue).length <
+            (fullCountry?.dialCode.length ?? 0),
         forcedCountry,
       },
     );
 
-    const timePassedSinceLastChange = timer.check();
-    const historySaveDebounceTimePassed = timePassedSinceLastChange
-      ? timePassedSinceLastChange > historySaveDebounceMS
-      : true;
+    let newCountry = fullCountry;
 
-    setPhone(phoneValue, {
-      overrideLastHistoryItem: !historySaveDebounceTimePassed,
-    });
+    if (
+      countryGuessingEnabled &&
+      countryGuessResult?.country &&
+      countryGuessResult.country.name !== country &&
+      countryGuessResult.fullDialCodeMatch
+    ) {
+      newCountry = countryGuessResult.country;
+      onCountryChange?.(phoneValue);
+    }
+
+    if (!newCountry) {
+      // Initial country is not passed, or iso code do not match
+      console.error(
+        '[react-international-phone]: initial country is not passed, or iso code do not match with any country',
+      );
+      return '';
+    }
 
     const newCursorPosition = initialized
       ? getCursorPosition({
@@ -303,6 +314,21 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
         })
       : newPhone.length;
 
+    const timePassedSinceLastChange = timer.check();
+    const historySaveDebounceTimePassed = timePassedSinceLastChange
+      ? timePassedSinceLastChange > historySaveDebounceMS
+      : true;
+
+    updateHistory(
+      {
+        phone: phoneValue,
+        country: newCountry.iso2,
+      },
+      {
+        overrideLastHistoryItem: !historySaveDebounceTimePassed,
+      },
+    );
+
     /**
      * HACK: should set cursor on the next tick to make sure that the phone value is updated
      * useTimeout with 0ms provides issues when two keys are pressed same time
@@ -310,16 +336,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     Promise.resolve().then(() => {
       inputRef.current?.setSelectionRange(newCursorPosition, newCursorPosition);
     });
-
-    if (
-      countryGuessingEnabled &&
-      countryGuessResult?.country &&
-      countryGuessResult.country.name !== country &&
-      countryGuessResult.fullDialCodeMatch
-    ) {
-      setCountry(countryGuessResult.country.iso2);
-      onCountryChange?.(phoneValue);
-    }
 
     if (!initialized) {
       setInitialized(true);
@@ -342,7 +358,7 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       const zPressed = e.key.toLowerCase() === 'z';
 
       if (!ctrlPressed || !zPressed) return;
-      return shiftPressed ? redo() : undo();
+      shiftPressed ? redo() : undo();
     };
 
     input.addEventListener('keydown', onKeyDown);
@@ -380,7 +396,7 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       cursorPosition: e.target.selectionStart ?? 0,
     });
 
-    if (disableDialCodeAndPrefix) {
+    if (disableDialCodeAndPrefix && fullCountry) {
       return addDialCode({
         phone: value,
         dialCode: fullCountry.dialCode,
@@ -404,10 +420,13 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       ? ''
       : `${prefix}${newCountry.dialCode}${charAfterDialCode}`;
 
-    setPhone(newPhoneValue, {
-      overrideLastHistoryItem: true,
-    });
-    setCountry(newCountry.iso2);
+    updateHistory(
+      {
+        phone: newPhoneValue,
+        country: newCountry.iso2,
+      },
+      { overrideLastHistoryItem: true },
+    );
 
     inputRef.current?.focus();
   };

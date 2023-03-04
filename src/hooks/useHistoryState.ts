@@ -15,25 +15,20 @@ interface SetStateConfig {
   overrideLastHistoryItem?: boolean;
 }
 
-type UseHistoryStateReturn = [
-  string, // state
-  (v: string, config?: SetStateConfig) => void, // setState
-  () => boolean, // undo
-  () => boolean, // redo
-];
+type HistoryActionResult<T> = { success: false } | { success: true; value: T };
 
-export const useHistoryState = (
-  initialValue: string,
+export function useHistoryState<T>(
+  initialValue: T,
   config?: UseHistoryStateConfig,
-): UseHistoryStateReturn => {
+) {
   const { size } = { ...defaultConfig, ...config };
 
   const [state, _setState] = useState(initialValue);
-  const [history, setHistory] = useState<string[]>([initialValue]);
+  const [history, setHistory] = useState<T[]>([initialValue]);
   const [pointer, setPointer] = useState<number>(0);
 
   const setState = useCallback(
-    (value: string, config?: SetStateConfig) => {
+    (value: T, config?: SetStateConfig) => {
       if (value === state) return;
 
       if (config?.overrideLastHistoryItem) {
@@ -56,25 +51,29 @@ export const useHistoryState = (
     [state, pointer, history.length, size],
   );
 
-  const undo = useCallback(() => {
+  const undo = useCallback((): HistoryActionResult<T> => {
     if (pointer <= 0) {
-      return false;
+      return { success: false };
     }
 
-    _setState(history[pointer - 1]);
+    const value = history[pointer - 1];
+    _setState(value);
     setPointer((prev) => prev - 1);
-    return true;
+
+    return { success: true, value };
   }, [history, pointer]);
 
-  const redo = useCallback(() => {
+  const redo = useCallback((): HistoryActionResult<T> => {
     if (pointer + 1 >= history.length) {
-      return false;
+      return { success: false };
     }
 
-    _setState(history[pointer + 1]);
+    const value = history[pointer + 1];
+    _setState(value);
     setPointer((prev) => prev + 1);
-    return true;
+
+    return { success: true, value };
   }, [history, pointer]);
 
-  return [state, setState, undo, redo];
-};
+  return [state, setState, undo, redo] as const;
+}
