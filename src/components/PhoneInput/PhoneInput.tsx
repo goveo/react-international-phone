@@ -28,8 +28,8 @@ export interface PhoneInputStyleProps {
 }
 
 export interface PhoneInputProps
-  extends PhoneInputStyleProps,
-    UsePhoneInputConfig {
+  extends UsePhoneInputConfig,
+    PhoneInputStyleProps {
   /**
    * @description Hide the dropdown icon. Make country selection not accessible.
    * @default false
@@ -92,9 +92,6 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     usePhoneInput({
       ...usePhoneInputConfig,
       countries,
-      onCountryChange: (phone) => {
-        onChange?.(phone);
-      },
     });
 
   const fullCountry = useMemo(() => {

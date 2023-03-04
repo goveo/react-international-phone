@@ -223,16 +223,18 @@ describe('PhoneInput', () => {
     expect(getInput().value).toBe('+355 1234-5678-9000');
   });
 
-  test('should handle hideSpaceAfterDialCode', () => {
+  test('should handle charAfterDialCode', () => {
     const { rerender } = render(
-      <PhoneInput initialCountry="us" hideSpaceAfterDialCode={false} />,
+      <PhoneInput initialCountry="us" charAfterDialCode="" />,
     );
     fireEvent.change(getInput(), { target: { value: '12345678900' } });
-    expect(getInput().value).toBe('+1 (234) 567-8900');
-
-    rerender(<PhoneInput initialCountry="us" hideSpaceAfterDialCode={true} />);
-    fireEvent.change(getInput(), { target: { value: '12345678900' } });
     expect(getInput().value).toBe('+1(234) 567-8900');
+    fireEvent.change(getInput(), { target: { value: '380999' } });
+    expect(getInput().value).toBe('+380(99) 9');
+
+    rerender(<PhoneInput initialCountry="us" charAfterDialCode="-" />);
+    fireEvent.change(getInput(), { target: { value: '12345678900' } });
+    expect(getInput().value).toBe('+1-(234) 567-8900');
   });
 
   test('should handle disableCountryGuess', () => {

@@ -40,7 +40,7 @@ Default.args = {
   initialCountry: 'us',
   placeholder: 'Phone number',
   defaultMask: '............',
-  hideSpaceAfterDialCode: false,
+  charAfterDialCode: ' ',
   disableCountryGuess: false,
   disableDialCodePrefill: false,
   forceDialCode: false,
