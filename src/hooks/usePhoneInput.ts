@@ -18,11 +18,12 @@ import {
 import { useHistoryState } from './useHistoryState';
 import { useTimer } from './useTimer';
 
-interface FormatPhoneValueFuncOptions {
+interface FormatPhoneValueProps {
+  value: string;
+  country: ParsedCountry;
   trimNonDigitsEnd?: boolean;
   insertDialCodeOnEmpty?: boolean;
   forceDisableCountryGuess?: boolean;
-  forcedCountry?: ParsedCountry;
 }
 
 type DeletionType = 'forward' | 'backward' | undefined;
@@ -32,7 +33,6 @@ interface HandleValueChangeFuncOptions {
   inserted?: boolean;
   cursorPosition?: number;
   insertDialCodeOnEmpty?: boolean;
-  forcedCountry?: ParsedCountry;
 }
 
 export const MASK_CHAR = '.';
@@ -160,32 +160,36 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const timer = useTimer();
 
-  const formatPhoneValue = (
-    value: string,
-    {
-      trimNonDigitsEnd,
-      insertDialCodeOnEmpty,
-      forceDisableCountryGuess,
-      forcedCountry,
-    }: FormatPhoneValueFuncOptions = {},
-  ): {
+  const initialCountryFull =
+    guessCountryByPartialNumber({
+      phone: value,
+      countries,
+    }).country ||
+    getCountry({ value: initialCountry, field: 'iso2', countries });
+
+  const formatPhoneValue = ({
+    value,
+    country,
+    trimNonDigitsEnd,
+    insertDialCodeOnEmpty,
+    forceDisableCountryGuess,
+  }: FormatPhoneValueProps): {
     phone: string;
     countryGuessResult?: CountryGuessResult | undefined;
     formatCountry?: ParsedCountry | undefined;
   } => {
     const shouldGuessCountry =
-      !forceDisableCountryGuess && countryGuessingEnabled && !forcedCountry;
+      !forceDisableCountryGuess && countryGuessingEnabled;
 
     const countryGuessResult = shouldGuessCountry
       ? guessCountryByPartialNumber({
           phone: value,
           countries,
-          currentCountryIso2: fullCountry?.iso2,
+          currentCountryIso2: country.iso2,
         }) // FIXME: should not guess country on every change
       : undefined;
 
-    const formatCountry =
-      forcedCountry ?? countryGuessResult?.country ?? fullCountry;
+    const formatCountry = countryGuessResult?.country ?? country;
 
     const phone = formatCountry
       ? formatPhone(value, {
@@ -205,7 +209,10 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
   };
 
   const [{ phone, country }, updateHistory, undo, redo] = useHistoryState({
-    phone: formatPhoneValue(value, {
+    // FIXME: add ability to pass callback as initial value
+    phone: formatPhoneValue({
+      value,
+      country: initialCountryFull as ParsedCountry,
       insertDialCodeOnEmpty: !disableDialCodePrefill,
     }).phone,
     country:
@@ -221,7 +228,7 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       value: country,
       field: 'iso2',
       countries,
-    });
+    }) as ParsedCountry;
   }, [countries, country]);
 
   const [initialized, setInitialized] = useState(false);
@@ -233,7 +240,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       cursorPosition,
       insertDialCodeOnEmpty,
       inserted,
-      forcedCountry,
     }: HandleValueChangeFuncOptions = {},
   ): string => {
     let newPhoneValue = newPhone;
@@ -264,20 +270,18 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       }
     }
 
-    const { phone: phoneValue, countryGuessResult } = formatPhoneValue(
-      newPhoneValue,
-      {
-        trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
-        insertDialCodeOnEmpty:
-          insertDialCodeOnEmpty || (!initialized && !disableDialCodePrefill),
-        forceDisableCountryGuess:
-          forceDialCode &&
-          !!deletion &&
-          removeNonDigits(newPhoneValue).length <
-            (fullCountry?.dialCode.length ?? 0),
-        forcedCountry,
-      },
-    );
+    const { phone: phoneValue, countryGuessResult } = formatPhoneValue({
+      value: newPhoneValue,
+      country: fullCountry,
+
+      trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
+      insertDialCodeOnEmpty:
+        insertDialCodeOnEmpty || (!initialized && !disableDialCodePrefill),
+      forceDisableCountryGuess:
+        forceDialCode &&
+        !!deletion &&
+        removeNonDigits(newPhoneValue).length < fullCountry.dialCode.length,
+    });
 
     let newCountry = fullCountry;
 
@@ -289,14 +293,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     ) {
       newCountry = countryGuessResult.country;
       onCountryChange?.(phoneValue);
-    }
-
-    if (!newCountry) {
-      // Initial country is not passed, or iso code do not match
-      console.error(
-        '[react-international-phone]: initial country is not passed, or iso code do not match with any country',
-      );
-      return '';
     }
 
     const newCursorPosition = initialized
