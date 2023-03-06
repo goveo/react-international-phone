@@ -20,7 +20,7 @@ import {
   usePhoneInput,
 } from 'react-international-phone';
 
-export const MuiPhone = ({ value, onChange, ...restProps }) => {
+export const MuiPhoneJsx = ({ value, onChange, ...restProps }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       initialCountry: 'us',

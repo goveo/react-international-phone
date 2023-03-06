@@ -7,9 +7,15 @@ You can build phone input by combination of **input component** (that you want t
 ## Material UI Example
 
 import { MuiPhone } from '@site/src/components/MuiPhone'
+import { useState } from 'react'
+
+export const PhoneComponentWrapper = () => {
+const [value, setValue] = useState('');
+return <MuiPhone value={value} onChange={setValue}/>
+};
 
 <div style={{ margin: "3rem 0 2rem" }}>
-<MuiPhone />
+  <PhoneComponentWrapper />
 </div>
 
 import Tabs from '@theme/Tabs';
