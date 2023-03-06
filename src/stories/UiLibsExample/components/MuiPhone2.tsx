@@ -9,7 +9,6 @@ export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
     usePhoneInput({
       initialCountry: 'us',
       value,
-      onCountryChange: onChange,
     });
 
   return (

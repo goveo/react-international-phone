@@ -12,7 +12,6 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
   const phoneInput = usePhoneInput({
     initialCountry: 'us',
     value,
-    onCountryChange: onChange,
   });
 
   const inputRef = useRef<InputRef>(null);

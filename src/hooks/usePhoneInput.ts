@@ -110,17 +110,10 @@ export interface UsePhoneInputConfig {
    * @default false
    */
   disableDialCodeAndPrefix?: boolean;
-
-  /**
-   * @description Callback that calls on country change
-   * @params *phone* - new phone value
-   * @default undefined
-   */
-  onCountryChange?: (phone: string) => void;
 }
 
 export const defaultConfig: Required<
-  Omit<UsePhoneInputConfig, 'initialCountry' | 'inputRef' | 'onCountryChange'> // omit props with no default value
+  Omit<UsePhoneInputConfig, 'initialCountry' | 'inputRef'> // omit props with no default value
 > = {
   value: '',
   prefix: '+',
@@ -147,7 +140,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     disableDialCodePrefill,
     forceDialCode,
     disableDialCodeAndPrefix,
-    onCountryChange,
   } = {
     ...defaultConfig,
     ...config,
@@ -303,7 +295,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       countryGuessResult.fullDialCodeMatch
     ) {
       newCountry = countryGuessResult.country;
-      onCountryChange?.(phoneValue);
     }
 
     const newCursorPosition = initialized
