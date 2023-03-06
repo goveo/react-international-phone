@@ -17,19 +17,28 @@ interface SetStateConfig {
 
 type HistoryActionResult<T> = { success: false } | { success: true; value: T };
 
-export function useHistoryState<T>(
-  initialValue: T,
+export function useHistoryState<T extends Record<string, unknown> | string>(
+  initialValue: T | (() => T),
   config?: UseHistoryStateConfig,
 ) {
   const { size } = { ...defaultConfig, ...config };
 
   const [state, _setState] = useState(initialValue);
-  const [history, setHistory] = useState<T[]>([initialValue]);
+  const [history, setHistory] = useState<T[]>([state]);
+
   const [pointer, setPointer] = useState<number>(0);
 
   const setState = useCallback(
     (value: T, config?: SetStateConfig) => {
-      if (value === state) return;
+      if (
+        // compare entries if passed value is object
+        (typeof value === 'object' &&
+          Object.entries(value).toString() ===
+            Object.entries(state).toString()) ||
+        value === state
+      ) {
+        return;
+      }
 
       if (config?.overrideLastHistoryItem) {
         setHistory((prev) => {

@@ -160,13 +160,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const timer = useTimer();
 
-  const initialCountryFull =
-    guessCountryByPartialNumber({
-      phone: value,
-      countries,
-    }).country ||
-    getCountry({ value: initialCountry, field: 'iso2', countries });
-
   const formatPhoneValue = ({
     value,
     country,
@@ -208,20 +201,38 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     return { phone, countryGuessResult, formatCountry };
   };
 
-  const [{ phone, country }, updateHistory, undo, redo] = useHistoryState({
-    // FIXME: add ability to pass callback as initial value
-    phone: formatPhoneValue({
-      value,
-      country: initialCountryFull as ParsedCountry,
-      insertDialCodeOnEmpty: !disableDialCodePrefill,
-    }).phone,
-    country:
-      guessCountryByPartialNumber({
+  const [{ phone, country }, updateHistory, undo, redo] = useHistoryState(
+    () => {
+      const countryGuessResult = guessCountryByPartialNumber({
         phone: value,
         countries,
         currentCountryIso2: initialCountry,
-      }).country?.iso2 ?? initialCountry,
-  });
+      });
+
+      const initialCountryFull = (countryGuessResult.country ||
+        getCountry({
+          value: initialCountry,
+          field: 'iso2',
+          countries,
+        })) as ParsedCountry;
+
+      if (!initialCountryFull) {
+        // initial country is not passed, or iso code do not match
+        console.error(
+          `[react-international-phone]: can not find a country with "${country}" iso2 code`,
+        );
+      }
+
+      return {
+        phone: formatPhoneValue({
+          value,
+          country: initialCountryFull,
+          insertDialCodeOnEmpty: !disableDialCodePrefill,
+        }).phone,
+        country: initialCountryFull.iso2,
+      };
+    },
+  );
 
   const fullCountry = useMemo(() => {
     return getCountry({
@@ -416,13 +427,10 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       ? ''
       : `${prefix}${newCountry.dialCode}${charAfterDialCode}`;
 
-    updateHistory(
-      {
-        phone: newPhoneValue,
-        country: newCountry.iso2,
-      },
-      { overrideLastHistoryItem: true },
-    );
+    updateHistory({
+      phone: newPhoneValue,
+      country: newCountry.iso2,
+    });
 
     inputRef.current?.focus();
   };

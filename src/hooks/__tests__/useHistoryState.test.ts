@@ -10,7 +10,7 @@ enum HookIndex {
 }
 
 describe('useHistoryState', () => {
-  test('Should set initial value', () => {
+  test('should set initial value', () => {
     const initialValue = 'Some test value';
     const { result } = renderHook(() => useHistoryState(initialValue));
 
@@ -19,8 +19,8 @@ describe('useHistoryState', () => {
     expect(state).toBe(initialValue);
   });
 
-  test('Should update state', () => {
-    const { result } = renderHook(() => useHistoryState(''));
+  test('should update state', () => {
+    const { result } = renderHook(() => useHistoryState<string>(''));
     const newValue = 'New value';
 
     act(() => {
@@ -30,8 +30,33 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe(newValue);
   });
 
-  test('Should support undo/redo', () => {
-    const { result } = renderHook(() => useHistoryState('1'));
+  test('should support state as object', () => {
+    const initialValue = { phone: '+1', country: 'us' };
+    const { result } = renderHook(() =>
+      useHistoryState({ phone: '+1', country: 'us' }),
+    );
+
+    const [state] = result.current;
+    expect(state).toMatchObject(initialValue);
+
+    const newValue = { phone: '+2', country: 'test' };
+    act(() => {
+      result.current[HookIndex.SetState](newValue);
+    });
+
+    expect(result.current[HookIndex.State]).toMatchObject(newValue);
+  });
+
+  test('should support initial value setter function', () => {
+    const initialValue = { phone: '+1', country: 'us' };
+    const { result } = renderHook(() => useHistoryState(() => initialValue));
+
+    const [state] = result.current;
+    expect(state).toMatchObject(initialValue);
+  });
+
+  test('should support undo/redo', () => {
+    const { result } = renderHook(() => useHistoryState<string>('1'));
 
     act(() => {
       result.current[HookIndex.SetState]('2');
@@ -85,8 +110,10 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe('100');
   });
 
-  test('Should handle history size', () => {
-    const { result } = renderHook(() => useHistoryState('0', { size: 2 }));
+  test('should handle history size', () => {
+    const { result } = renderHook(() =>
+      useHistoryState<string>('0', { size: 2 }),
+    );
 
     act(() => {
       result.current[HookIndex.SetState]('1');
@@ -109,8 +136,10 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe('2');
   });
 
-  test('Should handle skipHistorySave setState option', () => {
-    const { result } = renderHook(() => useHistoryState('0', { size: 2 }));
+  test('should handle skipHistorySave setState option', () => {
+    const { result } = renderHook(() =>
+      useHistoryState<string>('0', { size: 2 }),
+    );
 
     act(() => {
       result.current[HookIndex.SetState]('1');
@@ -134,8 +163,8 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe('1');
   });
 
-  test('Should not update history if same value have been set', () => {
-    const { result } = renderHook(() => useHistoryState('1'));
+  test('should not update history if same value have been set', () => {
+    const { result } = renderHook(() => useHistoryState<string>('1'));
 
     act(() => {
       result.current[HookIndex.SetState]('2');
