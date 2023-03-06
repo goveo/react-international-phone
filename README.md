@@ -52,3 +52,8 @@ const App = () => {
 ## Documentation
 
 Find the full API reference on [official documentation](https://react-international-phone-docs.vercel.app/).
+
+## Update from v1.x.x to v2.0.0
+
+You can encounter some breaking changes after update from v1.x.x to v2.0.0 <br/>
+Checkout [migration document](https://github.com/goveo/react-international-phone/blob/master/MIGRATION.md) that contains a list of breaking changes and ways to migrate.
