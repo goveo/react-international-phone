@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { defaultCountries } from '../data/countryData';
 import {
@@ -234,7 +234,7 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     }) as ParsedCountry;
   }, [countries, country]);
 
-  const [initialized, setInitialized] = useState(false);
+  const isInitializedRef = useRef(false);
 
   const handleValueChange = (
     newPhone: string,
@@ -279,7 +279,8 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
 
       trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
       insertDialCodeOnEmpty:
-        insertDialCodeOnEmpty || (!initialized && !disableDialCodePrefill),
+        insertDialCodeOnEmpty ||
+        (!isInitializedRef.current && !disableDialCodePrefill),
       forceDisableCountryGuess:
         forceDialCode &&
         !!deletion &&
@@ -297,20 +298,18 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       newCountry = countryGuessResult.country;
     }
 
-    const newCursorPosition = initialized
-      ? getCursorPosition({
-          cursorPositionAfterInput: cursorPositionAfterInput ?? 0,
-          phoneBeforeInput: phone,
-          phoneAfterInput: newPhone,
-          phoneAfterFormatted: phoneValue,
-          leftOffset: forceDialCode
-            ? prefix.length +
-              (fullCountry?.dialCode?.length ?? 0) +
-              charAfterDialCode.length
-            : 0,
-          deletion,
-        })
-      : newPhone.length;
+    const newCursorPosition = getCursorPosition({
+      cursorPositionAfterInput: cursorPositionAfterInput ?? 0,
+      phoneBeforeInput: phone,
+      phoneAfterInput: newPhone,
+      phoneAfterFormatted: phoneValue,
+      leftOffset: forceDialCode
+        ? prefix.length +
+          (fullCountry?.dialCode?.length ?? 0) +
+          charAfterDialCode.length
+        : 0,
+      deletion,
+    });
 
     const timePassedSinceLastChange = timer.check();
     const historySaveDebounceTimePassed = timePassedSinceLastChange
@@ -335,8 +334,8 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       inputRef.current?.setSelectionRange(newCursorPosition, newCursorPosition);
     });
 
-    if (!initialized) {
-      setInitialized(true);
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true;
     }
 
     return phoneValue;
@@ -428,7 +427,7 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
 
   // Handle value update
   useEffect(() => {
-    if (initialized && value === phone) return;
+    if (value === phone) return;
     handleValueChange(value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
