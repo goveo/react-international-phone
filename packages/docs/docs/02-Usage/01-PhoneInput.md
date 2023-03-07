@@ -12,11 +12,11 @@ Import component
 import { PhoneInput } from 'react-international-phone';
 ```
 
-Use by providing the _initialCountry_, _value_ and _onChange_ callback.
+Use by providing the _defaultCountry_, _value_ and _onChange_ callback.
 
 ```tsx
 <PhoneInput
-  initialCountry="ua"
+  defaultCountry="ua"
   value={phone}
   onChange={(phone) => setPhone(phone)}
 />
@@ -27,7 +27,7 @@ Output:
 import {PhoneInput} from 'react-international-phone';
 
 <PhoneInput
-initialCountry="ua"
+defaultCountry="ua"
 inputProps={{ autoFocus: true }}
 />
 
@@ -35,7 +35,7 @@ inputProps={{ autoFocus: true }}
 
 | Prop                            | Type                  | Description                                                                                                                                                                                                          | Default value               |
 | ------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| initialCountry <RequiredMark /> | `CountryIso2`         | Initial country value (iso2).                                                                                                                                                                                        |                             |
+| defaultCountry <RequiredMark /> | `CountryIso2`         | Default country value (iso2).                                                                                                                                                                                        |                             |
 | value                           | `string`              | Phone value.                                                                                                                                                                                                         | `""`                        |
 | countries                       | `CountryData[]`       | An array of available countries to select (and guess)                                                                                                                                                                | `defaultCountries`          |
 | hideDropdown                    | `boolean`             | Hide the dropdown icon. Make country selection not accessible.                                                                                                                                                       | `false`                     |

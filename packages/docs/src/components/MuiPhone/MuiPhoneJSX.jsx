@@ -23,7 +23,7 @@ import {
 export const MuiPhoneJsx = ({ value, onChange, ...restProps }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      initialCountry: 'us',
+      defaultCountry: 'us',
       value,
       countries: defaultCountries,
     });

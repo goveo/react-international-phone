@@ -39,9 +39,9 @@ export const MASK_CHAR = '.';
 
 export interface UsePhoneInputConfig {
   /**
-   * @description Initial country value (iso2).
+   * @description Default country value (iso2).
    */
-  initialCountry: CountryIso2;
+  defaultCountry: CountryIso2;
 
   /**
    * @description phone value
@@ -113,7 +113,7 @@ export interface UsePhoneInputConfig {
 }
 
 export const defaultConfig: Required<
-  Omit<UsePhoneInputConfig, 'initialCountry' | 'inputRef'> // omit props with no default value
+  Omit<UsePhoneInputConfig, 'defaultCountry' | 'inputRef'> // omit props with no default value
 > = {
   value: '',
   prefix: '+',
@@ -130,7 +130,7 @@ export const defaultConfig: Required<
 export const usePhoneInput = (config: UsePhoneInputConfig) => {
   const {
     value,
-    initialCountry,
+    defaultCountry,
     countries,
     prefix,
     defaultMask,
@@ -198,18 +198,18 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       const countryGuessResult = guessCountryByPartialNumber({
         phone: value,
         countries,
-        currentCountryIso2: initialCountry,
+        currentCountryIso2: defaultCountry,
       });
 
-      const initialCountryFull = (countryGuessResult.country ||
+      const defaultCountryFull = (countryGuessResult.country ||
         getCountry({
-          value: initialCountry,
+          value: defaultCountry,
           field: 'iso2',
           countries,
         })) as ParsedCountry;
 
-      if (!initialCountryFull) {
-        // initial country is not passed, or iso code do not match
+      if (!defaultCountryFull) {
+        // default country is not passed, or iso code do not match
         console.error(
           `[react-international-phone]: can not find a country with "${country}" iso2 code`,
         );
@@ -218,10 +218,10 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       return {
         phone: formatPhoneValue({
           value,
-          country: initialCountryFull,
+          country: defaultCountryFull,
           insertDialCodeOnEmpty: !disableDialCodePrefill,
         }).phone,
-        country: initialCountryFull.iso2,
+        country: defaultCountryFull.iso2,
       };
     },
   );

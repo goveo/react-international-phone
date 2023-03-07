@@ -13,7 +13,7 @@ export const ChakraPhone: React.FC<ChakraPhoneProps> = ({
   onChange,
 }) => {
   const phoneInput = usePhoneInput({
-    initialCountry: 'us',
+    defaultCountry: 'us',
     value,
   });
 

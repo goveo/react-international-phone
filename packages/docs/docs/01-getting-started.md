@@ -50,7 +50,7 @@ const App = () => {
   return (
     <div>
       <PhoneInput
-        initialCountry="ua"
+        defaultCountry="ua"
         value={phone}
         onChange={(phone) => setPhone(phone)}
       />

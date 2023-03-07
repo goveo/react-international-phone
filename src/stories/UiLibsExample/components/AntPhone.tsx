@@ -10,7 +10,7 @@ interface AntPhoneProps {
 
 export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
   const phoneInput = usePhoneInput({
-    initialCountry: 'us',
+    defaultCountry: 'us',
     value,
   });
 

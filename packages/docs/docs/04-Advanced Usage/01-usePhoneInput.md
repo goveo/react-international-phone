@@ -13,7 +13,7 @@ Use `phone` (as value), `handlePhoneValueChange` (as onChange callback) and `inp
 
 const { country, setCountry, phone, handlePhoneValueChange, inputRef } =
   usePhoneInput({
-    initialCountry: 'us',
+    defaultCountry: 'us',
     value: '+1 (234)',
   });
 ```
@@ -22,7 +22,7 @@ const { country, setCountry, phone, handlePhoneValueChange, inputRef } =
 
 | Argument                        | Type            | Description                                                                                                                                                                                                          | Default value               |
 | ------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| initialCountry <RequiredMark /> | `CountryIso2`   | Initial country value (iso2).                                                                                                                                                                                        |                             |
+| defaultCountry <RequiredMark /> | `CountryIso2`   | Default country value (iso2).                                                                                                                                                                                        |                             |
 | value                           | `string`        | Phone value.                                                                                                                                                                                                         | `""`                        |
 | countries                       | `CountryData[]` | An array of available countries to select (and guess).                                                                                                                                                               | `defaultCountries`          |
 | prefix                          | `string`        | Prefix for phone value.                                                                                                                                                                                              | `"+"`                       |

@@ -28,7 +28,7 @@ const App = () => {
   return (
     <div>
       <PhoneInput
-        initialCountry="ua"
+        defaultCountry="ua"
         phone={phone}
         onChange={setPhone}
         // highlight-start
@@ -49,7 +49,7 @@ return ['us', 'ua', 'gb'].includes(iso2);
 });
 
 <PhoneInput
-  initialCountry="ua"
+  defaultCountry="ua"
   countries={countries}
 />
 

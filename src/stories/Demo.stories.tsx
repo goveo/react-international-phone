@@ -54,7 +54,7 @@ export const Demo = () => {
       <Title>Default</Title>
       <PhoneWrapper>
         <PhoneInput
-          initialCountry="us"
+          defaultCountry="us"
           value={phone}
           onChange={setPhone}
           countrySelectorStyleProps={countrySelectorStyleProps}
@@ -63,7 +63,7 @@ export const Demo = () => {
       <Title>Forced dial code + filtered countries</Title>
       <PhoneWrapper>
         <PhoneInput
-          initialCountry="ee"
+          defaultCountry="ee"
           value={phone2}
           onChange={setPhone2}
           forceDialCode
@@ -101,7 +101,7 @@ export const RerenderTest = () => {
       <PhoneInput
         value={phone}
         onChange={setPhone}
-        initialCountry="nl"
+        defaultCountry="nl"
         placeholder="Test Placeholder"
         inputProps={{ autoFocus: true }}
       />
@@ -113,5 +113,5 @@ export const RerenderTest = () => {
 export const ControlledInputTest = () => {
   const [phone, setPhone] = useState('+1 ');
 
-  return <PhoneInput value={phone} onChange={setPhone} initialCountry="ca" />;
+  return <PhoneInput value={phone} onChange={setPhone} defaultCountry="ca" />;
 };

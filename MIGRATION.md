@@ -2,11 +2,21 @@
 
 ## From version 1.x.x to 2.0.0
 
-### 2.0 breaking changes
+### `initialCountry` has been renamed to `defaultCountry`
 
-#### `hideSpaceAfterDialCode` prop was changed with `charAfterDialCode`
+You should rename `initialCountry` prop to `defaultCountry` in your codebase:
 
-You should simply remove `hideSpaceAfterDialCode` and add the `charAfterDialCode` prop with the corresponding value, for example:
+```jsx
+/* before */
+<PhoneInput initialCountry="us" />
+
+/* after */
+<PhoneInput defaultCountry="us" />
+```
+
+### `hideSpaceAfterDialCode` has been changed with `charAfterDialCode`
+
+You should remove `hideSpaceAfterDialCode` and add the `charAfterDialCode` prop with the corresponding value, for example:
 
 ```jsx
 /* before */
@@ -16,19 +26,19 @@ You should simply remove `hideSpaceAfterDialCode` and add the `charAfterDialCode
 <PhoneInput charAfterDialCode="" />
 ```
 
-#### Removed `usePhone` hook
+### `usePhone` hook has been removed
 
 `usePhone` was removed and now it is not exported from the package entry point.
 
-If you used it, please change it to `usePhoneInput`, it should work the same.
+If you used it for some reason, please change it to `usePhoneInput`, it should work the same.
 
-#### Removed `onCountryChange` callback
+### `onCountryChange` callback has been removed
 
 Please remove it, or use the `useEffect` hook to handle country change:
 
 ```jsx
 const { country } = usePhoneInput({
-  initialCountry: 'us',
+  defaultCountry: 'us',
   value,
 });
 

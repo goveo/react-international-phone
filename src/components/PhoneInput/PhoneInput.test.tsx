@@ -50,13 +50,13 @@ describe('PhoneInput', () => {
   });
 
   test('should set phone value', () => {
-    render(<PhoneInput value="+38099109" initialCountry="ua" />);
+    render(<PhoneInput value="+38099109" defaultCountry="ua" />);
     expect(getInput().value).toBe('+380 (99) 109 ');
   });
 
   test('should handle onChange call', () => {
     const onChange = jest.fn();
-    render(<PhoneInput initialCountry="ua" onChange={onChange} />);
+    render(<PhoneInput defaultCountry="ua" onChange={onChange} />);
 
     fireEvent.change(getInput(), { target: { value: '38099' } });
     expect(onChange.mock.calls.length).toBe(1);
@@ -76,19 +76,19 @@ describe('PhoneInput', () => {
   });
 
   test('should set flag to country selector', () => {
-    const { rerender } = render(<PhoneInput value="+1" initialCountry="ca" />);
+    const { rerender } = render(<PhoneInput value="+1" defaultCountry="ca" />);
     expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
     expect(getCountrySelector()).toHaveAttribute('title', 'Canada');
 
-    rerender(<PhoneInput value="+1 (201)" initialCountry="ca" />);
+    rerender(<PhoneInput value="+1 (201)" defaultCountry="ca" />);
     expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
 
-    rerender(<PhoneInput value="+380 (99) 999 99 99" initialCountry="ca" />);
+    rerender(<PhoneInput value="+380 (99) 999 99 99" defaultCountry="ca" />);
     expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
   });
 
   test('should format value', () => {
-    render(<PhoneInput initialCountry="ua" value="380" />);
+    render(<PhoneInput defaultCountry="ua" value="380" />);
 
     fireEvent.change(getInput(), { target: { value: '380991234567' } });
     expect(getInput().value).toBe('+380 (99) 123 45 67');
@@ -98,7 +98,7 @@ describe('PhoneInput', () => {
   });
 
   test('should update country on input', () => {
-    render(<PhoneInput initialCountry="ua" />);
+    render(<PhoneInput defaultCountry="ua" />);
     fireEvent.change(getInput(), { target: { value: '+12345678900' } });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
 
@@ -108,7 +108,7 @@ describe('PhoneInput', () => {
 
   test('should not change the country when dial code or area-code is not changed', () => {
     // Canada and USA have "+1" as dial code
-    render(<PhoneInput initialCountry="ca" />);
+    render(<PhoneInput defaultCountry="ca" />);
 
     fireEvent.change(getInput(), { target: { value: '+12' } });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
@@ -130,14 +130,14 @@ describe('PhoneInput', () => {
   });
 
   test('should open country selector dropdown', () => {
-    render(<PhoneInput initialCountry="ua" />);
+    render(<PhoneInput defaultCountry="ua" />);
     expect(getCountrySelectorDropdown()).not.toBeVisible();
     fireEvent.click(getCountrySelector());
     expect(getCountrySelectorDropdown()).toBeVisible();
   });
 
   test('should select country from dropdown', () => {
-    render(<PhoneInput initialCountry="ua" />);
+    render(<PhoneInput defaultCountry="ua" />);
     fireEvent.click(getCountrySelector());
     fireEvent.click(getDropdownOption('af'));
     expect(getCountrySelector()).toHaveAttribute('data-country', 'af');
@@ -158,17 +158,17 @@ describe('PhoneInput', () => {
   });
 
   test('should support disabled state', () => {
-    const { rerender } = render(<PhoneInput initialCountry="ua" />);
+    const { rerender } = render(<PhoneInput defaultCountry="ua" />);
     expect(getCountrySelector()).toHaveProperty('disabled', false);
     expect(getInput()).toHaveProperty('disabled', false);
 
-    rerender(<PhoneInput initialCountry="ua" disabled />);
+    rerender(<PhoneInput defaultCountry="ua" disabled />);
     expect(getCountrySelector()).toHaveProperty('disabled', true);
     expect(getInput()).toHaveProperty('disabled', true);
 
     rerender(
       <PhoneInput
-        initialCountry="ua"
+        defaultCountry="ua"
         disabled
         showDisabledDialCodeAndPrefix
         disableDialCodeAndPrefix
@@ -180,23 +180,37 @@ describe('PhoneInput', () => {
   });
 
   test('should hide dropdown icon when hideDropdown is true', () => {
-    const { rerender } = render(<PhoneInput initialCountry="ua" />);
+    const { rerender } = render(<PhoneInput defaultCountry="ua" />);
     expect(getDropdownArrow()).toBeVisible();
 
-    rerender(<PhoneInput initialCountry="ua" hideDropdown />);
+    rerender(<PhoneInput defaultCountry="ua" hideDropdown />);
     expect(getDropdownArrow()).toBeNull();
   });
 
-  test('should set initial country', () => {
-    render(<PhoneInput initialCountry="tw" />);
-    expect(getCountrySelector()).toHaveAttribute('data-country', 'tw');
-    expect(getInput().value).toBe('+886 ');
+  describe('default country', () => {
+    test('should set default country if value is not provided', () => {
+      render(<PhoneInput defaultCountry="tw" />);
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'tw');
+      expect(getInput().value).toBe('+886 ');
+    });
+
+    test('should parse country from value if it is provided (and ignore default country)', () => {
+      render(<PhoneInput value="+1" defaultCountry="tw" />);
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+      expect(getInput().value).toBe('+1 ');
+    });
+
+    test('should set default country if multiple countries have provided dial code', () => {
+      render(<PhoneInput value="+1" defaultCountry="ca" />);
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+      expect(getInput().value).toBe('+1 ');
+    });
   });
 
   test('should render placeholder', () => {
     const { rerender } = render(
       <PhoneInput
-        initialCountry="us"
+        defaultCountry="us"
         disableDialCodePrefill
         placeholder="Phone input"
       />,
@@ -205,7 +219,7 @@ describe('PhoneInput', () => {
 
     rerender(
       <PhoneInput
-        initialCountry="us"
+        defaultCountry="us"
         disableDialCodePrefill
         placeholder="Test placeholder"
       />,
@@ -214,7 +228,7 @@ describe('PhoneInput', () => {
   });
 
   test('should handle defaultMask value', () => {
-    render(<PhoneInput initialCountry="us" defaultMask="....-....-...." />);
+    render(<PhoneInput defaultCountry="us" defaultMask="....-....-...." />);
     fireEvent.change(getInput(), { target: { value: '12345678900' } });
     expect(getInput().value).toBe('+1 (234) 567-8900');
 
@@ -225,33 +239,33 @@ describe('PhoneInput', () => {
 
   test('should handle charAfterDialCode', () => {
     const { rerender } = render(
-      <PhoneInput initialCountry="us" charAfterDialCode="" />,
+      <PhoneInput defaultCountry="us" charAfterDialCode="" />,
     );
     fireEvent.change(getInput(), { target: { value: '12345678900' } });
     expect(getInput().value).toBe('+1(234) 567-8900');
     fireEvent.change(getInput(), { target: { value: '380999' } });
     expect(getInput().value).toBe('+380(99) 9');
 
-    rerender(<PhoneInput initialCountry="us" charAfterDialCode="-" />);
+    rerender(<PhoneInput defaultCountry="us" charAfterDialCode="-" />);
     fireEvent.change(getInput(), { target: { value: '12345678900' } });
     expect(getInput().value).toBe('+1-(234) 567-8900');
   });
 
   test('should handle disableCountryGuess', () => {
-    render(<PhoneInput initialCountry="us" disableCountryGuess />);
+    render(<PhoneInput defaultCountry="us" disableCountryGuess />);
     fireEvent.change(getInput(), { target: { value: '38099123456' } });
     expect(getInput().value).toBe('+3 (809) 912-3456');
   });
 
   test('should handle disableDialCodePrefill', () => {
-    render(<PhoneInput initialCountry="us" disableDialCodePrefill />);
+    render(<PhoneInput defaultCountry="us" disableDialCodePrefill />);
     expect(getInput().value).toBe('');
   });
 
   describe('forceDialCode', () => {
     test('should not allow dial code change with input', () => {
       render(
-        <PhoneInput value="12345678900" initialCountry="us" forceDialCode />,
+        <PhoneInput value="12345678900" defaultCountry="us" forceDialCode />,
       );
       expect(getInput().value).toBe('+1 (234) 567-8900');
 
@@ -267,7 +281,7 @@ describe('PhoneInput', () => {
 
     test('should allow change dial code with country selector', () => {
       render(
-        <PhoneInput value="12345678900" initialCountry="us" forceDialCode />,
+        <PhoneInput value="12345678900" defaultCountry="us" forceDialCode />,
       );
       expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
       expect(getInput().value).toBe('+1 (234) 567-8900');
@@ -282,7 +296,7 @@ describe('PhoneInput', () => {
       const onChange = jest.fn();
       const user = userEvent.setup();
       render(
-        <PhoneInput initialCountry="us" forceDialCode onChange={onChange} />,
+        <PhoneInput defaultCountry="us" forceDialCode onChange={onChange} />,
       );
       expect(getInput().value).toBe('+1 ');
 
@@ -306,7 +320,7 @@ describe('PhoneInput', () => {
 
   describe('disableDialCodeAndPrefix', () => {
     test('should not include dial code inside input', () => {
-      render(<PhoneInput initialCountry="us" disableDialCodeAndPrefix />);
+      render(<PhoneInput defaultCountry="us" disableDialCodeAndPrefix />);
       fireEvent.change(getInput(), { target: { value: '1234567890' } });
       expect(getInput().value).toBe('(123) 456-7890');
 
@@ -320,7 +334,7 @@ describe('PhoneInput', () => {
     test('should ignore disableCountryGuess and forceDialCode', () => {
       const { rerender } = render(
         <PhoneInput
-          initialCountry="us"
+          defaultCountry="us"
           disableDialCodeAndPrefix
           disableCountryGuess
         />,
@@ -334,7 +348,7 @@ describe('PhoneInput', () => {
 
       rerender(
         <PhoneInput
-          initialCountry="us"
+          defaultCountry="us"
           disableDialCodeAndPrefix
           forceDialCode
         />,
@@ -351,14 +365,14 @@ describe('PhoneInput', () => {
   describe('showDisabledDialCodeAndPrefix', () => {
     test('should show dial code preview', () => {
       const { rerender } = render(
-        <PhoneInput initialCountry="us" disableDialCodeAndPrefix />,
+        <PhoneInput defaultCountry="us" disableDialCodeAndPrefix />,
       );
       fireEvent.change(getInput(), { target: { value: '1234567890' } });
       expect(getDialCodePreview()).toBeNull();
 
       rerender(
         <PhoneInput
-          initialCountry="us"
+          defaultCountry="us"
           disableDialCodeAndPrefix
           showDisabledDialCodeAndPrefix
         />,
@@ -372,7 +386,7 @@ describe('PhoneInput', () => {
 
       render(
         <PhoneInput
-          initialCountry="us"
+          defaultCountry="us"
           disableDialCodeAndPrefix
           showDisabledDialCodeAndPrefix
         />,
@@ -393,7 +407,7 @@ describe('PhoneInput', () => {
     test('should change country with country-selector', async () => {
       render(
         <PhoneInput
-          initialCountry="us"
+          defaultCountry="us"
           disableDialCodeAndPrefix
           showDisabledDialCodeAndPrefix
         />,
@@ -412,7 +426,7 @@ describe('PhoneInput', () => {
 
     test('should not work without disableDialCodeAndPrefix', async () => {
       const { rerender } = render(
-        <PhoneInput initialCountry="us" showDisabledDialCodeAndPrefix />,
+        <PhoneInput defaultCountry="us" showDisabledDialCodeAndPrefix />,
       );
 
       expect(getDialCodePreview()).toBeNull();
@@ -420,7 +434,7 @@ describe('PhoneInput', () => {
 
       rerender(
         <PhoneInput
-          initialCountry="us"
+          defaultCountry="us"
           disableDialCodeAndPrefix
           showDisabledDialCodeAndPrefix
         />,
@@ -441,7 +455,7 @@ describe('PhoneInput', () => {
     const increaseSystemTime = (ms = 1000) => jest.advanceTimersByTime(ms);
 
     test('should support undo on ctrl+z', () => {
-      render(<PhoneInput initialCountry="us" value="+1234" />);
+      render(<PhoneInput defaultCountry="us" value="+1234" />);
       increaseSystemTime();
 
       fireChangeEvent('1234567890');
@@ -489,7 +503,7 @@ describe('PhoneInput', () => {
     });
 
     test('should support redo on ctrl+shift+z', () => {
-      render(<PhoneInput initialCountry="us" value="+1234" />);
+      render(<PhoneInput defaultCountry="us" value="+1234" />);
       increaseSystemTime();
 
       fireChangeEvent('1234567890');
@@ -533,7 +547,7 @@ describe('PhoneInput', () => {
       });
 
       render(
-        <PhoneInput initialCountry="us" value="+1234" countries={countries} />,
+        <PhoneInput defaultCountry="us" value="+1234" countries={countries} />,
       );
 
       expect(getCountrySelectorDropdown().childNodes.length).toBe(
@@ -569,7 +583,7 @@ describe('PhoneInput', () => {
 
       render(
         <PhoneInput
-          initialCountry="ua"
+          defaultCountry="ua"
           value="+380(99)9999999"
           countries={countries}
         />,
@@ -586,7 +600,7 @@ describe('PhoneInput', () => {
     };
 
     test('should handle cursor when typing (end)', async () => {
-      render(<PhoneInput value="+1" initialCountry="us" />);
+      render(<PhoneInput value="+1" defaultCountry="us" />);
       expect(getInput().value).toBe('+1 ');
       expect(getCursorPosition()).toBe('+1 '.length);
 
@@ -600,7 +614,7 @@ describe('PhoneInput', () => {
     });
 
     test('should handle cursor when typing (start)', async () => {
-      render(<PhoneInput value="+1" initialCountry="us" />);
+      render(<PhoneInput value="+1" defaultCountry="us" />);
 
       await user.type(getInput(), '1', { initialSelectionStart: '+'.length });
       expect(getInput().value).toBe('+1 (1');
@@ -616,7 +630,7 @@ describe('PhoneInput', () => {
     });
 
     test('should handle cursor when typing (middle)', async () => {
-      render(<PhoneInput value="+1 (234)" initialCountry="us" />);
+      render(<PhoneInput value="+1 (234)" defaultCountry="us" />);
 
       await user.type(getInput(), '9', {
         initialSelectionStart: '+1 ('.length,
@@ -632,7 +646,7 @@ describe('PhoneInput', () => {
     });
 
     test('should handle cursor on insertion', async () => {
-      render(<PhoneInput value="+1 (234)" initialCountry="us" />);
+      render(<PhoneInput value="+1 (234)" defaultCountry="us" />);
       getInput().focus();
 
       setCursorPosition('+1'.length);
@@ -647,7 +661,7 @@ describe('PhoneInput', () => {
     });
 
     test('should handle backspace key', async () => {
-      render(<PhoneInput value="+1 (111) 111-11" initialCountry="us" />);
+      render(<PhoneInput value="+1 (111) 111-11" defaultCountry="us" />);
       getInput().focus();
 
       await user.type(getInput(), '{backspace}', {
@@ -689,7 +703,7 @@ describe('PhoneInput', () => {
     });
 
     test('should handle delete key', async () => {
-      render(<PhoneInput value="+1 (111) 111-11" initialCountry="us" />);
+      render(<PhoneInput value="+1 (111) 111-11" defaultCountry="us" />);
       getInput().focus();
 
       await user.type(getInput(), '{delete}', {
@@ -746,14 +760,14 @@ describe('PhoneInput', () => {
   describe('autofocus', () => {
     test('should set focus on input', () => {
       const { rerender } = render(
-        <PhoneInput initialCountry="us" inputProps={{ autoFocus: true }} />,
+        <PhoneInput defaultCountry="us" inputProps={{ autoFocus: true }} />,
       );
       expect(getInput()).toHaveFocus();
 
       // unset focus
       getInput().blur();
 
-      rerender(<PhoneInput initialCountry="us" />);
+      rerender(<PhoneInput defaultCountry="us" />);
       expect(getInput()).not.toHaveFocus();
     });
 
@@ -761,7 +775,7 @@ describe('PhoneInput', () => {
       render(
         <PhoneInput
           value="+31 "
-          initialCountry="nl"
+          defaultCountry="nl"
           inputProps={{ autoFocus: true }}
         />,
       );
@@ -778,13 +792,13 @@ describe('PhoneInput', () => {
 
   test('should use default mask if country data does not have mask', () => {
     // mask is undefined
-    const { rerender } = render(<PhoneInput initialCountry="do" />);
+    const { rerender } = render(<PhoneInput defaultCountry="do" />);
     fireChangeEvent('+1234567');
     expect(getInput().value).toBe('+1 234567');
     expect(getCountrySelector()).toHaveAttribute('data-country', 'do');
 
     // mask is empty string
-    rerender(<PhoneInput initialCountry="gr" />);
+    rerender(<PhoneInput defaultCountry="gr" />);
     fireChangeEvent('+301234567');
     expect(getInput().value).toBe('+30 1234567');
     expect(getCountrySelector()).toHaveAttribute('data-country', 'gr');
@@ -792,7 +806,7 @@ describe('PhoneInput', () => {
 
   test('should display input value on every country', () => {
     render(
-      <PhoneInput initialCountry={parseCountry(defaultCountries[0]).iso2} />,
+      <PhoneInput defaultCountry={parseCountry(defaultCountries[0]).iso2} />,
     );
 
     for (const c of defaultCountries) {
