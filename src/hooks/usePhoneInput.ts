@@ -300,7 +300,9 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     }
 
     const newCursorPosition = getCursorPosition({
-      cursorPositionAfterInput: cursorPositionAfterInput ?? 0,
+      cursorPositionAfterInput:
+        cursorPositionAfterInput ??
+        (isInitializedRef.current ? 0 : newPhone.length),
       phoneBeforeInput: phone,
       phoneAfterInput: newPhone,
       phoneAfterFormatted: phoneValue,
