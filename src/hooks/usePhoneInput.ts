@@ -413,7 +413,10 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       country: newCountry.iso2,
     });
 
-    inputRef.current?.focus();
+    // Next tick is used to support UI libraries (had an issue with MUI)
+    Promise.resolve().then(() => {
+      inputRef.current?.focus();
+    });
   };
 
   // Handle value update

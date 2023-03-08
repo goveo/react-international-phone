@@ -150,3 +150,13 @@ OnlyBalticCountries.args = {
     return balticCountries.includes(parseCountry(c).iso2);
   }),
 };
+
+export const WithAutofocus = Template.bind({});
+WithAutofocus.argTypes = argTypes;
+
+WithAutofocus.args = {
+  defaultCountry: 'es',
+  inputProps: {
+    autoFocus: true,
+  },
+};
