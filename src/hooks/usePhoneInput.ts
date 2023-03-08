@@ -16,7 +16,6 @@ import {
   removeNonDigits,
 } from '../utils';
 import { useHistoryState } from './useHistoryState';
-import { useTimer } from './useTimer';
 
 interface FormatPhoneValueProps {
   value: string;
@@ -150,7 +149,6 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
     : !disableCountryGuess;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const timer = useTimer();
 
   const formatPhoneValue = ({
     value,
@@ -223,6 +221,9 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
         }).phone,
         country: defaultCountryFull.iso2,
       };
+    },
+    {
+      overrideLastItemDebounceMS: historySaveDebounceMS,
     },
   );
 
@@ -311,20 +312,10 @@ export const usePhoneInput = (config: UsePhoneInputConfig) => {
       deletion,
     });
 
-    const timePassedSinceLastChange = timer.check();
-    const historySaveDebounceTimePassed = timePassedSinceLastChange
-      ? timePassedSinceLastChange > historySaveDebounceMS
-      : true;
-
-    updateHistory(
-      {
-        phone: phoneValue,
-        country: newCountry.iso2,
-      },
-      {
-        overrideLastHistoryItem: !historySaveDebounceTimePassed,
-      },
-    );
+    updateHistory({
+      phone: phoneValue,
+      country: newCountry.iso2,
+    });
 
     /**
      * HACK: should set cursor on the next tick to make sure that the phone value is updated

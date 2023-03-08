@@ -136,7 +136,7 @@ describe('useHistoryState', () => {
     expect(result.current[HookIndex.State]).toBe('2');
   });
 
-  test('should handle skipHistorySave setState option', () => {
+  test('should handle overrideLastItem setState option', () => {
     const { result } = renderHook(() =>
       useHistoryState<string>('0', { size: 2 }),
     );
@@ -152,7 +152,7 @@ describe('useHistoryState', () => {
 
     act(() => {
       result.current[HookIndex.SetState]('test', {
-        overrideLastHistoryItem: true,
+        overrideLastItem: true,
       });
     });
     expect(result.current[HookIndex.State]).toBe('test');
@@ -177,5 +177,52 @@ describe('useHistoryState', () => {
     });
 
     expect(result.current[HookIndex.State]).toBe('1');
+  });
+
+  test('should handle overrideLastItemDebounceMS', () => {
+    jest.useFakeTimers();
+
+    const waitForHistorySave = (ms = 1000) => jest.advanceTimersByTime(ms);
+
+    const { result } = renderHook(() =>
+      useHistoryState<string>('1', { overrideLastItemDebounceMS: 200 }),
+    );
+
+    act(() => {
+      result.current[HookIndex.SetState]('2');
+    });
+
+    act(() => {
+      result.current[HookIndex.SetState]('3');
+    });
+
+    act(waitForHistorySave);
+
+    act(() => {
+      result.current[HookIndex.SetState]('4');
+    });
+
+    act(waitForHistorySave);
+
+    act(() => {
+      result.current[HookIndex.SetState]('5');
+    });
+
+    act(() => {
+      result.current[HookIndex.Undo]();
+    });
+    expect(result.current[HookIndex.State]).toBe('4');
+
+    act(() => {
+      result.current[HookIndex.Undo]();
+    });
+    expect(result.current[HookIndex.State]).toBe('3');
+
+    act(() => {
+      result.current[HookIndex.Undo]();
+    });
+    expect(result.current[HookIndex.State]).toBe('1');
+
+    jest.useRealTimers();
   });
 });

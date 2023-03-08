@@ -1,18 +1,22 @@
 import { useCallback, useState } from 'react';
 
+import { useTimer } from './useTimer';
+
 interface UseHistoryStateConfig {
   size?: number;
+  overrideLastItemDebounceMS?: number;
 }
 
 const defaultConfig: Required<UseHistoryStateConfig> = {
   size: 20,
+  overrideLastItemDebounceMS: -1, // overriding is disabled by default
 };
 
 interface SetStateConfig {
   /**
    * Update last history element (not create new one)
    */
-  overrideLastHistoryItem?: boolean;
+  overrideLastItem?: boolean;
 }
 
 type HistoryActionResult<T> = { success: false } | { success: true; value: T };
@@ -21,12 +25,13 @@ export function useHistoryState<T extends Record<string, unknown> | string>(
   initialValue: T | (() => T),
   config?: UseHistoryStateConfig,
 ) {
-  const { size } = { ...defaultConfig, ...config };
+  const { size, overrideLastItemDebounceMS } = { ...defaultConfig, ...config };
 
   const [state, _setState] = useState(initialValue);
   const [history, setHistory] = useState<T[]>([state]);
-
   const [pointer, setPointer] = useState<number>(0);
+
+  const timer = useTimer();
 
   const setState = useCallback(
     (value: T, config?: SetStateConfig) => {
@@ -40,11 +45,25 @@ export function useHistoryState<T extends Record<string, unknown> | string>(
         return;
       }
 
-      if (config?.overrideLastHistoryItem) {
+      const isOverridingEnabled = overrideLastItemDebounceMS > 0;
+
+      const timePassedSinceLastChange = timer.check();
+      const debounceTimePassed =
+        isOverridingEnabled && timePassedSinceLastChange !== undefined
+          ? timePassedSinceLastChange > overrideLastItemDebounceMS
+          : true;
+
+      const shouldOverrideLastItem =
+        // use value of config.overrideLastItem if passed
+        config?.overrideLastItem !== undefined
+          ? config.overrideLastItem
+          : !debounceTimePassed;
+
+      if (shouldOverrideLastItem) {
+        // do not update pointer
         setHistory((prev) => {
           return [...prev.slice(0, pointer), value];
         });
-        // do not update pointer
       } else {
         const isSizeOverflow = history.length >= size;
         setHistory((prev) => [
@@ -57,7 +76,7 @@ export function useHistoryState<T extends Record<string, unknown> | string>(
       }
       _setState(value);
     },
-    [state, pointer, history.length, size],
+    [state, timer, overrideLastItemDebounceMS, pointer, history.length, size],
   );
 
   const undo = useCallback((): HistoryActionResult<T> => {

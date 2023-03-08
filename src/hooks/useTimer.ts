@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 
 export const useTimer = () => {
-  const [prevTime, setPrevTime] = useState<number>();
-  const [currentTime, setCurrentTime] = useState<number>(Date.now());
+  const prevTimeRef = useRef<number>();
+  const currentTimeRef = useRef<number>(Date.now());
 
   /**
    * @returns a milliseconds difference from the last check() call.
@@ -10,10 +10,12 @@ export const useTimer = () => {
    */
   const check = () => {
     const newTime = Date.now();
-    const difference = prevTime ? newTime - currentTime : undefined;
+    const difference = prevTimeRef.current
+      ? newTime - currentTimeRef.current
+      : undefined;
 
-    setPrevTime(currentTime);
-    setCurrentTime(newTime);
+    prevTimeRef.current = currentTimeRef.current;
+    currentTimeRef.current = newTime;
 
     return difference;
   };
