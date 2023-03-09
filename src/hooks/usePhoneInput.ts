@@ -274,9 +274,7 @@ export const usePhoneInput = ({
       country: fullCountry,
 
       trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
-      insertDialCodeOnEmpty:
-        insertDialCodeOnEmpty ||
-        (!isInitializedRef.current && !disableDialCodePrefill),
+      insertDialCodeOnEmpty,
       forceDisableCountryGuess:
         forceDialCode &&
         !!deletion &&
@@ -418,7 +416,7 @@ export const usePhoneInput = ({
 
   // Handle value update
   useEffect(() => {
-    if (value === phone) return;
+    if (!isInitializedRef.current || value === phone) return;
     handleValueChange(value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);

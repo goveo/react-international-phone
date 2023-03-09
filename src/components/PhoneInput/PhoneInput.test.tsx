@@ -109,16 +109,26 @@ describe('PhoneInput', () => {
     });
   });
 
-  test('should set flag to country selector', () => {
-    const { rerender } = render(<PhoneInput value="+1" defaultCountry="ca" />);
-    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
-    expect(getCountrySelector()).toHaveAttribute('title', 'Canada');
+  describe('country flag', () => {
+    test('should set flag on initial render', () => {
+      render(<PhoneInput value="+1" defaultCountry="ca" />);
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+      expect(getCountrySelector()).toHaveAttribute('title', 'Canada');
+    });
 
-    rerender(<PhoneInput value="+1 (201)" defaultCountry="ca" />);
-    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+    test('should set flag on phone change', () => {
+      render(<PhoneInput defaultCountry="us" />);
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
 
-    rerender(<PhoneInput value="+380 (99) 999 99 99" defaultCountry="ca" />);
-    expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
+      fireEvent.change(getInput(), { target: { value: '+38099' } });
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
+
+      fireEvent.change(getInput(), { target: { value: '+1 204' } });
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+    });
   });
 
   test('should format value', () => {
