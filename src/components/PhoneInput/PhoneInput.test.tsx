@@ -54,25 +54,59 @@ describe('PhoneInput', () => {
     expect(getInput().value).toBe('+380 (99) 109 ');
   });
 
-  test('should handle onChange call', () => {
-    const onChange = jest.fn();
-    render(<PhoneInput defaultCountry="ua" onChange={onChange} />);
+  describe('onChange', () => {
+    test('should call onChange when input value is updated', () => {
+      const onChange = jest.fn();
+      render(
+        <PhoneInput value="+1 " defaultCountry="us" onChange={onChange} />,
+      );
 
-    fireEvent.change(getInput(), { target: { value: '38099' } });
-    expect(onChange.mock.calls.length).toBe(1);
-    expect(onChange.mock.calls[0][0]).toBe('+380 (99) ');
+      fireEvent.change(getInput(), { target: { value: '38099' } });
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+380 (99) ');
 
-    fireEvent.change(getInput(), { target: { value: '+380 (99) 999' } });
-    expect(onChange.mock.calls.length).toBe(2);
-    expect(onChange.mock.calls[1][0]).toBe('+380 (99) 999 ');
+      fireEvent.change(getInput(), { target: { value: '+380 (99) 999' } });
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+380 (99) 999 ');
 
-    fireEvent.change(getInput(), { target: { value: '' } });
-    expect(onChange.mock.calls.length).toBe(3);
-    expect(onChange.mock.calls[2][0]).toBe('');
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('');
 
-    fireEvent.change(getInput(), { target: { value: '+1 403 555-6666' } });
-    expect(onChange.mock.calls.length).toBe(4);
-    expect(onChange.mock.calls[3][0]).toBe('+1 (403) 555-6666');
+      fireEvent.change(getInput(), { target: { value: '+1 403 555-6666' } });
+      expect(onChange.mock.calls.length).toBe(4);
+      expect(onChange.mock.calls[3][0]).toBe('+1 (403) 555-6666');
+    });
+
+    test('should call onChange on initialization (value is not formatted)', () => {
+      const onChange = jest.fn();
+      render(
+        <PhoneInput
+          value="+19999999999"
+          defaultCountry="us"
+          onChange={onChange}
+        />,
+      );
+
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1 (999) 999-9999');
+    });
+
+    test('should call onChange on initialization (value is empty string)', () => {
+      const onChange = jest.fn();
+      render(<PhoneInput value="" defaultCountry="us" onChange={onChange} />);
+
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+    });
+
+    test('should call onChange on initialization (value is not provided)', () => {
+      const onChange = jest.fn();
+      render(<PhoneInput defaultCountry="us" onChange={onChange} />);
+
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+    });
   });
 
   test('should set flag to country selector', () => {

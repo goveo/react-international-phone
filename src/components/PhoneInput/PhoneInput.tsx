@@ -1,6 +1,6 @@
 import './PhoneInput.style.scss';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
@@ -85,14 +85,22 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   countrySelectorStyleProps,
   dialCodePreviewStyleProps,
 
+  value,
   countries = defaultCountries,
   ...usePhoneInputConfig
 }) => {
   const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
     usePhoneInput({
-      ...usePhoneInputConfig,
+      value,
       countries,
+      ...usePhoneInputConfig,
     });
+
+  useEffect(() => {
+    if (phone === value) return;
+    onChange?.(phone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phone]);
 
   const fullCountry = useMemo(() => {
     if (!country) return;
@@ -135,10 +143,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       )}
 
       <input
-        onChange={(e) => {
-          const newPhone = handlePhoneValueChange(e);
-          onChange?.(newPhone);
-        }}
+        onChange={handlePhoneValueChange}
         value={phone}
         type="tel"
         ref={inputRef}

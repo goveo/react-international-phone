@@ -112,7 +112,7 @@ export interface UsePhoneInputConfig {
 }
 
 export const defaultConfig: Required<
-  Omit<UsePhoneInputConfig, 'defaultCountry' | 'inputRef'> // omit props with no default value
+  Omit<UsePhoneInputConfig, 'defaultCountry'> // omit props with no default value
 > = {
   value: '',
   prefix: '+',
@@ -126,24 +126,19 @@ export const defaultConfig: Required<
   countries: defaultCountries,
 };
 
-export const usePhoneInput = (config: UsePhoneInputConfig) => {
-  const {
-    value,
-    defaultCountry,
-    countries,
-    prefix,
-    defaultMask,
-    charAfterDialCode,
-    historySaveDebounceMS,
-    disableCountryGuess,
-    disableDialCodePrefill,
-    forceDialCode,
-    disableDialCodeAndPrefix,
-  } = {
-    ...defaultConfig,
-    ...config,
-  };
-
+export const usePhoneInput = ({
+  defaultCountry,
+  value = defaultConfig.value,
+  countries = defaultConfig.countries,
+  prefix = defaultConfig.prefix,
+  defaultMask = defaultConfig.defaultMask,
+  charAfterDialCode = defaultConfig.charAfterDialCode,
+  historySaveDebounceMS = defaultConfig.historySaveDebounceMS,
+  disableCountryGuess = defaultConfig.disableCountryGuess,
+  disableDialCodePrefill = defaultConfig.disableDialCodePrefill,
+  forceDialCode = defaultConfig.forceDialCode,
+  disableDialCodeAndPrefix = defaultConfig.disableDialCodeAndPrefix,
+}: UsePhoneInputConfig) => {
   const countryGuessingEnabled = disableDialCodeAndPrefix
     ? false
     : !disableCountryGuess;
