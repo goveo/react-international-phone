@@ -14,6 +14,12 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
     value,
   });
 
+  useEffect(() => {
+    if (phoneInput.phone === value) return;
+    onChange?.(phoneInput.phone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phoneInput.phone]);
+
   const inputRef = useRef<InputRef>(null);
 
   // Need to reassign inputRef because antd provides not default ref
@@ -55,10 +61,7 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
           placeholder="Phone number"
           type="tel"
           value={phoneInput.phone}
-          onChange={(e) => {
-            const value = phoneInput.handlePhoneValueChange(e);
-            onChange(value);
-          }}
+          onChange={phoneInput.handlePhoneValueChange}
           ref={inputRef}
           style={{
             width: '200px',

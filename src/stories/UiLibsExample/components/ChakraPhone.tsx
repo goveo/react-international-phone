@@ -1,5 +1,5 @@
 import { Button, ChakraProvider, Input } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { CountrySelector, usePhoneInput } from '../../../index';
 
@@ -16,6 +16,12 @@ export const ChakraPhone: React.FC<ChakraPhoneProps> = ({
     defaultCountry: 'us',
     value,
   });
+
+  useEffect(() => {
+    if (phoneInput.phone === value) return;
+    onChange?.(phoneInput.phone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phoneInput.phone]);
 
   return (
     <ChakraProvider>
@@ -34,12 +40,7 @@ export const ChakraPhone: React.FC<ChakraPhoneProps> = ({
           type="tel"
           color="primary"
           value={phoneInput.phone}
-          onChange={(e) => {
-            const value = phoneInput.handlePhoneValueChange(
-              e as React.ChangeEvent<HTMLInputElement>,
-            );
-            onChange(value);
-          }}
+          onChange={phoneInput.handlePhoneValueChange}
           width={200}
           ref={phoneInput.inputRef}
         />
