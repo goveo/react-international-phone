@@ -1,8 +1,15 @@
-# Migration
+# Migrating from v1 to v2
 
-## From version 1.x.x to 2.0.0
+:::caution Why is it important to update?
 
-### `initialCountry` has been renamed to `defaultCountry`
+Version 1 becomes deprecated and unsupported since v2 is released. <br/>
+New features and bug fixes will be pushed only to v2.
+
+:::
+
+This document describes all breaking changes and provides a migration guide from version 1 to version 2.
+
+## `initialCountry` has been renamed to `defaultCountry`
 
 You should rename `initialCountry` prop to `defaultCountry` in your codebase:
 
@@ -14,7 +21,7 @@ You should rename `initialCountry` prop to `defaultCountry` in your codebase:
 <PhoneInput defaultCountry="us" />
 ```
 
-### `hideSpaceAfterDialCode` has been changed with `charAfterDialCode`
+## `hideSpaceAfterDialCode` has been changed with `charAfterDialCode`
 
 You should remove `hideSpaceAfterDialCode` and add the `charAfterDialCode` prop with the corresponding value, for example:
 
@@ -26,13 +33,13 @@ You should remove `hideSpaceAfterDialCode` and add the `charAfterDialCode` prop 
 <PhoneInput charAfterDialCode="" />
 ```
 
-### `usePhone` hook has been removed
+## `usePhone` hook has been removed
 
 `usePhone` was removed and now it is not exported from the package entry point.
 
 If you used it for some reason, please change it to `usePhoneInput`, it should work the same.
 
-### `onCountryChange` callback has been removed
+## `onCountryChange` callback has been removed
 
 Please remove it, or use the `useEffect` hook to handle country change:
 
