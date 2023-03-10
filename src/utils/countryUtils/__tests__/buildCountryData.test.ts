@@ -68,4 +68,42 @@ describe('buildCountryData', () => {
     expect(country[5]).toEqual(undefined);
     expect(country[6]).toEqual(undefined);
   });
+
+  test('should bot allow create invalid countries', () => {
+    expect(() =>
+      buildCountryData({
+        name: 'Ukraine',
+        regions: [],
+        iso2: 'ua',
+        dialCode: '380',
+        format: undefined,
+        priority: 1,
+        areaCodes: undefined,
+      }),
+    ).toThrowError();
+
+    expect(() =>
+      buildCountryData({
+        name: 'Ukraine',
+        regions: [],
+        iso2: 'ua',
+        dialCode: '380',
+        format: undefined,
+        priority: undefined,
+        areaCodes: ['1'],
+      }),
+    ).toThrowError();
+
+    expect(() =>
+      buildCountryData({
+        name: 'Ukraine',
+        regions: [],
+        iso2: 'ua',
+        dialCode: '380',
+        format: '............',
+        priority: undefined,
+        areaCodes: ['1'],
+      }),
+    ).toThrowError();
+  });
 });
