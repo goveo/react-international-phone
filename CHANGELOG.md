@@ -1,3 +1,25 @@
+# [2.0.0](https://github.com/goveo/react-international-phone/compare/v1.8.8...v2.0.0) (2023-03-10)
+
+
+### Bug Fixes
+
+* **cursor:** fix cursor position on autofocus ([a7805fb](https://github.com/goveo/react-international-phone/commit/a7805fb5eaae7b6e6efd7d8bf90b66d058528de8))
+* **cursor:** set cursor position on initialization ([4176553](https://github.com/goveo/react-international-phone/commit/41765532cef8ba9c9a8d21c98add839300354f03))
+* **history:** add history initial value function setter, fix state comparing ([5893db6](https://github.com/goveo/react-international-phone/commit/5893db6259077d81c8365ff0034ce45befa19f5c))
+* **PhoneInput:** fix call onChange callback after redo/undo and country change ([e8f5ffc](https://github.com/goveo/react-international-phone/commit/e8f5ffc8c58c91d6c58457e68e3b7d5af2ecda37))
+* store country in history, update country flag on undo/redo ([8259173](https://github.com/goveo/react-international-phone/commit/825917383403f32e471e122c1f7c7e52aba724ef))
+* **usePhoneInput:** fix dial code population on phone removal after the first render ([2b14c61](https://github.com/goveo/react-international-phone/commit/2b14c6132fb398ea4bb098d64726e044d54f7654))
+* **usePhoneInput:** remove double rendering on initialization ([241e3e1](https://github.com/goveo/react-international-phone/commit/241e3e17324da7c051d71998300562980690673f))
+
+
+* refactor!: remove usePhone hook, change hideSpaceAfterDialCode with charAfterDialCode ([69731ae](https://github.com/goveo/react-international-phone/commit/69731ae8684e5003341b8a8bffc244872d77dffd))
+
+
+### BREAKING CHANGES
+
+* `usePhone` hook has been removed
+* `hideSpaceAfterDialCode` prop was changed with `charAfterDialCode`
+
 ## [1.8.8](https://github.com/goveo/react-international-phone/compare/v1.8.7...v1.8.8) (2023-03-04)
 
 
