@@ -43,8 +43,8 @@ Validation behavior on countries with default masks can be slightly adjusted wit
 | areaCodeMatch | `boolean`                             | Is country area code exists.              |
 
 :::caution
-`isValid` is not guaranteed that entered phone number is 100% valid.
-When it becomes set to **true** it shows that country has been parsed from provided value, and the format mask of this country were applied correctly.
+`isValid` does not guarantee that the entered phone number is 100% valid.
+When `isValid` value becomes **true** it shows that the country was parsed from the provided phone value and that country's format mask was applied correctly.
 :::
 
 ### Basic Usage
@@ -87,7 +87,7 @@ const App = () => {
 ```
 
 :::tip
-Sometimes when you don't want to check area codes (e.g. you are not sure that area-codes array covers all the possible values) you can use `lengthMatch` to check the validation:
+Sometimes, when you don't want to check area codes (for example, you're not sure that the array of area codes covers all possible values), you can use `lengthMatch` to check the validation:
 
 ```tsx
 const phoneValidation = usePhoneValidation('+1 (123) 456-7890');
