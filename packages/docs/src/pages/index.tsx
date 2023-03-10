@@ -28,7 +28,7 @@ const HomepageHeader: React.FC = () => {
           )}
         >
           <PhoneInput
-            initialCountry="ua"
+            defaultCountry="ua"
             placeholder="Phone number"
             inputProps={{
               autoFocus: true,

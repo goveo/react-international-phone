@@ -1,4 +1,4 @@
-import { defaultPhoneConfig, MASK_CHAR } from '../../hooks/usePhone';
+import { defaultConfig, MASK_CHAR } from '../../hooks/usePhoneInput';
 import { CountryData, ParsedCountry } from '../../types';
 import { removeNonDigits } from '../common';
 import { guessCountryByPartialNumber } from '../countryUtils';
@@ -36,7 +36,7 @@ export const validatePhone = (
     prefix,
     charAfterDialCode,
   } = {
-    ...defaultPhoneConfig,
+    ...defaultConfig,
     ...config,
   };
 

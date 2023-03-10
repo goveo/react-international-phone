@@ -7,9 +7,15 @@ You can build phone input by combination of **input component** (that you want t
 ## Material UI Example
 
 import { MuiPhone } from '@site/src/components/MuiPhone'
+import { useState } from 'react'
+
+export const PhoneComponentWrapper = () => {
+const [value, setValue] = useState('');
+return <MuiPhone value={value} onChange={setValue}/>
+};
 
 <div style={{ margin: "3rem 0 2rem" }}>
-<MuiPhone />
+  <PhoneComponentWrapper />
 </div>
 
 import Tabs from '@theme/Tabs';
@@ -29,7 +35,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   defaultCountries,
   FlagEmoji,
@@ -40,11 +46,16 @@ import {
 export const MuiPhone = ({ value, onChange, ...restProps }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      initialCountry: 'us',
+      defaultCountry: 'us',
       value,
-      onCountryChange: onChange,
       countries: defaultCountries,
     });
+
+  useEffect(() => {
+    if (phone === value) return;
+    onChange?.(phone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phone]);
 
   return (
     <TextField
@@ -53,10 +64,7 @@ export const MuiPhone = ({ value, onChange, ...restProps }) => {
       color="primary"
       placeholder="Phone number"
       value={phone}
-      onChange={(e) => {
-        const value = handlePhoneValueChange(e);
-        onChange(value);
-      }}
+      onChange={handlePhoneValueChange}
       type="tel"
       inputRef={inputRef}
       InputProps={{
@@ -142,7 +150,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   CountryIso2,
   defaultCountries,
@@ -163,11 +171,16 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
 }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      initialCountry: 'us',
+      defaultCountry: 'us',
       value,
-      onCountryChange: onChange,
       countries: defaultCountries,
     });
+
+  useEffect(() => {
+    if (phone === value) return;
+    onChange?.(phone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phone]);
 
   return (
     <TextField
@@ -176,10 +189,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
       color="primary"
       placeholder="Phone number"
       value={phone}
-      onChange={(e) => {
-        const value = handlePhoneValueChange(e);
-        onChange(value);
-      }}
+      onChange={handlePhoneValueChange}
       type="tel"
       inputRef={inputRef}
       InputProps={{

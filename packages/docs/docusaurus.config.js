@@ -93,6 +93,10 @@ const config = {
                 label: 'Advanced Usage',
                 to: '/docs/Advanced%20Usage/usePhoneInput',
               },
+              {
+                label: 'Migration',
+                to: '/docs/migration',
+              },
             ],
           },
           {

@@ -12,11 +12,11 @@ Import component
 import { PhoneInput } from 'react-international-phone';
 ```
 
-Use by providing the _initialCountry_, _value_ and _onChange_ callback.
+Use by providing the _defaultCountry_, _value_ and _onChange_ callback.
 
 ```tsx
 <PhoneInput
-  initialCountry="ua"
+  defaultCountry="ua"
   value={phone}
   onChange={(phone) => setPhone(phone)}
 />
@@ -27,7 +27,7 @@ Output:
 import {PhoneInput} from 'react-international-phone';
 
 <PhoneInput
-initialCountry="ua"
+defaultCountry="ua"
 inputProps={{ autoFocus: true }}
 />
 
@@ -35,7 +35,7 @@ inputProps={{ autoFocus: true }}
 
 | Prop                            | Type                  | Description                                                                                                                                                                                                          | Default value               |
 | ------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| initialCountry <RequiredMark /> | `CountryIso2`         | Initial country value (iso2).                                                                                                                                                                                        |                             |
+| defaultCountry <RequiredMark /> | `CountryIso2`         | Default country value (iso2).                                                                                                                                                                                        |                             |
 | value                           | `string`              | Phone value.                                                                                                                                                                                                         | `""`                        |
 | countries                       | `CountryData[]`       | An array of available countries to select (and guess)                                                                                                                                                                | `defaultCountries`          |
 | hideDropdown                    | `boolean`             | Hide the dropdown icon. Make country selection not accessible.                                                                                                                                                       | `false`                     |
@@ -43,7 +43,7 @@ inputProps={{ autoFocus: true }}
 | disabled                        | `boolean`             | Disable phone input and country selector.                                                                                                                                                                            | `false`                     |
 | prefix                          | `string`              | Prefix for phone value.                                                                                                                                                                                              | `"+"`                       |
 | defaultMask                     | `string`              | This mask will apply on countries that does not have specified mask.                                                                                                                                                 | `"............"` (12 chars) |
-| hideSpaceAfterDialCode          | `boolean`             | Hide space after country dial code                                                                                                                                                                                   | `false`                     |
+| charAfterDialCode               | `string`              | Char that renders after country dial code.                                                                                                                                                                           | ` `                         |
 | historySaveDebounceMS           | `number`              | Save value to history if there were not any changes in provided milliseconds timeslot.<br />Undo/redo (ctrl+z/ctrl+shift+z) works only with values that are saved in history                                         | `200`                       |
 | disableCountryGuess             | `boolean`             | Disable country guess on value change.<br />- _onCountryGuess_ callback would not be called.                                                                                                                         | `false`                     |
 | disableDialCodePrefill          | `boolean`             | Disable dial code prefill on initialization.<br />Dial code prefill works only when "empty" phone value have been provided.                                                                                          | `false`                     |

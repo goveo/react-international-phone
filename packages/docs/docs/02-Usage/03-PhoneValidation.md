@@ -68,7 +68,7 @@ const App = () => {
   return (
     <form>
       <PhoneInput
-        initialCountry="ua"
+        defaultCountry="ua"
         value={phone}
         onChange={(phone) => setPhone(phone)}
       />

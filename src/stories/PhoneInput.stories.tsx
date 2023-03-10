@@ -15,7 +15,7 @@ const Template: ComponentStory<typeof PhoneInput> = (args) => (
   <PhoneInput {...args} />
 );
 
-const initialCountryArgType = {
+const defaultCountryArgType = {
   options: defaultCountries.map((c) => parseCountry(c).iso2),
   control: {
     type: 'select',
@@ -28,7 +28,7 @@ const initialCountryArgType = {
 };
 
 const argTypes = {
-  initialCountry: initialCountryArgType,
+  defaultCountry: defaultCountryArgType,
 };
 
 export const Default = Template.bind({});
@@ -37,10 +37,10 @@ Default.argTypes = argTypes;
 Default.args = {
   disabled: false,
   hideDropdown: false,
-  initialCountry: 'us',
+  defaultCountry: 'us',
   placeholder: 'Phone number',
   defaultMask: '............',
-  hideSpaceAfterDialCode: false,
+  charAfterDialCode: ' ',
   disableCountryGuess: false,
   disableDialCodePrefill: false,
   forceDialCode: false,
@@ -57,14 +57,14 @@ WithInitialValue.argTypes = argTypes;
 
 WithInitialValue.args = {
   value: '+380999999999',
-  initialCountry: 'ua',
+  defaultCountry: 'ua',
 };
 
 export const ForcedDialCode = Template.bind({});
 ForcedDialCode.argTypes = argTypes;
 
 ForcedDialCode.args = {
-  initialCountry: 'pl',
+  defaultCountry: 'pl',
   forceDialCode: true,
 };
 
@@ -72,7 +72,7 @@ export const DisabledPrefill = Template.bind({});
 DisabledPrefill.argTypes = argTypes;
 
 DisabledPrefill.args = {
-  initialCountry: 'cz',
+  defaultCountry: 'cz',
   disableDialCodePrefill: true,
   placeholder: 'Phone number',
 };
@@ -81,7 +81,7 @@ export const DisabledCountryGuess = Template.bind({});
 DisabledCountryGuess.argTypes = argTypes;
 
 DisabledCountryGuess.args = {
-  initialCountry: 'gb',
+  defaultCountry: 'gb',
   disableCountryGuess: true,
 };
 
@@ -89,7 +89,7 @@ export const WithoutDropdown = Template.bind({});
 WithoutDropdown.argTypes = argTypes;
 
 WithoutDropdown.args = {
-  initialCountry: 'ee',
+  defaultCountry: 'ee',
   disableCountryGuess: true,
   hideDropdown: true,
   forceDialCode: true,
@@ -99,7 +99,7 @@ export const WithHiddenDialCode = Template.bind({});
 WithHiddenDialCode.argTypes = argTypes;
 
 WithHiddenDialCode.args = {
-  initialCountry: 'se',
+  defaultCountry: 'se',
   disableDialCodeAndPrefix: true,
 };
 
@@ -107,7 +107,7 @@ export const WithCodePreview = Template.bind({});
 WithCodePreview.argTypes = argTypes;
 
 WithCodePreview.args = {
-  initialCountry: 'lv',
+  defaultCountry: 'lv',
   disableDialCodeAndPrefix: true,
   showDisabledDialCodeAndPrefix: true,
 };
@@ -116,7 +116,7 @@ export const CustomStyles = Template.bind({});
 CustomStyles.argTypes = argTypes;
 
 CustomStyles.args = {
-  initialCountry: 'ca',
+  defaultCountry: 'ca',
   style: {
     '--react-international-phone-border-radius': 0,
     '--react-international-phone-border-color': 'gray',
@@ -133,7 +133,7 @@ export const OnlyEuropeCountries = Template.bind({});
 OnlyEuropeCountries.argTypes = argTypes;
 
 OnlyEuropeCountries.args = {
-  initialCountry: 'fi',
+  defaultCountry: 'fi',
   countries: defaultCountries.filter((c) =>
     parseCountry(c).regions.includes('europe'),
   ),
@@ -145,8 +145,18 @@ OnlyBalticCountries.argTypes = argTypes;
 const balticCountries: CountryIso2[] = ['lt', 'lv', 'ee'];
 
 OnlyBalticCountries.args = {
-  initialCountry: 'lt',
+  defaultCountry: 'lt',
   countries: defaultCountries.filter((c) => {
     return balticCountries.includes(parseCountry(c).iso2);
   }),
+};
+
+export const WithAutofocus = Template.bind({});
+WithAutofocus.argTypes = argTypes;
+
+WithAutofocus.args = {
+  defaultCountry: 'es',
+  inputProps: {
+    autoFocus: true,
+  },
 };

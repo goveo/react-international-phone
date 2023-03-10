@@ -1,25 +1,46 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { defaultCountries } from '../data/countryData';
-import { CountryIso2 } from '../types';
+import {
+  CountryData,
+  CountryGuessResult,
+  CountryIso2,
+  ParsedCountry,
+} from '../types';
 import {
   addDialCode,
+  formatPhone,
   getCountry,
   getCursorPosition,
   guessCountryByPartialNumber,
-  removeDialCode,
+  removeNonDigits,
 } from '../utils';
-import { usePhone, UsePhoneConfig } from './usePhone';
+import { useHistoryState } from './useHistoryState';
 
-export interface UsePhoneInputConfig
-  extends Omit<
-    UsePhoneConfig,
-    'country' | 'inputRef' | 'onCountryGuess' | 'onPhoneFormat'
-  > {
+interface FormatPhoneValueProps {
+  value: string;
+  country: ParsedCountry;
+  trimNonDigitsEnd?: boolean;
+  insertDialCodeOnEmpty?: boolean;
+  forceDisableCountryGuess?: boolean;
+}
+
+type DeletionType = 'forward' | 'backward' | undefined;
+
+interface HandleValueChangeFuncOptions {
+  deletion?: DeletionType;
+  inserted?: boolean;
+  cursorPosition?: number;
+  insertDialCodeOnEmpty?: boolean;
+}
+
+export const MASK_CHAR = '.';
+
+export interface UsePhoneInputConfig {
   /**
-   * @description Initial country value (iso2).
+   * @description Default country value (iso2).
    */
-  initialCountry: CountryIso2;
+  defaultCountry: CountryIso2;
 
   /**
    * @description phone value
@@ -27,129 +48,292 @@ export interface UsePhoneInputConfig
   value?: string;
 
   /**
-   * @description Hide space after country dial code
-   * @default false
+   * @description Array of available countries for guessing
+   * @default defaultCountries // full country list
    */
-  hideSpaceAfterDialCode?: boolean;
+  countries?: CountryData[];
 
   /**
-   * @description Callback that calls on country change
-   * @params *phone* - new phone value
-   * @default undefined
+   * @description Prefix for phone value.
+   * @default "+"
    */
-  onCountryChange?: (phone: string) => void;
+  prefix?: string;
+
+  /**
+   * @description This mask will apply on countries that does not have specified mask.
+   * @default "............" // 12 chars
+   */
+  defaultMask?: string;
+
+  /**
+   * @description Char that renders after country dial code.
+   * @default " "
+   */
+  charAfterDialCode?: string;
+
+  /**
+   * @description
+   * Save value to history if there were not any changes in provided milliseconds timeslot.
+   * Undo/redo (ctrl+z/ctrl+shift+z) works only with values that are saved in history.
+   * @default 200
+   */
+  historySaveDebounceMS?: number;
+
+  /**
+   * @description Disable country guess on value change.
+   * @default false
+   */
+  disableCountryGuess?: boolean;
+
+  /**
+   * @description
+   * Disable dial code prefill on initialization.
+   * Dial code prefill works only when "empty" phone value have been provided.
+   * @default false
+   */
+  disableDialCodePrefill?: boolean;
+
+  /**
+   * @description
+   * Always display the dial code.
+   * Dial code can't be removed/changed by keyboard events, but it can be changed by pasting another country phone value.
+   * @default false
+   */
+  forceDialCode?: boolean;
+
+  /**
+   * @description Phone value will not include passed *dialCode* and *prefix* if set to *true*.
+   * @ignore
+   * - *disableCountryGuess* value will be ignored and set to *true*.
+   * - *forceDialCode* value will be ignored and set to *false*.
+   * @default false
+   */
+  disableDialCodeAndPrefix?: boolean;
 }
 
+export const defaultConfig: Required<
+  Omit<UsePhoneInputConfig, 'defaultCountry'> // omit props with no default value
+> = {
+  value: '',
+  prefix: '+',
+  defaultMask: '............', // 12 chars
+  charAfterDialCode: ' ',
+  historySaveDebounceMS: 200,
+  disableCountryGuess: false,
+  disableDialCodePrefill: false,
+  forceDialCode: false,
+  disableDialCodeAndPrefix: false,
+  countries: defaultCountries,
+};
+
 export const usePhoneInput = ({
-  initialCountry,
-  value = '',
-  prefix = '+',
-  countries = defaultCountries,
-  disableDialCodeAndPrefix,
-  hideSpaceAfterDialCode,
-  onCountryChange,
-  ...restConfig
+  defaultCountry,
+  value = defaultConfig.value,
+  countries = defaultConfig.countries,
+  prefix = defaultConfig.prefix,
+  defaultMask = defaultConfig.defaultMask,
+  charAfterDialCode = defaultConfig.charAfterDialCode,
+  historySaveDebounceMS = defaultConfig.historySaveDebounceMS,
+  disableCountryGuess = defaultConfig.disableCountryGuess,
+  disableDialCodePrefill = defaultConfig.disableDialCodePrefill,
+  forceDialCode = defaultConfig.forceDialCode,
+  disableDialCodeAndPrefix = defaultConfig.disableDialCodeAndPrefix,
 }: UsePhoneInputConfig) => {
+  const countryGuessingEnabled = disableDialCodeAndPrefix
+    ? false
+    : !disableCountryGuess;
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // store info in ref to pass it to onPhoneUpdate callback
-  const onPhoneUpdateRef = useRef<{
-    shouldFocus: boolean;
-    shouldSetCursorToEnd: boolean;
-  }>({
-    shouldFocus: false,
-    shouldSetCursorToEnd: false,
-  });
+  const formatPhoneValue = ({
+    value,
+    country,
+    trimNonDigitsEnd,
+    insertDialCodeOnEmpty,
+    forceDisableCountryGuess,
+  }: FormatPhoneValueProps): {
+    phone: string;
+    countryGuessResult?: CountryGuessResult | undefined;
+    formatCountry?: ParsedCountry | undefined;
+  } => {
+    const shouldGuessCountry =
+      !forceDisableCountryGuess && countryGuessingEnabled;
 
-  const [country, setCountry] = useState<CountryIso2>(
-    guessCountryByPartialNumber({
-      phone: value,
-      countries,
-      currentCountryIso2: initialCountry,
-    }).country?.iso2 ?? initialCountry,
+    const countryGuessResult = shouldGuessCountry
+      ? guessCountryByPartialNumber({
+          phone: value,
+          countries,
+          currentCountryIso2: country.iso2,
+        }) // FIXME: should not guess country on every change
+      : undefined;
+
+    const formatCountry = countryGuessResult?.country ?? country;
+
+    const phone = formatCountry
+      ? formatPhone(value, {
+          prefix,
+          mask: formatCountry.format || defaultMask,
+          maskChar: MASK_CHAR,
+          dialCode: formatCountry.dialCode,
+          trimNonDigitsEnd,
+          charAfterDialCode,
+          forceDialCode,
+          insertDialCodeOnEmpty,
+          disableDialCodeAndPrefix,
+        })
+      : value;
+
+    return { phone, countryGuessResult, formatCountry };
+  };
+
+  const setCursorPosition = (cursorPosition: number) => {
+    /**
+     * HACK: should set cursor on the next tick to make sure that the phone value is updated
+     * useTimeout with 0ms provides issues when two keys are pressed same time
+     */
+    Promise.resolve().then(() => {
+      inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
+    });
+  };
+
+  const [{ phone, country }, updateHistory, undo, redo] = useHistoryState(
+    () => {
+      const countryGuessResult = guessCountryByPartialNumber({
+        phone: value,
+        countries,
+        currentCountryIso2: defaultCountry,
+      });
+
+      const defaultCountryFull = (countryGuessResult.country ||
+        getCountry({
+          value: defaultCountry,
+          field: 'iso2',
+          countries,
+        })) as ParsedCountry;
+
+      if (!defaultCountryFull) {
+        // default country is not passed, or iso code do not match
+        console.error(
+          `[react-international-phone]: can not find a country with "${country}" iso2 code`,
+        );
+      }
+
+      const phone = formatPhoneValue({
+        value,
+        country: defaultCountryFull,
+        insertDialCodeOnEmpty: !disableDialCodePrefill,
+      }).phone;
+
+      setCursorPosition(phone.length);
+
+      return {
+        phone,
+        country: defaultCountryFull.iso2,
+      };
+    },
+    {
+      overrideLastItemDebounceMS: historySaveDebounceMS,
+    },
   );
 
-  const passedCountry = useMemo(() => {
-    if (!country) return;
+  const fullCountry = useMemo(() => {
     return getCountry({
       value: country,
       field: 'iso2',
       countries,
-    });
+    }) as ParsedCountry;
   }, [countries, country]);
 
-  const charAfterDialCode = hideSpaceAfterDialCode ? '' : ' ';
-  const dialCode = passedCountry?.dialCode ?? '';
+  const isInitializedRef = useRef(false);
 
-  const localValue = disableDialCodeAndPrefix
-    ? removeDialCode({
-        phone: value,
-        dialCode,
-        charAfterDialCode,
-        prefix,
-      })
-    : value;
-
-  const { phone, initialized, undo, redo, handleValueChange } = usePhone(
-    localValue,
+  const handleValueChange = (
+    newPhone: string,
     {
-      country,
-      countries,
-      prefix,
-      disableDialCodeAndPrefix,
-      charAfterDialCode,
-      onCountryGuess: ({ country, fullDialCodeMatch }) => {
-        if (fullDialCodeMatch) {
-          setCountry(country.iso2);
-        }
-      },
-      onPhoneUpdate: (
-        newPhone,
-        {
-          formatCountry,
-          unformattedValue,
-          cursorPosition: cursorPositionAfterInput,
-          deletion,
-        },
-      ) => {
-        const shouldGetCursorPosition =
-          initialized && !onPhoneUpdateRef.current.shouldSetCursorToEnd;
+      deletion,
+      cursorPosition,
+      insertDialCodeOnEmpty,
+      inserted,
+    }: HandleValueChangeFuncOptions = {},
+  ): string => {
+    let newPhoneValue = newPhone;
+    let cursorPositionAfterInput = cursorPosition;
 
-        const cursorPosition = shouldGetCursorPosition
-          ? getCursorPosition({
-              cursorPositionAfterInput,
-              phoneBeforeInput: phone,
-              phoneAfterInput: unformattedValue,
-              phoneAfterFormatted: newPhone,
-              leftOffset: restConfig.forceDialCode
-                ? prefix.length +
-                  (formatCountry?.dialCode?.length ?? 0) +
-                  charAfterDialCode.length
-                : 0,
-              deletion,
-            })
-          : newPhone.length;
+    if (
+      forceDialCode &&
+      !disableDialCodeAndPrefix &&
+      fullCountry &&
+      // dial code has been changed
+      !removeNonDigits(newPhone).startsWith(fullCountry.dialCode) &&
+      // phone was not removed completely
+      !!newPhone
+    ) {
+      // Allow dial code change when selected all (ctrl+a) and inserted new value that starts with prefix
+      if (
+        inserted &&
+        newPhone.startsWith(prefix) &&
+        // cursor position was set to 0 before the input
+        newPhone.length - (cursorPosition ?? 0) === 0
+      ) {
+        newPhoneValue = newPhone;
+      } else {
+        // Prevent change of dial code and set the cursor to beginning
+        // (after formatting it will be set after dial code)
+        newPhoneValue = phone;
+        cursorPositionAfterInput = 0;
+      }
+    }
 
-        /**
-         * HACK: should set cursor on the next tick to make sure that the phone value is updated
-         * useTimeout with 0ms provides issues when two keys are pressed same time
-         */
-        Promise.resolve().then(() => {
-          inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
+    const { phone: phoneValue, countryGuessResult } = formatPhoneValue({
+      value: newPhoneValue,
+      country: fullCountry,
 
-          if (onPhoneUpdateRef.current.shouldFocus) {
-            inputRef.current?.focus();
-          }
+      trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
+      insertDialCodeOnEmpty,
+      forceDisableCountryGuess:
+        forceDialCode &&
+        !!deletion &&
+        removeNonDigits(newPhoneValue).length < fullCountry.dialCode.length,
+    });
 
-          onPhoneUpdateRef.current = {
-            shouldFocus: false,
-            shouldSetCursorToEnd: false,
-          };
-        });
-      },
-      ...restConfig,
-    },
-  );
+    let newCountry = fullCountry;
+
+    if (
+      countryGuessingEnabled &&
+      countryGuessResult?.country &&
+      countryGuessResult.country.name !== country &&
+      countryGuessResult.fullDialCodeMatch
+    ) {
+      newCountry = countryGuessResult.country;
+    }
+
+    const newCursorPosition = getCursorPosition({
+      cursorPositionAfterInput:
+        cursorPositionAfterInput ??
+        (isInitializedRef.current ? 0 : newPhone.length),
+      phoneBeforeInput: phone,
+      phoneAfterInput: newPhone,
+      phoneAfterFormatted: phoneValue,
+      leftOffset: forceDialCode
+        ? prefix.length +
+          (fullCountry?.dialCode?.length ?? 0) +
+          charAfterDialCode.length
+        : 0,
+      deletion,
+    });
+
+    updateHistory({
+      phone: phoneValue,
+      country: newCountry.iso2,
+    });
+
+    setCursorPosition(newCursorPosition);
+
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true;
+    }
+
+    return phoneValue;
+  };
 
   // Handle undo/redo events
   useEffect(() => {
@@ -165,7 +349,7 @@ export const usePhoneInput = ({
       const zPressed = e.key.toLowerCase() === 'z';
 
       if (!ctrlPressed || !zPressed) return;
-      return shiftPressed ? redo() : undo();
+      shiftPressed ? redo() : undo();
     };
 
     input.addEventListener('keydown', onKeyDown);
@@ -203,10 +387,10 @@ export const usePhoneInput = ({
       cursorPosition: e.target.selectionStart ?? 0,
     });
 
-    if (disableDialCodeAndPrefix) {
+    if (disableDialCodeAndPrefix && fullCountry) {
       return addDialCode({
         phone: value,
-        dialCode,
+        dialCode: fullCountry.dialCode,
         charAfterDialCode,
         prefix,
       });
@@ -223,31 +407,33 @@ export const usePhoneInput = ({
     });
     if (!newCountry) return;
 
-    // need to call focus inside a onPhoneUpdate callback
-    // because we need to wait phone-input's rerender to set focus properly
-    onPhoneUpdateRef.current = {
-      shouldFocus: true,
-      shouldSetCursorToEnd: true,
-    };
+    const newPhoneValue = disableDialCodeAndPrefix
+      ? ''
+      : `${prefix}${newCountry.dialCode}${charAfterDialCode}`;
 
-    const newValue = handleValueChange(
-      disableDialCodeAndPrefix
-        ? ''
-        : `${prefix}${charAfterDialCode}${newCountry.dialCode}`,
-      {
-        forcedCountry: newCountry,
-      },
-    );
-    setCountry(newCountry.iso2);
+    updateHistory({
+      phone: newPhoneValue,
+      country: newCountry.iso2,
+    });
 
-    onCountryChange?.(newValue);
+    // Next tick is used to support UI libraries (had an issue with MUI)
+    Promise.resolve().then(() => {
+      inputRef.current?.focus();
+    });
   };
+
+  // Handle value update
+  useEffect(() => {
+    if (!isInitializedRef.current || value === phone) return;
+    handleValueChange(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   return {
     phone, // Formatted phone string.
-    handlePhoneValueChange, // Change handler for input component
-    inputRef, // Ref object for input component (handles caret position, focus and undo/redo).
     country, // Current country iso code.
     setCountry: setNewCountry, // Country setter.
+    handlePhoneValueChange, // Change handler for input component
+    inputRef, // Ref object for input component (handles caret position, focus and undo/redo).
   };
 };

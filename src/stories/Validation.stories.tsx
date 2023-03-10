@@ -25,7 +25,7 @@ export const Default = () => {
   return (
     <div>
       <PhoneInput
-        initialCountry="ua"
+        defaultCountry="ua"
         value={phone}
         onChange={(phone) => setPhone(phone)}
       />
@@ -63,7 +63,7 @@ export const ReactHookForm = () => {
         control={control}
         render={({ field }) => (
           <PhoneInput
-            initialCountry="us"
+            defaultCountry="us"
             value={field.value}
             onChange={field.onChange}
             inputProps={{
@@ -113,7 +113,7 @@ export const Formik = () => {
   return (
     <div>
       <PhoneInput
-        initialCountry="us"
+        defaultCountry="us"
         value={values.phone}
         onChange={(newPhone) => {
           setFieldTouched('phone');
@@ -154,7 +154,7 @@ export const FormikWithYup = () => {
   return (
     <div>
       <PhoneInput
-        initialCountry="us"
+        defaultCountry="us"
         value={values.phone}
         onChange={(newPhone) => {
           setFieldTouched('phone');

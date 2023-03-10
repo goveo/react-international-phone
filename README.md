@@ -7,6 +7,8 @@
 ![install-size-badge](https://badgen.net/packagephobia/install/react-international-phone)
 [![codecov](https://codecov.io/gh/goveo/react-international-phone/branch/master/graph/badge.svg?token=SHEF4U216O)](https://codecov.io/gh/goveo/react-international-phone)
 ![downloads](https://img.shields.io/npm/dt/react-international-phone)
+![Semantic Release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)
+[![stars](https://img.shields.io/github/stars/goveo/react-international-phone?style=social)](https://github.com/goveo/react-international-phone)
 
 [Live demo: Storybook](https://react-international-phone-storybook.vercel.app)
 
@@ -40,7 +42,7 @@ const App = () => {
   return (
     <div>
       <PhoneInput
-        initialCountry="ua"
+        defaultCountry="ua"
         value={phone}
         onChange={(phone) => setPhone(phone)}
       />
@@ -52,3 +54,8 @@ const App = () => {
 ## Documentation
 
 Find the full API reference on [official documentation](https://react-international-phone-docs.vercel.app/).
+
+## Update from v1 to v2
+
+You can encounter some breaking changes after update from v1 to v2 <br/>
+Checkout [migration document](https://react-international-phone-docs.vercel.app/docs/migration) that contains a list of breaking changes and ways to migrate.

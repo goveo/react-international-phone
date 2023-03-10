@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   defaultCountries,
   FlagEmoji,
@@ -20,14 +20,19 @@ import {
   usePhoneInput,
 } from 'react-international-phone';
 
-export const MuiPhone = ({ value, onChange, ...restProps }) => {
+export const MuiPhoneJsx = ({ value, onChange, ...restProps }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      initialCountry: 'us',
+      defaultCountry: 'us',
       value,
-      onCountryChange: onChange,
       countries: defaultCountries,
     });
+
+  useEffect(() => {
+    if (phone === value) return;
+    onChange?.(phone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phone]);
 
   return (
     <TextField
@@ -36,10 +41,7 @@ export const MuiPhone = ({ value, onChange, ...restProps }) => {
       color="primary"
       placeholder="Phone number"
       value={phone}
-      onChange={(e) => {
-        const value = handlePhoneValueChange(e);
-        onChange(value);
-      }}
+      onChange={handlePhoneValueChange}
       type="tel"
       inputRef={inputRef}
       InputProps={{
