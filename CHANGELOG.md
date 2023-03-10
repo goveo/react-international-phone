@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/goveo/react-international-phone/compare/v2.0.0...v2.0.1) (2023-03-10)
+
+
+### Bug Fixes
+
+* **buildCountryData:** fix countryData filter, add validation of passed country values ([a62ea19](https://github.com/goveo/react-international-phone/commit/a62ea191298370922dac016dee82811af7e26de4))
+
 # [2.0.0](https://github.com/goveo/react-international-phone/compare/v1.8.8...v2.0.0) (2023-03-10)
 
 
