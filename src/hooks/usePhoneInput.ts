@@ -186,6 +186,16 @@ export const usePhoneInput = ({
     return { phone, countryGuessResult, formatCountry };
   };
 
+  const setCursorPosition = (cursorPosition: number) => {
+    /**
+     * HACK: should set cursor on the next tick to make sure that the phone value is updated
+     * useTimeout with 0ms provides issues when two keys are pressed same time
+     */
+    Promise.resolve().then(() => {
+      inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
+    });
+  };
+
   const [{ phone, country }, updateHistory, undo, redo] = useHistoryState(
     () => {
       const countryGuessResult = guessCountryByPartialNumber({
@@ -208,12 +218,16 @@ export const usePhoneInput = ({
         );
       }
 
+      const phone = formatPhoneValue({
+        value,
+        country: defaultCountryFull,
+        insertDialCodeOnEmpty: !disableDialCodePrefill,
+      }).phone;
+
+      setCursorPosition(phone.length);
+
       return {
-        phone: formatPhoneValue({
-          value,
-          country: defaultCountryFull,
-          insertDialCodeOnEmpty: !disableDialCodePrefill,
-        }).phone,
+        phone,
         country: defaultCountryFull.iso2,
       };
     },
@@ -312,13 +326,7 @@ export const usePhoneInput = ({
       country: newCountry.iso2,
     });
 
-    /**
-     * HACK: should set cursor on the next tick to make sure that the phone value is updated
-     * useTimeout with 0ms provides issues when two keys are pressed same time
-     */
-    Promise.resolve().then(() => {
-      inputRef.current?.setSelectionRange(newCursorPosition, newCursorPosition);
-    });
+    setCursorPosition(newCursorPosition);
 
     if (!isInitializedRef.current) {
       isInitializedRef.current = true;
