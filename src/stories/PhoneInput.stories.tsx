@@ -4,7 +4,7 @@ import React from 'react';
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { defaultCountries } from '../data/countryData';
 import { CountryIso2 } from '../types';
-import { parseCountry } from '../utils';
+import { buildCountryData, parseCountry } from '../utils';
 
 export default {
   title: 'PhoneInput',
@@ -159,4 +159,23 @@ WithAutofocus.args = {
   inputProps: {
     autoFocus: true,
   },
+};
+
+export const E164Format = Template.bind({});
+E164Format.storyName = 'E164 Format';
+E164Format.argTypes = argTypes;
+
+const e164Countries = defaultCountries.map((c) => {
+  const country = parseCountry(c);
+  return buildCountryData({
+    ...country,
+    format: country.format?.replace(/[^\\.]*/g, ''), // remove all except dots
+  });
+});
+
+E164Format.args = {
+  defaultCountry: 'pt',
+  charAfterDialCode: '',
+  countries: e164Countries,
+  placeholder: 'Phone number',
 };
