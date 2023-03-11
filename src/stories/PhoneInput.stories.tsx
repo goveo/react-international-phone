@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { defaultCountries } from '../data/countryData';
@@ -178,4 +178,25 @@ E164Format.args = {
   charAfterDialCode: '',
   countries: e164Countries,
   placeholder: 'Phone number',
+};
+
+export const ControlledMode = () => {
+  const [phone, setPhone] = useState('');
+
+  const setRandomNumber = () => {
+    setPhone(`+${Math.floor(Math.random() * 1e15)}`);
+  };
+
+  return (
+    <div>
+      <p style={{ color: 'black' }}>Phone: {phone}</p>
+      <button onClick={setRandomNumber}>Set random number</button>
+      <PhoneInput
+        value={phone}
+        onChange={setPhone}
+        defaultCountry="fr"
+        placeholder="Phone number"
+      />
+    </div>
+  );
 };
