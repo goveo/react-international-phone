@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../data/countryData';
 import {
@@ -244,8 +244,6 @@ export const usePhoneInput = ({
     }) as ParsedCountry;
   }, [countries, country]);
 
-  const isInitializedRef = useRef(false);
-
   const handleValueChange = (
     newPhone: string,
     {
@@ -307,9 +305,7 @@ export const usePhoneInput = ({
     }
 
     const newCursorPosition = getCursorPosition({
-      cursorPositionAfterInput:
-        cursorPositionAfterInput ??
-        (isInitializedRef.current ? 0 : newPhone.length),
+      cursorPositionAfterInput: cursorPositionAfterInput ?? 0,
       phoneBeforeInput: phone,
       phoneAfterInput: newPhone,
       phoneAfterFormatted: phoneValue,
@@ -418,11 +414,14 @@ export const usePhoneInput = ({
     });
   };
 
+  const [initialized, setInitialized] = useState(false);
+
   // Handle value update
   useEffect(() => {
-    if (!isInitializedRef.current) {
+    if (!initialized) {
       // skip on initial render
-      isInitializedRef.current = true;
+      // initial value was set inside the useHistoryState call
+      setInitialized(true);
       return;
     }
 
