@@ -267,7 +267,3 @@ export interface CountryGuessResult {
   fullDialCodeMatch: boolean;
   areaCodeMatch: boolean | undefined;
 }
-
-export type RequiredType<T> = {
-  [K in keyof T]: NonNullable<T[K]>;
-};
