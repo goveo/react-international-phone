@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/goveo/react-international-phone/compare/v2.0.1...v2.0.2) (2023-03-11)
+
+
+### Bug Fixes
+
+* **usePhoneInput:** fix value change handle after initial render ([c00caa1](https://github.com/goveo/react-international-phone/commit/c00caa17e6d739c1058ed88fb974e61d7a69fa81))
+
 ## [2.0.1](https://github.com/goveo/react-international-phone/compare/v2.0.0...v2.0.1) (2023-03-10)
 
 
