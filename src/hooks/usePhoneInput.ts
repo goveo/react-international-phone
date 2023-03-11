@@ -328,10 +328,6 @@ export const usePhoneInput = ({
 
     setCursorPosition(newCursorPosition);
 
-    if (!isInitializedRef.current) {
-      isInitializedRef.current = true;
-    }
-
     return phoneValue;
   };
 
@@ -424,7 +420,14 @@ export const usePhoneInput = ({
 
   // Handle value update
   useEffect(() => {
-    if (!isInitializedRef.current || value === phone) return;
+    if (!isInitializedRef.current) {
+      // skip on initial render
+      isInitializedRef.current = true;
+      return;
+    }
+
+    if (value === phone) return;
+
     handleValueChange(value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
