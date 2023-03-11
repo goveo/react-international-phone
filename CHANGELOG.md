@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/goveo/react-international-phone/compare/v2.0.2...v2.0.3) (2023-03-11)
+
+
+### Bug Fixes
+
+* infinite loop when passing empty string value on react v18 ([c593432](https://github.com/goveo/react-international-phone/commit/c5934320029ac93b542954fe82847bb7e537b235))
+
 ## [2.0.2](https://github.com/goveo/react-international-phone/compare/v2.0.1...v2.0.2) (2023-03-11)
 
 
