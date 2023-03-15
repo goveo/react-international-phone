@@ -1,5 +1,5 @@
 import { IconButton, TextField } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { CountrySelector, usePhoneInput } from '../../../index';
 import { MUIPhoneProps } from './MuiPhone';
@@ -9,13 +9,10 @@ export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
     usePhoneInput({
       defaultCountry: 'us',
       value,
+      onChange: (data) => {
+        onChange(data.phone);
+      },
     });
-
-  useEffect(() => {
-    if (phone === value) return;
-    onChange?.(phone);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phone]);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>

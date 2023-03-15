@@ -12,13 +12,10 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
   const phoneInput = usePhoneInput({
     defaultCountry: 'us',
     value,
+    onChange: (data) => {
+      onChange(data.phone);
+    },
   });
-
-  useEffect(() => {
-    if (phoneInput.phone === value) return;
-    onChange?.(phoneInput.phone);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phoneInput.phone]);
 
   const inputRef = useRef<InputRef>(null);
 

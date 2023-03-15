@@ -35,7 +35,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   defaultCountries,
   FlagEmoji,
@@ -49,13 +49,10 @@ export const MuiPhone = ({ value, onChange, ...restProps }) => {
       defaultCountry: 'us',
       value,
       countries: defaultCountries,
+      onChange: (data) => {
+        onChange(data.phone);
+      },
     });
-
-  useEffect(() => {
-    if (phone === value) return;
-    onChange?.(phone);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phone]);
 
   return (
     <TextField
@@ -150,7 +147,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   CountryIso2,
   defaultCountries,
@@ -174,13 +171,10 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
       defaultCountry: 'us',
       value,
       countries: defaultCountries,
+      onChange: (data) => {
+        onChange(data.phone);
+      },
     });
-
-  useEffect(() => {
-    if (phone === value) return;
-    onChange?.(phone);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phone]);
 
   return (
     <TextField

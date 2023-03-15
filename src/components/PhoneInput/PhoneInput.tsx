@@ -1,6 +1,6 @@
 import './PhoneInput.style.scss';
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
@@ -28,7 +28,7 @@ export interface PhoneInputStyleProps {
 }
 
 export interface PhoneInputProps
-  extends UsePhoneInputConfig,
+  extends Omit<UsePhoneInputConfig, 'onChange'>,
     PhoneInputStyleProps {
   /**
    * @description Hide the dropdown icon. Make country selection not accessible.
@@ -94,13 +94,10 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       value,
       countries,
       ...usePhoneInputConfig,
+      onChange: (data) => {
+        onChange?.(data.phone);
+      },
     });
-
-  useEffect(() => {
-    if (phone === value) return;
-    onChange?.(phone);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phone]);
 
   const fullCountry = useMemo(() => {
     if (!country) return;
