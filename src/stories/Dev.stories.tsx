@@ -10,7 +10,7 @@ import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
 export default {
   title: 'Dev',
-  includeStories: [], // Comment this line to show demo story
+  includeStories: [], // Comment this line to show stories
 } as Meta;
 
 const Title: React.FC<{
@@ -114,4 +114,27 @@ export const ControlledInputTest = () => {
   const [phone, setPhone] = useState('+1 ');
 
   return <PhoneInput value={phone} onChange={setPhone} defaultCountry="ca" />;
+};
+
+export const TwoInputsTest = () => {
+  const [phone, setPhone] = useState('+1 ');
+
+  return (
+    <div>
+      <p style={{ color: 'black' }}>Phone: {phone}</p>
+      <PhoneInput
+        value={phone}
+        onChange={setPhone}
+        defaultCountry="us"
+        inputProps={{ id: 'top' }}
+      />
+
+      <PhoneInput
+        value={phone}
+        onChange={setPhone}
+        defaultCountry="us"
+        inputProps={{ id: 'bottom' }}
+      />
+    </div>
+  );
 };
