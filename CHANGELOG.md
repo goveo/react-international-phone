@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/goveo/react-international-phone/compare/v2.0.3...v2.0.4) (2023-03-15)
+
+
+### Bug Fixes
+
+* add onChange callback to usePhoneInput, remove useEffect from PhoneInput ([423bef9](https://github.com/goveo/react-international-phone/commit/423bef9023506b74ca326c922a6900cf661ca3ea))
+
 ## [2.0.3](https://github.com/goveo/react-international-phone/compare/v2.0.2...v2.0.3) (2023-03-11)
 
 
