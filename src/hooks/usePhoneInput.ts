@@ -112,7 +112,9 @@ export interface UsePhoneInputConfig {
 
   /**
    * @description Callback that calls on phone change
-   * @params *phone* - new phone value
+   * @params new phone input state
+   * - *data.phone* - new phone value
+   * - *data.country* - new country value
    * @default undefined
    */
   onChange?: (data: { phone: string; country: CountryIso2 }) => void;
