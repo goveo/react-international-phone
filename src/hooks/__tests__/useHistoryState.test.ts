@@ -225,4 +225,42 @@ describe('useHistoryState', () => {
 
     jest.useRealTimers();
   });
+
+  test('should call onChange callback', () => {
+    const onChange = jest.fn();
+    const { result } = renderHook(() =>
+      useHistoryState<string>('', {
+        onChange,
+      }),
+    );
+    expect(onChange.mock.calls.length).toBe(0);
+
+    act(() => {
+      result.current[HookIndex.SetState]('+380');
+    });
+    expect(result.current[HookIndex.State]).toBe('+380');
+    expect(onChange.mock.calls.length).toBe(1);
+    expect(onChange.mock.calls[0][0]).toBe('+380');
+
+    act(() => {
+      result.current[HookIndex.SetState]('+1 (204) ');
+    });
+    expect(result.current[HookIndex.State]).toBe('+1 (204) ');
+    expect(onChange.mock.calls.length).toBe(2);
+    expect(onChange.mock.calls[1][0]).toBe('+1 (204) ');
+
+    act(() => {
+      result.current[HookIndex.Undo]();
+    });
+    expect(result.current[HookIndex.State]).toBe('+380');
+    expect(onChange.mock.calls.length).toBe(3);
+    expect(onChange.mock.calls[2][0]).toBe('+380');
+
+    act(() => {
+      result.current[HookIndex.Redo]();
+    });
+    expect(result.current[HookIndex.State]).toBe('+1 (204) ');
+    expect(onChange.mock.calls.length).toBe(4);
+    expect(onChange.mock.calls[3][0]).toBe('+1 (204) ');
+  });
 });

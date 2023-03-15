@@ -55,11 +55,12 @@ describe('PhoneInput', () => {
   });
 
   describe('onChange', () => {
-    test('should call onChange when input value is updated', () => {
+    test('should call onChange when input value is updated', async () => {
       const onChange = jest.fn();
       render(
         <PhoneInput value="+1 " defaultCountry="us" onChange={onChange} />,
       );
+      expect(onChange.mock.calls.length).toBe(0);
 
       fireEvent.change(getInput(), { target: { value: '38099' } });
       expect(onChange.mock.calls.length).toBe(1);
@@ -106,6 +107,77 @@ describe('PhoneInput', () => {
 
       expect(onChange.mock.calls.length).toBe(1);
       expect(onChange.mock.calls[0][0]).toBe('+1 ');
+    });
+
+    test('should call onChange on country change', () => {
+      const onChange = jest.fn();
+      render(<PhoneInput defaultCountry="us" onChange={onChange} />);
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('ua'));
+
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+380 ');
+
+      // set Canada
+      fireEvent.change(getInput(), { target: { value: '+1 (204) ' } });
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('+1 (204) ');
+
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('ca'));
+      expect(onChange.mock.calls.length).toBe(4);
+      expect(onChange.mock.calls[3][0]).toBe('+1 ');
+
+      // should fire change even if phone is not changed
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('us'));
+      expect(onChange.mock.calls.length).toBe(5);
+      expect(onChange.mock.calls[4][0]).toBe('+1 ');
+    });
+
+    test('should call onChange on undo/redo', () => {
+      const onChange = jest.fn();
+      render(
+        <PhoneInput
+          defaultCountry="us"
+          onChange={onChange}
+          // remove history save debounce
+          historySaveDebounceMS={0}
+        />,
+      );
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+
+      fireEvent.change(getInput(), { target: { value: '+38099' } });
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+380 (99) ');
+
+      fireEvent.change(getInput(), { target: { value: '+38099 99' } });
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('+380 (99) 99');
+
+      // undo
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: true,
+        shiftKey: false,
+      });
+      expect(onChange.mock.calls.length).toBe(4);
+      expect(onChange.mock.calls[3][0]).toBe('+380 (99) ');
+
+      // redo
+      fireEvent.keyDown(getInput(), {
+        key: 'Z',
+        code: 'KeyZ',
+        ctrlKey: true,
+        shiftKey: true,
+      });
+      expect(onChange.mock.calls.length).toBe(5);
+      expect(onChange.mock.calls[4][0]).toBe('+380 (99) 99');
     });
   });
 
