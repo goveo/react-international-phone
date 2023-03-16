@@ -321,6 +321,12 @@ describe('PhoneInput', () => {
       expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
       expect(getInput().value).toBe('+1 ');
     });
+
+    test('should set "us" if the default-country and value are not specified', () => {
+      render(<PhoneInput />);
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+      expect(getInput().value).toBe('+1 ');
+    });
   });
 
   test('should render placeholder', () => {

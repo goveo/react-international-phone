@@ -60,13 +60,14 @@ const App = () => {
   const phoneValidation = usePhoneValidation(phone);
   // highlight-end
 
-  const handleSubmit = () => {
-    // some submit logic
-    alert(`phone: ${phone}`);
-  };
-
   return (
-    <form>
+    <form
+      onSubmit={(e) => {
+        // some submit logic
+        e.preventDefault();
+        alert(`Submitted phone: ${phone}`);
+      }}
+    >
       <PhoneInput
         defaultCountry="ua"
         value={phone}
@@ -77,7 +78,6 @@ const App = () => {
         disabled={!phoneValidation.isValid}
         // highlight-end
         type="submit"
-        onClick={handleSubmit}
       >
         Submit
       </button>
@@ -85,6 +85,35 @@ const App = () => {
   );
 };
 ```
+
+import { useState } from 'react'
+import { PhoneInput, usePhoneValidation } from 'react-international-phone';
+
+export const Example = () => {
+const [phone, setPhone] = useState('');
+const phoneValidation = usePhoneValidation(phone);
+return (<form
+onSubmit={(e) => {
+e.preventDefault();
+alert(`Submitted phone: ${phone}`);
+}} >
+<PhoneInput
+defaultCountry="ua"
+value={phone}
+onChange={(phone) => setPhone(phone)}
+/>
+<button
+disabled={!phoneValidation.isValid}
+type="submit" >
+Submit
+</button></form>);
+};
+
+Output:
+
+<div style={{ margin: "8px 0 24px" }}>
+<Example />
+</div>
 
 :::tip
 Sometimes, when you don't want to check area codes (for example, you're not sure that the array of area codes covers all possible values), you can use `lengthMatch` to check the validation:
