@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/goveo/react-international-phone/compare/v2.0.4...v2.1.0) (2023-03-16)
+
+
+### Features
+
+* make defaultCountry not required, set us as defaultCountry ([41e96e3](https://github.com/goveo/react-international-phone/commit/41e96e3ebbc520625a738444997a7a870b8aa4e9))
+
 ## [2.0.4](https://github.com/goveo/react-international-phone/compare/v2.0.3...v2.0.4) (2023-03-15)
 
 
