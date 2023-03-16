@@ -78,11 +78,16 @@ const [name, regions, iso2, dialCode, format, priority, areaCodes] =
 
 :::tip
 
-Also you can use `parseCountry` helper function to convert country data array to an object (as shown in example).
+You can use the `parseCountry` helper function to convert the country data array to an object, modify it in some way, and build back with `buildCountryData`
 
 ```ts
-const { name, regions, iso2, dialCode, format, priority, areaCodes } =
-  parseCountry(defaultCountries[0]);
+const lowercasedCountries = defaultCountries.map((country) => {
+  const parsedCountry = parseCountry(country);
+  // lowercase country names, for example
+  parsedCountry.name = parsedCountry.name.toLowerCase();
+
+  return buildCountryData(parsedCountry);
+});
 ```
 
 :::
