@@ -1,4 +1,4 @@
-import { Button, Input, InputRef } from 'antd';
+import { Button, Input, InputRef, Space } from 'antd';
 import React, { useEffect, useRef } from 'react';
 
 import { CountrySelector, usePhoneInput } from '../../../index';
@@ -28,7 +28,7 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <Input.Group compact>
+      <Space.Compact>
         <CountrySelector
           selectedCountry={phoneInput.country}
           onSelect={(country) => phoneInput.setCountry(country.iso2)}
@@ -36,13 +36,9 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
             <Button
               {...rootProps}
               style={{
-                height: '32px',
                 padding: '4px',
-                // make the right border square
-                borderEndEndRadius: '0px',
-                borderStartEndRadius: '0px',
-                // fix on click effect overlap
-                zIndex: 1,
+                height: '100%',
+                zIndex: 1, // fix focus overlap
               }}
             >
               {children}
@@ -60,11 +56,8 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
           value={phoneInput.phone}
           onChange={phoneInput.handlePhoneValueChange}
           ref={inputRef}
-          style={{
-            width: '200px',
-          }}
         />
-      </Input.Group>
+      </Space.Compact>
     </div>
   );
 };
