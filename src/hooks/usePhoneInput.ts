@@ -39,11 +39,13 @@ export const MASK_CHAR = '.';
 export interface UsePhoneInputConfig {
   /**
    * @description Default country value (iso2).
+   * @default "us"
    */
-  defaultCountry: CountryIso2;
+  defaultCountry?: CountryIso2;
 
   /**
    * @description phone value
+   * @default ""
    */
   value?: string;
 
@@ -121,8 +123,9 @@ export interface UsePhoneInputConfig {
 }
 
 export const defaultConfig: Required<
-  Omit<UsePhoneInputConfig, 'defaultCountry' | 'onChange'> // omit props with no default value
+  Omit<UsePhoneInputConfig, 'onChange'> // omit props with no default value
 > = {
+  defaultCountry: 'us',
   value: '',
   prefix: '+',
   defaultMask: '............', // 12 chars
@@ -136,7 +139,7 @@ export const defaultConfig: Required<
 };
 
 export const usePhoneInput = ({
-  defaultCountry,
+  defaultCountry = defaultConfig.defaultCountry,
   value = defaultConfig.value,
   countries = defaultConfig.countries,
   prefix = defaultConfig.prefix,
