@@ -1,9 +1,13 @@
 import { defaultConfig, MASK_CHAR } from '../../hooks/usePhoneInput';
-import { CountryData, ParsedCountry } from '../../types';
+import { CountryData, CountryIso2, ParsedCountry } from '../../types';
 import { removeNonDigits } from '../common';
-import { guessCountryByPartialNumber } from '../countryUtils';
+import { getCountry, guessCountryByPartialNumber } from '../countryUtils';
 
 export interface ValidatePhoneConfig {
+  /**
+   * Country to validate
+   */
+  country?: CountryIso2;
   /**
    * Custom countries list
    */
@@ -20,6 +24,7 @@ export interface ValidatePhoneReturn {
   isValid: boolean;
   lengthMatch: boolean;
   areaCodeMatch: boolean | undefined;
+  dialCodeMatch: boolean;
 }
 
 export const validatePhone = (
@@ -40,17 +45,37 @@ export const validatePhone = (
     ...config,
   };
 
-  const { country, fullDialCodeMatch, areaCodeMatch } =
-    guessCountryByPartialNumber({
-      phone,
-      countries,
-    });
+  const passedCountry = config?.country
+    ? getCountry({ value: config.country, field: 'iso2', countries })
+    : null;
+
+  const countryGuessResult = guessCountryByPartialNumber({
+    phone,
+    countries,
+    currentCountryIso2: config?.country,
+  });
+
+  const isPassedCountryValid =
+    countryGuessResult.country?.iso2 === passedCountry?.iso2;
+
+  const {
+    country,
+    fullDialCodeMatch: dialCodeMatch,
+    areaCodeMatch,
+  } = !passedCountry || isPassedCountryValid
+    ? countryGuessResult
+    : {
+        country: passedCountry,
+        fullDialCodeMatch: false,
+        areaCodeMatch: passedCountry?.areaCodes ? false : undefined,
+      };
 
   // Handle non-existent dial code
-  if (!country || !fullDialCodeMatch) {
+  if (!country) {
     return {
-      country: undefined,
+      country: country,
       lengthMatch: false,
+      dialCodeMatch,
       areaCodeMatch,
       isValid: false,
     };
@@ -62,6 +87,7 @@ export const validatePhone = (
     return {
       country,
       lengthMatch: false,
+      dialCodeMatch,
       areaCodeMatch,
       isValid: false,
     };
@@ -80,6 +106,7 @@ export const validatePhone = (
     return {
       country,
       lengthMatch: false,
+      dialCodeMatch,
       areaCodeMatch,
       isValid: false,
     };
@@ -90,6 +117,7 @@ export const validatePhone = (
     return {
       country,
       lengthMatch: false,
+      dialCodeMatch,
       areaCodeMatch,
       isValid: false,
     };
@@ -101,6 +129,7 @@ export const validatePhone = (
       return {
         country,
         lengthMatch: false,
+        dialCodeMatch,
         areaCodeMatch,
         isValid: false,
       };
@@ -110,6 +139,7 @@ export const validatePhone = (
   return {
     country,
     lengthMatch: true,
+    dialCodeMatch,
     areaCodeMatch,
     isValid: areaCodeMatch ?? true,
   };

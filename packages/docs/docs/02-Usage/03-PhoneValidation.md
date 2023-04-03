@@ -27,6 +27,7 @@ Validation behavior on countries with default masks can be slightly adjusted wit
 
 | Prop                      | Type            | Description                                                                                                                                            | Default value               |
 | ------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
+| country                   | `CountryIso2`   | Forced country to validate.                                                                                                                            | `undefined`                 |
 | defaultMaskMinPhoneLength | `number`        | Required phone length for countries without specified mask. Validation will fail if number of digits in phone value will be less that provided number. | `10`                        |
 | defaultMask               | `string`        | Mask for countries without specified mask.                                                                                                             | `"............"` (12 chars) |
 | countries                 | `CountryData[]` | An array of available countries.                                                                                                                       | `defaultCountries`          |
@@ -35,12 +36,13 @@ Validation behavior on countries with default masks can be slightly adjusted wit
 
 ## Returned values
 
-| Prop          | Type                                  | Description                               |
-| ------------- | ------------------------------------- | ----------------------------------------- |
-| isValid       | `boolean`                             | Is phone valid.                           |
-| country       | <code>CountryData \| undefined</code> | Parsed country from provided phone value. |
-| lengthMatch   | `boolean`                             | Is phone length match required value.     |
-| areaCodeMatch | `boolean`                             | Is country area code exists.              |
+| Prop          | Type                                  | Description                                |
+| ------------- | ------------------------------------- | ------------------------------------------ |
+| isValid       | `boolean`                             | Is phone valid.                            |
+| country       | <code>CountryData \| undefined</code> | Parsed country from provided phone value.  |
+| lengthMatch   | `boolean`                             | Is phone length match required value.      |
+| areaCodeMatch | `boolean`                             | Is country area code exists.               |
+| dialCodeMatch | `boolean`                             | Is country dial code match parsed country. |
 
 :::caution
 `isValid` does not guarantee that the entered phone number is 100% valid.

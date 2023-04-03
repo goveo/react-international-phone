@@ -3,7 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-import { PhoneInput, usePhoneValidation, validatePhone } from '../index';
+import {
+  CountryIso2,
+  PhoneInput,
+  usePhoneValidation,
+  validatePhone,
+} from '../index';
 
 const ValidationProperty: React.FC<{
   title: string;
@@ -20,20 +25,28 @@ const ValidationProperty: React.FC<{
 
 export const Default = () => {
   const [phone, setPhone] = useState('');
-  const validation = usePhoneValidation(phone);
+  const [phoneCountry, setPhoneCountry] = useState<CountryIso2>('ua');
+  const validation = usePhoneValidation(phone, { country: phoneCountry });
 
   return (
     <div>
       <PhoneInput
         defaultCountry="ua"
         value={phone}
-        onChange={(phone) => setPhone(phone)}
+        onChange={(phone, country) => {
+          setPhone(phone);
+          setPhoneCountry(country);
+        }}
       />
       <ValidationProperty title="isValid" value={validation.isValid} />
       <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
       <ValidationProperty
         title="areaCodeMatch"
         value={validation.areaCodeMatch}
+      />
+      <ValidationProperty
+        title="dialCodeMatch"
+        value={validation.dialCodeMatch}
       />
       <ValidationProperty title="country" value={validation.country?.iso2} />
     </div>

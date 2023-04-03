@@ -211,7 +211,7 @@ describe('guessCountryByPartialNumber', () => {
       }),
     ).toMatchObject({
       country: { dialCode: '1', iso2: 'do' },
-      areaCodeMatch: false,
+      areaCodeMatch: undefined,
     });
 
     expect(

@@ -263,4 +263,115 @@ describe('validatePhone', () => {
       isValid: false,
     });
   });
+
+  describe('should support config.country', () => {
+    test('should work with matched dial code', () => {
+      expect(validatePhone('+1 999999999999', { country: 'do' })).toMatchObject(
+        {
+          country: getCountry('do'),
+          areaCodeMatch: undefined,
+          lengthMatch: true,
+          isValid: true,
+        },
+      );
+
+      expect(validatePhone('+1', { country: 'pr' })).toMatchObject({
+        country: getCountry('pr'),
+        areaCodeMatch: undefined,
+        lengthMatch: false,
+        isValid: false,
+      });
+
+      expect(
+        validatePhone('+1 (999) 999-9999', { country: 'us' }),
+      ).toMatchObject({
+        country: getCountry('us'),
+        areaCodeMatch: false,
+        lengthMatch: true,
+        isValid: false,
+      });
+
+      expect(
+        validatePhone('+1 (999) 999-9999', { country: 'ca' }),
+      ).toMatchObject({
+        country: getCountry('ca'),
+        areaCodeMatch: false,
+        lengthMatch: true,
+        isValid: false,
+      });
+    });
+
+    test('should use country from config.country for validation', () => {
+      expect(
+        validatePhone('+1 (201) 567-8900', { country: 'ua' }),
+      ).toMatchObject({
+        country: getCountry('ua'),
+        areaCodeMatch: undefined,
+        lengthMatch: false,
+        isValid: false,
+      });
+
+      expect(
+        validatePhone('+380 (99) 999 99 99', { country: 'us' }),
+      ).toMatchObject({
+        country: getCountry('us'),
+        areaCodeMatch: false,
+        lengthMatch: false,
+        isValid: false,
+      });
+
+      expect(
+        validatePhone('+1 (204) 567-8900', { country: 'us' }),
+      ).toMatchObject({
+        country: getCountry('us'),
+        areaCodeMatch: false,
+        lengthMatch: true,
+        isValid: false,
+      });
+    });
+  });
+
+  describe('should return dialCodeMatch', () => {
+    test('should return true for valid phone', () => {
+      expect(validatePhone('+1 (204) 567-8900')).toMatchObject({
+        country: getCountry('ca'),
+        dialCodeMatch: true,
+        areaCodeMatch: true,
+        lengthMatch: true,
+        isValid: true,
+      });
+    });
+
+    test('should return false for invalid phone', () => {
+      expect(validatePhone('+99999999')).toMatchObject({
+        country: undefined,
+        dialCodeMatch: false,
+        areaCodeMatch: undefined,
+        lengthMatch: false,
+        isValid: false,
+      });
+    });
+
+    test('should work with config.country', () => {
+      expect(
+        validatePhone('+1 (201) 567-8900', { country: 'ua' }),
+      ).toMatchObject({
+        country: getCountry('ua'),
+        dialCodeMatch: false,
+        areaCodeMatch: undefined,
+        lengthMatch: false,
+        isValid: false,
+      });
+
+      expect(
+        validatePhone('+1 (201) 567-8900', { country: 'us' }),
+      ).toMatchObject({
+        country: getCountry('us'),
+        dialCodeMatch: true,
+        areaCodeMatch: true,
+        lengthMatch: true,
+        isValid: true,
+      });
+    });
+  });
 });

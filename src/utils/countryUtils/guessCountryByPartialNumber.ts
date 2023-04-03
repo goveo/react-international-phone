@@ -127,7 +127,11 @@ export const guessCountryByPartialNumber = ({
       !result.areaCodeMatch;
 
     if (shouldSaveDialCode) {
-      result.country = currentCountry;
+      result = {
+        country: currentCountry,
+        areaCodeMatch: currentCountry?.areaCodes ? false : undefined,
+        fullDialCodeMatch: true,
+      };
     }
   }
 
