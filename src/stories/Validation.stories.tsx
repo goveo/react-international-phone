@@ -25,20 +25,19 @@ const ValidationProperty: React.FC<{
 
 export const Default = () => {
   const [phone, setPhone] = useState('');
-  const [phoneCountry, setPhoneCountry] = useState<CountryIso2>('ua');
-  const validation = usePhoneValidation(phone, { country: phoneCountry });
+  const validation = usePhoneValidation(phone);
 
   return (
     <div>
       <PhoneInput
         defaultCountry="ua"
         value={phone}
-        onChange={(phone, country) => {
+        onChange={(phone) => {
           setPhone(phone);
-          setPhoneCountry(country);
         }}
       />
       <ValidationProperty title="isValid" value={validation.isValid} />
+      <ValidationProperty title="formatMatch" value={validation.formatMatch} />
       <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
       <ValidationProperty
         title="areaCodeMatch"

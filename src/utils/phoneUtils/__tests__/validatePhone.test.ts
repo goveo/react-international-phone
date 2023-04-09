@@ -30,7 +30,7 @@ describe('validatePhone', () => {
     });
   });
 
-  test('should handle phone value fill', () => {
+  test('should handle phone length match', () => {
     expect(validatePhone('+1 (999) 999-9999')).toMatchObject({
       lengthMatch: true,
     });
@@ -51,8 +51,9 @@ describe('validatePhone', () => {
       lengthMatch: false,
     });
 
+    // allow phone number overflow
     expect(validatePhone('+1 (999) 999-99999')).toMatchObject({
-      lengthMatch: false,
+      lengthMatch: true,
     });
   });
 
@@ -95,32 +96,82 @@ describe('validatePhone', () => {
     });
   });
 
+  test('should handle formatting match', () => {
+    expect(validatePhone('+1 (999) 999-9999')).toMatchObject({
+      formatMatch: true,
+    });
+
+    expect(validatePhone('')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('+')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('+380')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('+1 (999) 999-')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('19999999999')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('+19999999999')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('+1 (999) 999-999')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('1 (999) 999-999')).toMatchObject({
+      formatMatch: false,
+    });
+
+    expect(validatePhone('+1 (999) 999-99999')).toMatchObject({
+      formatMatch: true,
+    });
+  });
+
   test('should return isValid', () => {
     expect(validatePhone('+1 (201) 234-5678')).toMatchObject({
       isValid: true,
     });
 
     expect(validatePhone('1 (201) 234-5678')).toMatchObject({
-      isValid: false,
+      isValid: true,
     });
 
     expect(validatePhone('+12012345678')).toMatchObject({
-      isValid: false,
+      isValid: true,
     });
 
     expect(validatePhone('+1 201 234 5678')).toMatchObject({
-      isValid: false,
+      isValid: true,
+    });
+
+    expect(validatePhone('+1 (402) 999-9999-')).toMatchObject({
+      isValid: true,
+    });
+
+    expect(validatePhone('+1 (402) 999-99999')).toMatchObject({
+      isValid: true,
     });
 
     expect(validatePhone('+1 (402) 999-999')).toMatchObject({
       isValid: false,
     });
 
-    expect(validatePhone('+1 (402) 999-9999-')).toMatchObject({
+    expect(validatePhone('')).toMatchObject({
       isValid: false,
     });
 
-    expect(validatePhone('+1 (402) 999-99999')).toMatchObject({
+    expect(validatePhone('+1 ')).toMatchObject({
       isValid: false,
     });
   });
@@ -167,7 +218,7 @@ describe('validatePhone', () => {
       country: getCountry('ca'),
       areaCodeMatch: false,
       lengthMatch: true,
-      isValid: false,
+      isValid: true,
     });
   });
 
@@ -175,8 +226,9 @@ describe('validatePhone', () => {
     expect(validatePhone('+1 (201) 234-5678', { prefix: '' })).toMatchObject({
       country: getCountry('us'),
       areaCodeMatch: true,
-      lengthMatch: false,
-      isValid: false,
+      lengthMatch: true,
+      isValid: true,
+      formatMatch: false,
     });
 
     expect(validatePhone('1 (201) 234-5678', { prefix: '' })).toMatchObject({
@@ -184,6 +236,7 @@ describe('validatePhone', () => {
       areaCodeMatch: true,
       lengthMatch: true,
       isValid: true,
+      formatMatch: true,
     });
 
     expect(validatePhone('-1 (201) 234-5678', { prefix: '-' })).toMatchObject({
@@ -191,6 +244,7 @@ describe('validatePhone', () => {
       areaCodeMatch: true,
       lengthMatch: true,
       isValid: true,
+      formatMatch: true,
     });
   });
 
@@ -200,8 +254,9 @@ describe('validatePhone', () => {
     ).toMatchObject({
       country: getCountry('us'),
       areaCodeMatch: true,
-      lengthMatch: false,
-      isValid: false,
+      lengthMatch: true,
+      isValid: true,
+      formatMatch: false,
     });
 
     expect(
@@ -211,6 +266,7 @@ describe('validatePhone', () => {
       areaCodeMatch: true,
       lengthMatch: true,
       isValid: true,
+      formatMatch: true,
     });
   });
 
@@ -224,42 +280,46 @@ describe('validatePhone', () => {
       country: getCountry('lt'),
       areaCodeMatch: undefined,
       lengthMatch: true,
+      formatMatch: true,
       isValid: true,
     });
 
     expect(
       validatePhone('+370 123456789000', {
-        defaultMask: '.... .....',
+        defaultMask: '.... .... ....',
         defaultMaskMinPhoneLength: 11,
       }),
     ).toMatchObject({
       country: getCountry('lt'),
       areaCodeMatch: undefined,
-      lengthMatch: false,
-      isValid: false,
+      lengthMatch: true,
+      formatMatch: false,
+      isValid: true,
     });
 
     expect(
-      validatePhone('+370 1234 567890', {
-        defaultMask: '.... .....',
+      validatePhone('+370 1234 5678 90', {
+        defaultMask: '.... .... ....',
         defaultMaskMinPhoneLength: 11,
       }),
     ).toMatchObject({
       country: getCountry('lt'),
       areaCodeMatch: undefined,
-      lengthMatch: false,
-      isValid: false,
+      lengthMatch: true,
+      formatMatch: true,
+      isValid: true,
     });
 
     expect(
       validatePhone('+370 1234 567', {
-        defaultMask: '.... .....',
+        defaultMask: '.... .... ....',
         defaultMaskMinPhoneLength: 11,
       }),
     ).toMatchObject({
       country: getCountry('lt'),
       areaCodeMatch: undefined,
       lengthMatch: false,
+      formatMatch: true,
       isValid: false,
     });
   });
@@ -288,7 +348,7 @@ describe('validatePhone', () => {
         country: getCountry('us'),
         areaCodeMatch: false,
         lengthMatch: true,
-        isValid: false,
+        isValid: true,
       });
 
       expect(
@@ -297,7 +357,17 @@ describe('validatePhone', () => {
         country: getCountry('ca'),
         areaCodeMatch: false,
         lengthMatch: true,
-        isValid: false,
+        isValid: true,
+      });
+
+      expect(
+        validatePhone('+380 (99) 999 99 99', { country: 'ua' }),
+      ).toMatchObject({
+        country: getCountry('ua'),
+        areaCodeMatch: undefined,
+        lengthMatch: true,
+        formatMatch: true,
+        isValid: true,
       });
     });
 
@@ -316,7 +386,7 @@ describe('validatePhone', () => {
       ).toMatchObject({
         country: getCountry('us'),
         areaCodeMatch: false,
-        lengthMatch: false,
+        lengthMatch: true,
         isValid: false,
       });
 
@@ -326,7 +396,7 @@ describe('validatePhone', () => {
         country: getCountry('us'),
         areaCodeMatch: false,
         lengthMatch: true,
-        isValid: false,
+        isValid: true,
       });
     });
   });
@@ -373,5 +443,23 @@ describe('validatePhone', () => {
         isValid: true,
       });
     });
+  });
+
+  test('should work with all default countries', () => {
+    for (const c of defaultCountries) {
+      const country = parseCountry(c);
+
+      const phone = `+${country.dialCode} ${
+        country.format?.replace(/\./g, '9') || '9999999999'
+      }`;
+
+      const validationResult = validatePhone(phone);
+
+      expect(validationResult).toMatchObject({
+        dialCodeMatch: true,
+        lengthMatch: true,
+        isValid: true,
+      });
+    }
   });
 });
