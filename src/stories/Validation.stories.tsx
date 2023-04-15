@@ -52,6 +52,37 @@ export const Default = () => {
   );
 };
 
+export const ValidationWithCountrySaving = () => {
+  const [phone, setPhone] = useState('');
+  const [currentCountry, setCurrentCountry] = useState<CountryIso2>('ua');
+  const validation = usePhoneValidation(phone, { country: currentCountry });
+
+  return (
+    <div>
+      <PhoneInput
+        defaultCountry="ua"
+        value={phone}
+        onChange={(phone, country) => {
+          setPhone(phone);
+          setCurrentCountry(country);
+        }}
+      />
+      <ValidationProperty title="isValid" value={validation.isValid} />
+      <ValidationProperty title="formatMatch" value={validation.formatMatch} />
+      <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
+      <ValidationProperty
+        title="areaCodeMatch"
+        value={validation.areaCodeMatch}
+      />
+      <ValidationProperty
+        title="dialCodeMatch"
+        value={validation.dialCodeMatch}
+      />
+      <ValidationProperty title="country" value={validation.country?.iso2} />
+    </div>
+  );
+};
+
 export const ReactHookForm = () => {
   const {
     control,

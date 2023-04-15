@@ -88,9 +88,10 @@ export const validatePhone = (
     };
   }
 
-  const isDefaultMask = !country.format;
   const countryMask = country.format || defaultMask;
+  const isDefaultMask = !country.format;
 
+  // mask length (only digits)
   const requiredMaskLength = isDefaultMask
     ? defaultMaskMinPhoneLength - country.dialCode.length
     : countryMask.length - countryMask.replaceAll(MASK_CHAR, '').length;
