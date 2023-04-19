@@ -23,6 +23,27 @@ const ValidationProperty: React.FC<{
   );
 };
 
+const ValidationInfo: React.FC<{
+  validation: ReturnType<typeof usePhoneValidation>;
+}> = ({ validation }) => {
+  return (
+    <>
+      <ValidationProperty title="isValid" value={validation.isValid} />
+      <ValidationProperty title="formatMatch" value={validation.formatMatch} />
+      <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
+      <ValidationProperty
+        title="areaCodeMatch"
+        value={validation.areaCodeMatch}
+      />
+      <ValidationProperty
+        title="dialCodeMatch"
+        value={validation.dialCodeMatch}
+      />
+      <ValidationProperty title="country" value={validation.country?.iso2} />
+    </>
+  );
+};
+
 export const Default = () => {
   const [phone, setPhone] = useState('');
   const validation = usePhoneValidation(phone);
@@ -36,18 +57,7 @@ export const Default = () => {
           setPhone(phone);
         }}
       />
-      <ValidationProperty title="isValid" value={validation.isValid} />
-      <ValidationProperty title="formatMatch" value={validation.formatMatch} />
-      <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
-      <ValidationProperty
-        title="areaCodeMatch"
-        value={validation.areaCodeMatch}
-      />
-      <ValidationProperty
-        title="dialCodeMatch"
-        value={validation.dialCodeMatch}
-      />
-      <ValidationProperty title="country" value={validation.country?.iso2} />
+      <ValidationInfo validation={validation} />
     </div>
   );
 };
@@ -67,18 +77,7 @@ export const ValidationWithCountrySaving = () => {
           setCurrentCountry(country);
         }}
       />
-      <ValidationProperty title="isValid" value={validation.isValid} />
-      <ValidationProperty title="formatMatch" value={validation.formatMatch} />
-      <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
-      <ValidationProperty
-        title="areaCodeMatch"
-        value={validation.areaCodeMatch}
-      />
-      <ValidationProperty
-        title="dialCodeMatch"
-        value={validation.dialCodeMatch}
-      />
-      <ValidationProperty title="country" value={validation.country?.iso2} />
+      <ValidationInfo validation={validation} />
     </div>
   );
 };
@@ -137,16 +136,7 @@ export const Formik = () => {
 
       const validationResult = validatePhone(phone);
       if (!validationResult.isValid) {
-        errors.phone = 'something went wrong';
-      }
-      if (!validationResult.lengthMatch) {
-        errors.phone = 'wrong phone length';
-      }
-      if (validationResult.areaCodeMatch === false) {
-        errors.phone = 'wrong area code';
-      }
-      if (!validationResult.country) {
-        errors.phone = 'wrong dial code';
+        errors.phone = 'Phone is not valid';
       }
 
       return errors;
@@ -166,9 +156,7 @@ export const Formik = () => {
           name: 'phone',
         }}
       />
-      <code style={{ color: errors.phone ? 'red' : 'green' }}>
-        <p>{errors.phone ? `Error: ${errors.phone}` : 'Phone is valid'}</p>
-      </code>
+      <ValidationProperty title="isValid" value={!errors.phone} />
     </div>
   );
 };
@@ -207,9 +195,7 @@ export const FormikWithYup = () => {
           name: 'phone',
         }}
       />
-      <code style={{ color: errors.phone ? 'red' : 'green' }}>
-        <p>{errors.phone ? `Error: ${errors.phone}` : 'Phone is valid'}</p>
-      </code>
+      <ValidationProperty title="isValid" value={!errors.phone} />
     </div>
   );
 };
