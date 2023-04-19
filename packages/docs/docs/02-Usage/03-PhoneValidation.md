@@ -46,14 +46,14 @@ Validation behavior on countries with default masks can be slightly adjusted wit
 | formatMatch   | `boolean`                             | Is formatting applied correctly.           |
 
 :::note
-`isValid` is not depend on `dialCodeMatch` and `formatMatch`.
+`isValid` is not depend on `areaCodeMatch` and `formatMatch`.
 If you want to check dial codes and the formatting strictly you can add an additional check:
 
 ```ts
 const phoneValidation = usePhoneValidation('+1 (123) 456-7890');
 const isPhoneValid =
   phoneValidation.isValid &&
-  phoneValidation.dialCodeMatch &&
+  phoneValidation.areaCodeMatch &&
   phoneValidation.formatMatch;
 ```
 

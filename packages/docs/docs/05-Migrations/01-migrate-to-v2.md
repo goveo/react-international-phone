@@ -7,8 +7,6 @@ New features and bug fixes will be pushed only to v2.
 
 :::
 
-This document describes all breaking changes and provides a migration guide from version 1 to version 2.
-
 ## `initialCountry` has been renamed to `defaultCountry`
 
 You should rename `initialCountry` prop to `defaultCountry` in your codebase:
