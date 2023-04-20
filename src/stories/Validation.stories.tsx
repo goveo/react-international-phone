@@ -82,6 +82,40 @@ export const ValidationWithCountrySaving = () => {
   );
 };
 
+export const ValidationWithDisabledCountryGuessing = () => {
+  const [phone, setPhone] = useState('');
+  const [shouldSaveCountry, setShouldSaveCountry] = useState(false);
+  const [currentCountry, setCurrentCountry] = useState<CountryIso2>('ua');
+  const validation = usePhoneValidation(phone, {
+    country: shouldSaveCountry ? currentCountry : undefined,
+  });
+
+  return (
+    <div>
+      <input
+        type="checkbox"
+        id="check"
+        checked={shouldSaveCountry}
+        onChange={(e) => setShouldSaveCountry(e.target.checked)}
+        style={{ marginBottom: '10px' }}
+      />
+      <label htmlFor="check" style={{ color: 'black' }}>
+        Pass selected country to validation
+      </label>
+      <PhoneInput
+        disableCountryGuess
+        defaultCountry="ua"
+        value={phone}
+        onChange={(phone, country) => {
+          setPhone(phone);
+          setCurrentCountry(country);
+        }}
+      />
+      <ValidationInfo validation={validation} />
+    </div>
+  );
+};
+
 export const ReactHookForm = () => {
   const {
     control,
