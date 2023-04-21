@@ -1,3 +1,16 @@
+# [2.2.0](https://github.com/goveo/react-international-phone/compare/v2.1.0...v2.2.0) (2023-04-21)
+
+
+### Bug Fixes
+
+* **validation:** add formatMatch return value, make areaCodesMatch not affect isValid ([48715ef](https://github.com/goveo/react-international-phone/commit/48715ef39308269f67d6586e650324c46af5cf2e))
+
+
+### Features
+
+* add country value to onChange callback ([39fcf48](https://github.com/goveo/react-international-phone/commit/39fcf48d4d0fc472bd6a420eaa8389074984907f))
+* **validation:** add country prop to validation function, add dialCodeMatch return property ([97f19e7](https://github.com/goveo/react-international-phone/commit/97f19e7f69257402e353e7ce2c312709308608a3))
+
 # [2.1.0](https://github.com/goveo/react-international-phone/compare/v2.0.4...v2.1.0) (2023-03-16)
 
 
