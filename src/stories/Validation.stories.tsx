@@ -3,7 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-import { PhoneInput, usePhoneValidation, validatePhone } from '../index';
+import {
+  CountryIso2,
+  PhoneInput,
+  usePhoneValidation,
+  validatePhone,
+} from '../index';
 
 const ValidationProperty: React.FC<{
   title: string;
@@ -18,6 +23,27 @@ const ValidationProperty: React.FC<{
   );
 };
 
+const ValidationInfo: React.FC<{
+  validation: ReturnType<typeof usePhoneValidation>;
+}> = ({ validation }) => {
+  return (
+    <>
+      <ValidationProperty title="isValid" value={validation.isValid} />
+      <ValidationProperty title="formatMatch" value={validation.formatMatch} />
+      <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
+      <ValidationProperty
+        title="areaCodeMatch"
+        value={validation.areaCodeMatch}
+      />
+      <ValidationProperty
+        title="dialCodeMatch"
+        value={validation.dialCodeMatch}
+      />
+      <ValidationProperty title="country" value={validation.country?.iso2} />
+    </>
+  );
+};
+
 export const Default = () => {
   const [phone, setPhone] = useState('');
   const validation = usePhoneValidation(phone);
@@ -27,15 +53,65 @@ export const Default = () => {
       <PhoneInput
         defaultCountry="ua"
         value={phone}
-        onChange={(phone) => setPhone(phone)}
+        onChange={(phone) => {
+          setPhone(phone);
+        }}
       />
-      <ValidationProperty title="isValid" value={validation.isValid} />
-      <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
-      <ValidationProperty
-        title="areaCodeMatch"
-        value={validation.areaCodeMatch}
+      <ValidationInfo validation={validation} />
+    </div>
+  );
+};
+
+export const ValidationWithCountrySaving = () => {
+  const [phone, setPhone] = useState('');
+  const [currentCountry, setCurrentCountry] = useState<CountryIso2>('ua');
+  const validation = usePhoneValidation(phone, { country: currentCountry });
+
+  return (
+    <div>
+      <PhoneInput
+        defaultCountry="ua"
+        value={phone}
+        onChange={(phone, country) => {
+          setPhone(phone);
+          setCurrentCountry(country);
+        }}
       />
-      <ValidationProperty title="country" value={validation.country?.iso2} />
+      <ValidationInfo validation={validation} />
+    </div>
+  );
+};
+
+export const ValidationWithDisabledCountryGuessing = () => {
+  const [phone, setPhone] = useState('');
+  const [shouldSaveCountry, setShouldSaveCountry] = useState(false);
+  const [currentCountry, setCurrentCountry] = useState<CountryIso2>('ua');
+  const validation = usePhoneValidation(phone, {
+    country: shouldSaveCountry ? currentCountry : undefined,
+  });
+
+  return (
+    <div>
+      <input
+        type="checkbox"
+        id="check"
+        checked={shouldSaveCountry}
+        onChange={(e) => setShouldSaveCountry(e.target.checked)}
+        style={{ marginBottom: '10px' }}
+      />
+      <label htmlFor="check" style={{ color: 'black' }}>
+        Pass selected country to validation
+      </label>
+      <PhoneInput
+        disableCountryGuess
+        defaultCountry="ua"
+        value={phone}
+        onChange={(phone, country) => {
+          setPhone(phone);
+          setCurrentCountry(country);
+        }}
+      />
+      <ValidationInfo validation={validation} />
     </div>
   );
 };
@@ -94,16 +170,7 @@ export const Formik = () => {
 
       const validationResult = validatePhone(phone);
       if (!validationResult.isValid) {
-        errors.phone = 'something went wrong';
-      }
-      if (!validationResult.lengthMatch) {
-        errors.phone = 'wrong phone length';
-      }
-      if (validationResult.areaCodeMatch === false) {
-        errors.phone = 'wrong area code';
-      }
-      if (!validationResult.country) {
-        errors.phone = 'wrong dial code';
+        errors.phone = 'Phone is not valid';
       }
 
       return errors;
@@ -123,9 +190,7 @@ export const Formik = () => {
           name: 'phone',
         }}
       />
-      <code style={{ color: errors.phone ? 'red' : 'green' }}>
-        <p>{errors.phone ? `Error: ${errors.phone}` : 'Phone is valid'}</p>
-      </code>
+      <ValidationProperty title="isValid" value={!errors.phone} />
     </div>
   );
 };
@@ -164,9 +229,7 @@ export const FormikWithYup = () => {
           name: 'phone',
         }}
       />
-      <code style={{ color: errors.phone ? 'red' : 'green' }}>
-        <p>{errors.phone ? `Error: ${errors.phone}` : 'Phone is valid'}</p>
-      </code>
+      <ValidationProperty title="isValid" value={!errors.phone} />
     </div>
   );
 };

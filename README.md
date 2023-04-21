@@ -58,4 +58,4 @@ Find the full API reference on [official documentation](https://react-internatio
 ## Update from v1 to v2
 
 You can encounter some breaking changes after update from v1 to v2 <br/>
-Checkout [migration document](https://react-international-phone-docs.vercel.app/docs/migration) that contains a list of breaking changes and ways to migrate.
+Checkout [migration document](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v2) that contains a list of breaking changes and ways to migrate.

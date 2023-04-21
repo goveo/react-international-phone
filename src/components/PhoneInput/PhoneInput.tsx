@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
 import { buildClassNames } from '../../style/buildClassNames';
+import { CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
 import {
   CountrySelector,
@@ -64,10 +65,10 @@ export interface PhoneInputProps
 
   /**
    * @description Callback that calls on phone change
-   * @params *phone* - new phone value
+   * @params `phone` - new phone value, `country` - country iso2 value
    * @default undefined
    */
-  onChange?: (phone: string) => void;
+  onChange?: (phone: string, country: CountryIso2) => void;
 }
 
 export const PhoneInput: React.FC<PhoneInputProps> = ({
@@ -95,7 +96,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       countries,
       ...usePhoneInputConfig,
       onChange: (data) => {
-        onChange?.(data.phone);
+        onChange?.(data.phone, data.country);
       },
     });
 

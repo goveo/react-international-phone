@@ -27,6 +27,7 @@ Validation behavior on countries with default masks can be slightly adjusted wit
 
 | Prop                      | Type            | Description                                                                                                                                            | Default value               |
 | ------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
+| country                   | `CountryIso2`   | Forced country to validate.                                                                                                                            | `undefined`                 |
 | defaultMaskMinPhoneLength | `number`        | Required phone length for countries without specified mask. Validation will fail if number of digits in phone value will be less that provided number. | `10`                        |
 | defaultMask               | `string`        | Mask for countries without specified mask.                                                                                                             | `"............"` (12 chars) |
 | countries                 | `CountryData[]` | An array of available countries.                                                                                                                       | `defaultCountries`          |
@@ -35,19 +36,73 @@ Validation behavior on countries with default masks can be slightly adjusted wit
 
 ## Returned values
 
-| Prop          | Type                                  | Description                               |
-| ------------- | ------------------------------------- | ----------------------------------------- |
-| isValid       | `boolean`                             | Is phone valid.                           |
-| country       | <code>CountryData \| undefined</code> | Parsed country from provided phone value. |
-| lengthMatch   | `boolean`                             | Is phone length match required value.     |
-| areaCodeMatch | `boolean`                             | Is country area code exists.              |
+| Prop          | Type                                  | Description                                |
+| ------------- | ------------------------------------- | ------------------------------------------ |
+| isValid       | `boolean`                             | Is phone valid.                            |
+| country       | <code>CountryData \| undefined</code> | Parsed country from provided phone value.  |
+| lengthMatch   | `boolean`                             | Is phone length match required value.      |
+| areaCodeMatch | `boolean`                             | Is country area code exists.               |
+| dialCodeMatch | `boolean`                             | Is country dial code match parsed country. |
+| formatMatch   | `boolean`                             | Is formatting applied correctly.           |
 
-:::caution
-`isValid` does not guarantee that the entered phone number is 100% valid.
-When `isValid` value becomes **true** it shows that the country was parsed from the provided phone value and that country's format mask was applied correctly.
+:::note
+`isValid` is not depend on `areaCodeMatch` and `formatMatch`.
+If you want to check dial codes and the formatting strictly you can add an additional check:
+
+```ts
+const phoneValidation = usePhoneValidation('+1 (123) 456-7890');
+const isPhoneValid =
+  phoneValidation.isValid &&
+  phoneValidation.areaCodeMatch &&
+  phoneValidation.formatMatch;
+```
+
 :::
 
-### Basic Usage
+:::caution
+`isValid` does **not guarantee** that the entered phone number **is 100% valid**.<br/>
+
+When `isValid` value becomes **true** it shows that the country was parsed from the provided phone value and has required amount of digits.
+:::
+
+### Dial codes overlap issue
+
+:::danger
+**Country value can be parsed incorrectly sometimes** <br/>
+It can happen when the country of provided phone value shares the same dial code with another country, but have a lower priory. For example, if user selects a _Vatican City_ and types a phone number like `+39 99 9999 9999` it will be validated as _Italy_ by default.
+:::
+
+This issue can happen with following countries:
+
+- `+1` United States, Canada, Dominican Republic, Puerto Rico
+- `+559` Curaçao, Caribbean Netherlands
+- `+39` Italy, Vatican City,
+- `+7` Kazakhstan, Russia
+
+To prevent this issue you can save the selected country value to the local state and pass it to the **country** validation property:
+
+```tsx
+const [phone, setPhone] = useState('');
+// highlight-start
+const [currentCountry, setCurrentCountry] = useState<CountryIso2>('ua');
+const validation = usePhoneValidation(phone, { country: currentCountry });
+// highlight-end
+
+return (
+  <PhoneInput
+    defaultCountry="ua"
+    value={phone}
+    onChange={(phone, country) => {
+      setPhone(phone);
+      // highlight-start
+      setCurrentCountry(country);
+      // highlight-end
+    }}
+  />
+);
+```
+
+## Basic Usage
 
 ```tsx
 import { useState } from 'react';
@@ -114,15 +169,3 @@ Output:
 <div style={{ margin: "8px 0 24px" }}>
 <Example />
 </div>
-
-:::tip
-Sometimes, when you don't want to check area codes (for example, you're not sure that the array of area codes covers all possible values), you can use `lengthMatch` to check the validation:
-
-```tsx
-const phoneValidation = usePhoneValidation('+1 (123) 456-7890');
-// highlight-start
-const isPhoneValid = phoneValidation.lengthMatch;
-// highlight-end
-```
-
-:::

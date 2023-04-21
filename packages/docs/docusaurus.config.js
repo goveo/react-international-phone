@@ -94,8 +94,8 @@ const config = {
                 to: '/docs/Advanced%20Usage/usePhoneInput',
               },
               {
-                label: 'Migration',
-                to: '/docs/migration',
+                label: 'Migrations',
+                to: '/docs/Migrations/migrate-to-v2',
               },
             ],
           },
