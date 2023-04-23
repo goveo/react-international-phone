@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/goveo/react-international-phone/compare/v2.2.0...v2.2.1) (2023-04-23)
+
+
+### Bug Fixes
+
+* update Australia format mask ([2506e7f](https://github.com/goveo/react-international-phone/commit/2506e7f0cae54975c0b2a8bb218f6911ef94409b))
+
 # [2.2.0](https://github.com/goveo/react-international-phone/compare/v2.1.0...v2.2.0) (2023-04-21)
 
 
