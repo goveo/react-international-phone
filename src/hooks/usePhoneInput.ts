@@ -239,10 +239,6 @@ export const usePhoneInput = ({
 
       setCursorPosition(phone.length);
 
-      if (value !== phone) {
-        onChange?.({ phone, country: defaultCountryFull.iso2 });
-      }
-
       return {
         phone,
         country: defaultCountryFull.iso2,
@@ -437,9 +433,14 @@ export const usePhoneInput = ({
   // Handle value update
   useEffect(() => {
     if (!initialized) {
-      // skip on initial render
-      // initial value was set inside the useHistoryState call
       setInitialized(true);
+
+      if (value !== phone) {
+        // Can call onChange directly because phone value was formatted inside the useHistoryState setter
+        onChange?.({ phone, country });
+      }
+
+      // skip value handling on initial render
       return;
     }
 
