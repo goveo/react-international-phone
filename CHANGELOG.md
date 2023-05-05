@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/goveo/react-international-phone/compare/v2.2.1...v2.2.2) (2023-05-05)
+
+
+### Bug Fixes
+
+* **usePhoneInput:** move onChange call from the useHistoryState state setter to value update effect ([6ab8da7](https://github.com/goveo/react-international-phone/commit/6ab8da7b49784da3f5047841d258e303adba4e56))
+
 ## [2.2.1](https://github.com/goveo/react-international-phone/compare/v2.2.0...v2.2.1) (2023-04-23)
 
 
