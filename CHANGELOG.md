@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/goveo/react-international-phone/compare/v2.2.2...v2.2.3) (2023-06-30)
+
+
+### Bug Fixes
+
+* **data:** add some missing US area-codes ([3f7b77e](https://github.com/goveo/react-international-phone/commit/3f7b77e020caa20559934b26c10ed6933ff362a8))
+
 ## [2.2.2](https://github.com/goveo/react-international-phone/compare/v2.2.1...v2.2.2) (2023-05-05)
 
 
