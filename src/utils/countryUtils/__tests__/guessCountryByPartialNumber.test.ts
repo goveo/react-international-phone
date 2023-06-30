@@ -207,11 +207,11 @@ describe('guessCountryByPartialNumber', () => {
       guessCountryByPartialNumber({
         phone: '+1 234567890',
         countries: defaultCountries,
-        currentCountryIso2: 'do',
+        currentCountryIso2: 'us',
       }),
     ).toMatchObject({
-      country: { dialCode: '1', iso2: 'do' },
-      areaCodeMatch: undefined,
+      country: { dialCode: '1', iso2: 'us' },
+      areaCodeMatch: true,
     });
 
     expect(
@@ -223,6 +223,17 @@ describe('guessCountryByPartialNumber', () => {
     ).toMatchObject({
       country: { dialCode: '1', iso2: 'ca' },
       areaCodeMatch: true,
+    });
+
+    expect(
+      guessCountryByPartialNumber({
+        phone: '+1 111567890',
+        countries: defaultCountries,
+        currentCountryIso2: 'do',
+      }),
+    ).toMatchObject({
+      country: { dialCode: '1', iso2: 'do' },
+      areaCodeMatch: undefined,
     });
   });
 });
