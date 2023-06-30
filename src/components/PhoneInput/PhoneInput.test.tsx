@@ -232,7 +232,7 @@ describe('PhoneInput', () => {
     fireEvent.change(getInput(), { target: { value: '+123' } });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
 
-    fireEvent.change(getInput(), { target: { value: '+1234' } });
+    fireEvent.change(getInput(), { target: { value: '+1230' } });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
 
     fireEvent.change(getInput(), { target: { value: '+1203' } });
@@ -915,8 +915,8 @@ describe('PhoneInput', () => {
   test('should use default mask if country data does not have mask', () => {
     // mask is undefined
     const { rerender } = render(<PhoneInput defaultCountry="do" />);
-    fireChangeEvent('+1234567');
-    expect(getInput().value).toBe('+1 234567');
+    fireChangeEvent('+1114567');
+    expect(getInput().value).toBe('+1 114567');
     expect(getCountrySelector()).toHaveAttribute('data-country', 'do');
 
     // mask is empty string
