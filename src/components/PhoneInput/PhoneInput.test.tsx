@@ -12,6 +12,7 @@ import {
   getDropdownArrow,
   getDropdownOption,
   getInput,
+  increaseSystemTime,
   mockScrollIntoView,
 } from '../../utils/test-utils';
 import { PhoneInput } from './PhoneInput';
@@ -573,8 +574,6 @@ describe('PhoneInput', () => {
     afterAll(() => {
       jest.useRealTimers();
     });
-
-    const increaseSystemTime = (ms = 1000) => jest.advanceTimersByTime(ms);
 
     test('should support undo on ctrl+z', () => {
       render(<PhoneInput defaultCountry="us" value="+1234" />);

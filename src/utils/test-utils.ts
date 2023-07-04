@@ -74,3 +74,8 @@ export const mockScrollIntoView = () => {
 
   return mock;
 };
+
+/**
+ * Make sure that `jest.useFakeTimers()` is called before use
+ */
+export const increaseSystemTime = (ms = 1000) => jest.advanceTimersByTime(ms);

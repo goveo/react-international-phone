@@ -8,6 +8,8 @@ import { CountryData, CountryIso2, ParsedCountry } from '../../types';
 import { parseCountry, scrollToChild } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 
+const SEARCH_DEBOUNCE_MS = 1000;
+
 export interface CountrySelectorDropdownStyleProps {
   style?: React.CSSProperties;
   className?: string;
@@ -48,6 +50,34 @@ export const CountrySelectorDropdown: React.FC<
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
   const lastScrolledCountry = useRef<CountryIso2>();
+
+  const searchRef = useRef<{
+    updatedAt: Date | undefined;
+    value: string;
+  }>({ updatedAt: undefined, value: '' });
+
+  const updateSearch = (newChar: string) => {
+    const isSearchDelayPassed =
+      searchRef.current.updatedAt &&
+      new Date().getTime() - searchRef.current.updatedAt.getTime() >
+        SEARCH_DEBOUNCE_MS;
+
+    searchRef.current = {
+      value: isSearchDelayPassed
+        ? newChar
+        : `${searchRef.current.value}${newChar}`,
+      updatedAt: new Date(),
+    };
+
+    const searchedCountryIndex = countries.findIndex((c) =>
+      parseCountry(c).name.toLowerCase().startsWith(searchRef.current.value),
+    );
+
+    // focus to searched country
+    if (searchedCountryIndex !== -1) {
+      setFocusedItemIndex(searchedCountryIndex);
+    }
+  };
 
   const getCountryIndex = useCallback(
     (country: CountryIso2) => {
@@ -92,6 +122,8 @@ export const CountrySelectorDropdown: React.FC<
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    e.stopPropagation();
+
     if (e.key === 'Enter') {
       const focusedCountry = parseCountry(countries[focusedItemIndex]);
       handleCountrySelect(focusedCountry);
@@ -125,6 +157,15 @@ export const CountrySelectorDropdown: React.FC<
       e.preventDefault();
       moveFocusedItem('last');
       return;
+    }
+
+    if (e.key === ' ') {
+      // prevent scrolling with space
+      e.preventDefault();
+    }
+
+    if (e.key.length === 1 && !e.altKey && !e.ctrlKey && !e.metaKey) {
+      updateSearch(e.key.toLocaleLowerCase());
     }
   };
 

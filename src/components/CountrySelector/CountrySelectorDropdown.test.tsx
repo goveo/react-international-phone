@@ -8,6 +8,7 @@ import {
   getCountryFlag,
   getCountrySelectorDropdown,
   getDropdownOption,
+  increaseSystemTime,
   mockScrollIntoView,
 } from '../../utils/test-utils';
 import {
@@ -26,7 +27,7 @@ const selectedItemClass =
   'react-international-phone-country-selector-dropdown__list-item--selected';
 
 describe('CountrySelectorDropdown', () => {
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
 
   beforeAll(() => {
     mockScrollIntoView();
@@ -309,6 +310,63 @@ describe('CountrySelectorDropdown', () => {
       await user.tab();
 
       expect(onClose).toBeCalledTimes(1);
+    });
+  });
+
+  describe('search', () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    test('should search country by name', async () => {
+      render(
+        <CountrySelectorDropdown
+          {...defaultDropdownProps}
+          selectedCountry="us"
+        />,
+      );
+      expect(getCountrySelectorDropdown()).toBeVisible();
+
+      expect(getDropdownOption('us')).toHaveClass(focusedItemClass);
+      expect(getDropdownOption('us')).toHaveClass(selectedItemClass);
+
+      expect(getDropdownOption('ua')).not.toHaveClass(focusedItemClass);
+      expect(getDropdownOption('ua')).not.toHaveClass(selectedItemClass);
+
+      await user.keyboard('ukr');
+
+      expect(getDropdownOption('us')).toHaveClass(selectedItemClass);
+      expect(getDropdownOption('us')).not.toHaveClass(focusedItemClass);
+
+      expect(getDropdownOption('ua')).toHaveClass(focusedItemClass);
+      expect(getDropdownOption('ua')).not.toHaveClass(selectedItemClass);
+    });
+
+    test('should clear search after delay', async () => {
+      render(
+        <CountrySelectorDropdown
+          {...defaultDropdownProps}
+          selectedCountry="us"
+        />,
+      );
+      expect(getCountrySelectorDropdown()).toBeVisible();
+
+      expect(getDropdownOption('us')).toHaveClass(focusedItemClass);
+      expect(getDropdownOption('us')).toHaveClass(selectedItemClass);
+
+      expect(getDropdownOption('is')).not.toHaveClass(focusedItemClass);
+      expect(getDropdownOption('is')).not.toHaveClass(selectedItemClass);
+
+      await user.keyboard('i');
+      expect(getDropdownOption('is')).toHaveClass(focusedItemClass);
+
+      increaseSystemTime(1500);
+
+      await user.keyboard('united kin');
+      expect(getDropdownOption('gb')).toHaveClass(focusedItemClass);
     });
   });
 });
