@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/goveo/react-international-phone/compare/v2.2.3...v2.3.0) (2023-07-04)
+
+
+### Features
+
+* **country-selector:** add search to country-selector dropdown ([ebe6cca](https://github.com/goveo/react-international-phone/commit/ebe6cca7a5bf250e1b5452fb296775ff90ce5f5f))
+
 ## [2.2.3](https://github.com/goveo/react-international-phone/compare/v2.2.2...v2.2.3) (2023-06-30)
 
 
