@@ -5,6 +5,7 @@ import { CountrySelectorStyleProps } from '../components/CountrySelector/Country
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { defaultCountries } from '../data/countryData';
 import { usePhoneValidation } from '../hooks/usePhoneValidation';
+import { CountryIso2 } from '../types';
 import { parseCountry } from '../utils';
 import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
@@ -136,5 +137,17 @@ export const TwoInputsTest = () => {
         inputProps={{ id: 'bottom' }}
       />
     </div>
+  );
+};
+
+export const WrongDefaultCountryCode = () => {
+  const [phone, setPhone] = useState('');
+
+  return (
+    <PhoneInput
+      value={phone}
+      onChange={setPhone}
+      defaultCountry={'not-valid-code' as CountryIso2}
+    />
   );
 };
