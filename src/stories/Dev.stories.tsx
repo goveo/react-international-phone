@@ -138,3 +138,15 @@ export const TwoInputsTest = () => {
     </div>
   );
 };
+
+export const WrongDefaultCountryCode = () => {
+  const [phone, setPhone] = useState('');
+
+  return (
+    <PhoneInput
+      value={phone}
+      onChange={setPhone}
+      defaultCountry="not-valid-code"
+    />
+  );
+};

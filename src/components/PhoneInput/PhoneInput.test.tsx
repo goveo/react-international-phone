@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
+import { CountryIso2 } from '../../types';
 import { parseCountry, removeNonDigits } from '../../utils';
 import { buildCountryData } from '../../utils/countryUtils/buildCountryData';
 import {
@@ -327,6 +328,25 @@ describe('PhoneInput', () => {
       render(<PhoneInput />);
       expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
       expect(getInput().value).toBe('+1 ');
+    });
+
+    test('should set "us" if provided invalid default country', () => {
+      const logSpy = jest
+        .spyOn(global.console, 'error')
+        .mockImplementation(() => null);
+
+      render(<PhoneInput defaultCountry={'test' as CountryIso2} />);
+
+      expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
+      expect(getInput().value).toBe('+1 ');
+
+      expect(logSpy).toHaveBeenCalled();
+      expect(logSpy).toHaveBeenCalledTimes(1);
+      expect(logSpy).toHaveBeenCalledWith(
+        '[react-international-phone]: can not find a country with "test" iso2 code',
+      );
+
+      logSpy.mockRestore();
     });
   });
 

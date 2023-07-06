@@ -13,6 +13,7 @@ import {
   getCountry,
   getCursorPosition,
   guessCountryByPartialNumber,
+  parseCountry,
   removeNonDigits,
 } from '../utils';
 import { useHistoryState } from './useHistoryState';
@@ -217,19 +218,25 @@ export const usePhoneInput = ({
         currentCountryIso2: defaultCountry,
       });
 
-      const defaultCountryFull = (countryGuessResult.country ||
+      const guessedCountryFull = (countryGuessResult.country ||
         getCountry({
           value: defaultCountry,
           field: 'iso2',
           countries,
         })) as ParsedCountry;
 
-      if (!defaultCountryFull) {
+      if (!guessedCountryFull) {
         // default country is not passed, or iso code do not match
         console.error(
-          `[react-international-phone]: can not find a country with "${country}" iso2 code`,
+          `[react-international-phone]: can not find a country with "${defaultCountry}" iso2 code`,
         );
       }
+
+      const defaultCountryFull =
+        guessedCountryFull || // set "us" if user provided not valid country
+        parseCountry(
+          countries.find((c) => parseCountry(c).iso2 === 'us') as CountryData,
+        );
 
       const phone = formatPhoneValue({
         value,
