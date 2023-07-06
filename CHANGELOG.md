@@ -1,3 +1,11 @@
+## [2.3.1](https://github.com/goveo/react-international-phone/compare/v2.3.0...v2.3.1) (2023-07-06)
+
+
+### Bug Fixes
+
+* change CountryIso2 type to string ([98b63f2](https://github.com/goveo/react-international-phone/commit/98b63f2dda54740cf2078eac9ead6e4474120531))
+* set "us" if the wrong default country value was provided ([83e08e0](https://github.com/goveo/react-international-phone/commit/83e08e0fcce21a07ccdf23f8aabae276bf6eeac2))
+
 # [2.3.0](https://github.com/goveo/react-international-phone/compare/v2.2.3...v2.3.0) (2023-07-04)
 
 
