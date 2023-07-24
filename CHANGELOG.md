@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/goveo/react-international-phone/compare/v2.3.1...v2.3.2) (2023-07-24)
+
+
+### Bug Fixes
+
+* **data:** Update Ivory Coast Phone Number Format to Support 10 Digits After Area Code ([45565e9](https://github.com/goveo/react-international-phone/commit/45565e9cffc404349435104b53128aa51f868f8a))
+
 ## [2.3.1](https://github.com/goveo/react-international-phone/compare/v2.3.0...v2.3.1) (2023-07-06)
 
 
