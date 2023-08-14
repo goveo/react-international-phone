@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { CountrySelectorStyleProps } from '../components/CountrySelector/CountrySelector';
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { defaultCountries } from '../data/countryData';
-import { usePhoneValidation } from '../hooks/usePhoneValidation';
 import { parseCountry } from '../utils';
 import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
@@ -38,7 +37,6 @@ export const Demo = () => {
   const [phone, setPhone] = useState('+1');
   const [phone2, setPhone2] = useState('+372');
   const [muiPhone, setMuiPhone] = useState('+380');
-  const muiValidation = usePhoneValidation(muiPhone);
 
   const countrySelectorStyleProps: CountrySelectorStyleProps = {
     dropdownStyleProps: {
@@ -75,14 +73,7 @@ export const Demo = () => {
       </PhoneWrapper>
       <Title marginBottom="20px">Material UI + validation</Title>
       <PhoneWrapper>
-        <MuiPhone
-          error={!muiValidation.isValid}
-          helperText={
-            muiValidation.isValid ? undefined : 'Phone number is not valid'
-          }
-          value={muiPhone}
-          onChange={setMuiPhone}
-        />
+        <MuiPhone value={muiPhone} onChange={setMuiPhone} />
       </PhoneWrapper>
     </div>
   );
