@@ -1,16 +1,3 @@
-type Region = 'america' | 'europe' | 'asia' | 'oceania' | 'africa';
-type SubRegion =
-  | 'north-america'
-  | 'south-america'
-  | 'central-america'
-  | 'carribean'
-  | 'eu-union'
-  | 'ex-ussr'
-  | 'ex-yugos'
-  | 'baltic'
-  | 'middle-east'
-  | 'north-africa';
-
 export type CountryIso2 =
   // eslint-disable-next-line @typescript-eslint/ban-types
   | (string & {}) // allow any string but add autocompletion for values below
@@ -228,7 +215,6 @@ export type CountryIso2 =
 
 type BaseCountryData = [
   string, // country name
-  Array<Region | SubRegion>, // regions
   CountryIso2, // iso2 code
   string, // international dial code
 ];
@@ -256,12 +242,11 @@ export type CountryData =
 
 export interface ParsedCountry {
   name: CountryData[0];
-  regions: CountryData[1];
-  iso2: CountryData[2];
-  dialCode: CountryData[3];
-  format: CountryData[4];
-  priority: CountryData[5];
-  areaCodes: CountryData[6];
+  iso2: CountryData[1];
+  dialCode: CountryData[2];
+  format: CountryData[3];
+  priority: CountryData[4];
+  areaCodes: CountryData[5];
 }
 
 export interface CountryGuessResult {
