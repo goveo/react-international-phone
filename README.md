@@ -59,7 +59,7 @@ Find the full API reference on [official documentation](https://react-internatio
 
 You can encounter some breaking changes after update between major versions.
 
-Checkout migration documents that contain a list of breaking changes and ways to update:
+Checkout migration documents that contain a list of breaking changes and ways to migrate:
 <br/>
 [Update from v2 to v3](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v3)
 <br/>
