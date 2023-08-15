@@ -20,7 +20,6 @@ export const guessCountryByPartialNumber = ({
   const emptyResult = {
     country: undefined,
     fullDialCodeMatch: false,
-    areaCodeMatch: undefined,
   };
   if (!partialPhone) {
     return emptyResult;
@@ -37,18 +36,16 @@ export const guessCountryByPartialNumber = ({
   const updateResult = ({
     country,
     fullDialCodeMatch,
-    areaCodeMatch,
   }: {
     country: ParsedCountry;
     fullDialCodeMatch: boolean;
-    areaCodeMatch?: boolean;
   }) => {
     const sameDialCode = country.dialCode === result.country?.dialCode;
     const newPriorityValueLower =
       (country.priority ?? 0) < (result.country?.priority ?? 0);
 
     if (!sameDialCode || newPriorityValueLower) {
-      result = { country, fullDialCodeMatch, areaCodeMatch };
+      result = { country, fullDialCodeMatch };
     }
   };
 
@@ -71,7 +68,6 @@ export const guessCountryByPartialNumber = ({
             return {
               country: parsedCountry,
               fullDialCodeMatch: true,
-              areaCodeMatch: true,
             };
           }
         }
@@ -85,7 +81,6 @@ export const guessCountryByPartialNumber = ({
         updateResult({
           country: parsedCountry,
           fullDialCodeMatch: true,
-          areaCodeMatch: areaCodes ? !areaCodes : undefined,
         });
       }
     }
@@ -115,21 +110,36 @@ export const guessCountryByPartialNumber = ({
       countries,
     });
 
-    // save the passed country if the dial code is the same
-    const shouldSaveDialCode =
+    if (!currentCountry) {
+      return result;
+    }
+
+    const getAreaCodesPartialMatch = (country: ParsedCountry) => {
+      if (!country?.areaCodes) return false;
+
+      const phoneWithoutDialCode = phone.substring(country.dialCode.length);
+
+      return country.areaCodes.some((areaCode) =>
+        areaCode.startsWith(phoneWithoutDialCode),
+      );
+    };
+
+    const currentAreaCodePartiallyMatch = currentCountry
+      ? getAreaCodesPartialMatch(currentCountry)
+      : false;
+
+    const shouldSaveCurrentCountry =
       !!result &&
-      !!currentCountry &&
-      // different countries with same dial code
+      // countries have same dial code
       result.country?.dialCode === currentCountry.dialCode &&
       result.country !== currentCountry &&
-      // full dial code match (without area code)
       result.fullDialCodeMatch &&
-      !result.areaCodeMatch;
+      // current country area-code is still partially match input
+      (!currentCountry.areaCodes || currentAreaCodePartiallyMatch);
 
-    if (shouldSaveDialCode) {
+    if (shouldSaveCurrentCountry) {
       result = {
         country: currentCountry,
-        areaCodeMatch: currentCountry?.areaCodes ? false : undefined,
         fullDialCodeMatch: true,
       };
     }

@@ -252,5 +252,4 @@ export interface ParsedCountry {
 export interface CountryGuessResult {
   country: ParsedCountry | undefined;
   fullDialCodeMatch: boolean;
-  areaCodeMatch: boolean | undefined;
 }
