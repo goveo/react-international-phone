@@ -1,17 +1,7 @@
 # [3.0.0](https://github.com/goveo/react-international-phone/compare/v2.3.3...v3.0.0) (2023-08-15)
 
 
-* chore!: update to v3 ([266e8d7](https://github.com/goveo/react-international-phone/commit/266e8d7df80f070c1334edc8a0f0328f653b5c53))
-
-
 ### BREAKING CHANGES
-
-* need to update to v3
-
-## [2.3.3](https://github.com/goveo/react-international-phone/compare/v2.3.2...v2.3.3) (2023-08-15)
-
-
-### Bug Fixes
 
 * **country-data:** remove area-codes for countries that have priority 0 ([28809d0](https://github.com/goveo/react-international-phone/commit/28809d0c6e83a0ba969140c9bcdf492b29cd619d))
 * remove areaCodeMatch from guessCountryByPartialNumber util function ([a4008ad](https://github.com/goveo/react-international-phone/commit/a4008ad7688df15c5d040c5ff3c94d20a1f8803a))
