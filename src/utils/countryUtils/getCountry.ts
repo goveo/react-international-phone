@@ -14,7 +14,7 @@ export const getCountry = ({
   field: keyof ParsedCountry;
   countries: CountryData[];
 }): ParsedCountry | undefined => {
-  if (['regions', 'priority'].includes(field)) {
+  if (['priority'].includes(field)) {
     throw new Error(constructFieldNotSupportedErrorMessage(field));
   }
   const country = countries.find((country) => {

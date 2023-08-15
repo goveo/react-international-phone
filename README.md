@@ -55,7 +55,12 @@ const App = () => {
 
 Find the full API reference on [official documentation](https://react-international-phone-docs.vercel.app/).
 
-## Update from v1 to v2
+## Migration
 
-You can encounter some breaking changes after update from v1 to v2 <br/>
-Checkout [migration document](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v2) that contains a list of breaking changes and ways to migrate.
+You can encounter some breaking changes after update between major versions.
+
+Checkout migration documents that contain a list of breaking changes and ways to migrate:
+<br/>
+[Update from v2 to v3](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v3)
+<br/>
+[Update from v1 to v2](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v2)

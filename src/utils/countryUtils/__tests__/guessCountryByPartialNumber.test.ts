@@ -150,58 +150,6 @@ describe('guessCountryByPartialNumber', () => {
     ).toMatchObject({ country: { dialCode: '7', iso2: 'kz' } });
   });
 
-  test('should return areaCodeMatch', () => {
-    expect(
-      guessCountryByPartialNumber({
-        phone: '+1 (201) 999-9999',
-        countries: defaultCountries,
-      }),
-    ).toMatchObject({
-      country: { dialCode: '1', iso2: 'us' },
-      areaCodeMatch: true,
-    });
-
-    expect(
-      guessCountryByPartialNumber({
-        phone: '+1 (403) 999-9999',
-        countries: defaultCountries,
-      }),
-    ).toMatchObject({
-      country: { dialCode: '1', iso2: 'ca' },
-      areaCodeMatch: true,
-    });
-
-    expect(
-      guessCountryByPartialNumber({
-        phone: '+1 (999) 999-9999',
-        countries: defaultCountries,
-      }),
-    ).toMatchObject({
-      country: { dialCode: '1', iso2: 'us' },
-      areaCodeMatch: false,
-    });
-
-    expect(
-      guessCountryByPartialNumber({
-        phone: '+380 (99) 999 9999',
-        countries: defaultCountries,
-      }),
-    ).toMatchObject({
-      country: { dialCode: '380', iso2: 'ua' },
-      areaCodeMatch: undefined,
-    });
-
-    expect(
-      guessCountryByPartialNumber({
-        phone: '+999 (99) 999 9999',
-        countries: defaultCountries,
-      }),
-    ).toMatchObject({
-      country: undefined,
-      areaCodeMatch: undefined,
-    });
-  });
-
   test('should return the current country if the dial code matches', () => {
     expect(
       guessCountryByPartialNumber({
@@ -211,7 +159,6 @@ describe('guessCountryByPartialNumber', () => {
       }),
     ).toMatchObject({
       country: { dialCode: '1', iso2: 'us' },
-      areaCodeMatch: true,
     });
 
     expect(
@@ -222,7 +169,6 @@ describe('guessCountryByPartialNumber', () => {
       }),
     ).toMatchObject({
       country: { dialCode: '1', iso2: 'ca' },
-      areaCodeMatch: true,
     });
 
     expect(
@@ -233,7 +179,6 @@ describe('guessCountryByPartialNumber', () => {
       }),
     ).toMatchObject({
       country: { dialCode: '1', iso2: 'do' },
-      areaCodeMatch: undefined,
     });
   });
 });

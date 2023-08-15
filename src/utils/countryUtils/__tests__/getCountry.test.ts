@@ -83,12 +83,5 @@ describe('getCountry', () => {
     expect(() =>
       getCountry({ value: 1, field: 'priority', countries: defaultCountries }),
     ).toThrowError();
-    expect(() =>
-      getCountry({
-        value: ['europe'],
-        field: 'regions',
-        countries: defaultCountries,
-      }),
-    ).toThrowError();
   });
 });

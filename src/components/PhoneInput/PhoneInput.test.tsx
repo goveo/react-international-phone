@@ -4,7 +4,7 @@ import React from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { CountryIso2 } from '../../types';
-import { parseCountry, removeNonDigits } from '../../utils';
+import { getCountry, parseCountry, removeNonDigits } from '../../utils';
 import { buildCountryData } from '../../utils/countryUtils/buildCountryData';
 import {
   getCountrySelector,
@@ -235,7 +235,7 @@ describe('PhoneInput', () => {
     expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
 
     fireEvent.change(getInput(), { target: { value: '+1230' } });
-    expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
 
     fireEvent.change(getInput(), { target: { value: '+1203' } });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
@@ -962,10 +962,14 @@ describe('PhoneInput', () => {
       fireChangeEvent(inputValue);
 
       expect(removeNonDigits(getInput().value)).toBe(inputValue);
-      expect(getCountrySelector()).toHaveAttribute(
-        'data-country',
-        country.iso2,
-      );
+
+      const countryInSelector = getCountry({
+        field: 'iso2',
+        value: getCountrySelector().getAttribute('data-country') || '',
+        countries: defaultCountries,
+      });
+
+      expect(country.dialCode === countryInSelector?.dialCode).toBe(true);
     }
   });
 });

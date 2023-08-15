@@ -60,7 +60,6 @@ Each country in `defaultCountries` follows this format:
 ```ts
 [
   string, // country name
-  Array<Region | SubRegion>, // regions
   CountryIso2, // iso2 code
   string, // international dial code
   string, // format (optional)
@@ -72,8 +71,7 @@ Each country in `defaultCountries` follows this format:
 You can use these data to filter/modify country list.
 
 ```ts
-const [name, regions, iso2, dialCode, format, priority, areaCodes] =
-  defaultCountries[0];
+const [name, iso2, dialCode, format, priority, areaCodes] = defaultCountries[0];
 ```
 
 :::tip

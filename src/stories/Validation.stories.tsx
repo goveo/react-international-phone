@@ -1,52 +1,34 @@
+import { PhoneNumberUtil } from 'google-libphonenumber';
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+const validatePhone = (phone: string) => {
+  try {
+    return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
+  } catch (error) {
+    return false;
+  }
+};
+
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-import {
-  CountryIso2,
-  PhoneInput,
-  usePhoneValidation,
-  validatePhone,
-} from '../index';
+import { PhoneInput } from '../index';
 
-const ValidationProperty: React.FC<{
-  title: string;
-  value: unknown;
-}> = ({ title, value }) => {
+const ValidationResult: React.FC<{
+  isValid: boolean;
+}> = ({ isValid }) => {
   return (
-    <code style={{ color: value === false ? 'red' : 'green' }}>
-      <p>
-        {title}: {String(value)}
-      </p>
+    <code style={{ color: isValid === false ? 'red' : 'green' }}>
+      isValid: {String(isValid)}
     </code>
-  );
-};
-
-const ValidationInfo: React.FC<{
-  validation: ReturnType<typeof usePhoneValidation>;
-}> = ({ validation }) => {
-  return (
-    <>
-      <ValidationProperty title="isValid" value={validation.isValid} />
-      <ValidationProperty title="formatMatch" value={validation.formatMatch} />
-      <ValidationProperty title="lengthMatch" value={validation.lengthMatch} />
-      <ValidationProperty
-        title="areaCodeMatch"
-        value={validation.areaCodeMatch}
-      />
-      <ValidationProperty
-        title="dialCodeMatch"
-        value={validation.dialCodeMatch}
-      />
-      <ValidationProperty title="country" value={validation.country?.iso2} />
-    </>
   );
 };
 
 export const Default = () => {
   const [phone, setPhone] = useState('');
-  const validation = usePhoneValidation(phone);
+  const isValid = validatePhone(phone);
 
   return (
     <div>
@@ -57,61 +39,25 @@ export const Default = () => {
           setPhone(phone);
         }}
       />
-      <ValidationInfo validation={validation} />
+      <ValidationResult isValid={isValid} />
     </div>
   );
 };
 
-export const ValidationWithCountrySaving = () => {
-  const [phone, setPhone] = useState('');
-  const [currentCountry, setCurrentCountry] = useState<CountryIso2>('ua');
-  const validation = usePhoneValidation(phone, { country: currentCountry });
+export const Prefilled = () => {
+  const [phone, setPhone] = useState('+1 (204) 999-9999');
+  const isValid = validatePhone(phone);
 
   return (
     <div>
       <PhoneInput
         defaultCountry="ua"
         value={phone}
-        onChange={(phone, country) => {
+        onChange={(phone) => {
           setPhone(phone);
-          setCurrentCountry(country);
         }}
       />
-      <ValidationInfo validation={validation} />
-    </div>
-  );
-};
-
-export const ValidationWithDisabledCountryGuessing = () => {
-  const [phone, setPhone] = useState('');
-  const [shouldSaveCountry, setShouldSaveCountry] = useState(false);
-  const [currentCountry, setCurrentCountry] = useState<CountryIso2>('ua');
-  const validation = usePhoneValidation(phone, {
-    country: shouldSaveCountry ? currentCountry : undefined,
-  });
-
-  return (
-    <div>
-      <input
-        type="checkbox"
-        id="check"
-        checked={shouldSaveCountry}
-        onChange={(e) => setShouldSaveCountry(e.target.checked)}
-        style={{ marginBottom: '10px' }}
-      />
-      <label htmlFor="check" style={{ color: 'black' }}>
-        Pass selected country to validation
-      </label>
-      <PhoneInput
-        disableCountryGuess
-        defaultCountry="ua"
-        value={phone}
-        onChange={(phone, country) => {
-          setPhone(phone);
-          setCurrentCountry(country);
-        }}
-      />
-      <ValidationInfo validation={validation} />
+      <ValidationResult isValid={isValid} />
     </div>
   );
 };
@@ -149,10 +95,10 @@ export const ReactHookForm = () => {
           />
         )}
         rules={{
-          validate: (phone) => validatePhone(phone).isValid,
+          validate: (phone) => validatePhone(phone),
         }}
       />
-      <ValidationProperty title="isValid" value={!errors.phone} />
+      <ValidationResult isValid={!errors.phone} />
     </div>
   );
 };
@@ -168,8 +114,8 @@ export const Formik = () => {
     validate: ({ phone }) => {
       const errors: Record<string, string> = {};
 
-      const validationResult = validatePhone(phone);
-      if (!validationResult.isValid) {
+      const isValid = validatePhone(phone);
+      if (!isValid) {
         errors.phone = 'Phone is not valid';
       }
 
@@ -190,7 +136,7 @@ export const Formik = () => {
           name: 'phone',
         }}
       />
-      <ValidationProperty title="isValid" value={!errors.phone} />
+      <ValidationResult isValid={!errors.phone} />
     </div>
   );
 };
@@ -198,10 +144,8 @@ export const Formik = () => {
 const formValidationSchema = Yup.object().shape({
   phone: Yup.string()
     .required('Required')
-    .test(
-      'phone',
-      'Phone number is invalid',
-      (value) => validatePhone(value ?? '').isValid,
+    .test('phone', 'Phone number is invalid', (value) =>
+      validatePhone(value ?? ''),
     ),
 });
 
@@ -229,7 +173,7 @@ export const FormikWithYup = () => {
           name: 'phone',
         }}
       />
-      <ValidationProperty title="isValid" value={!errors.phone} />
+      <ValidationResult isValid={!errors.phone} />
     </div>
   );
 };

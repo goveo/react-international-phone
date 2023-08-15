@@ -129,16 +129,6 @@ CustomStyles.args = {
   } as React.CSSProperties,
 };
 
-export const OnlyEuropeCountries = Template.bind({});
-OnlyEuropeCountries.argTypes = argTypes;
-
-OnlyEuropeCountries.args = {
-  defaultCountry: 'fi',
-  countries: defaultCountries.filter((c) =>
-    parseCountry(c).regions.includes('europe'),
-  ),
-};
-
 export const OnlyBalticCountries = Template.bind({});
 OnlyBalticCountries.argTypes = argTypes;
 
