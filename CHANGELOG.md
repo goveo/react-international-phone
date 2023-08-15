@@ -1,3 +1,13 @@
+# [3.0.0](https://github.com/goveo/react-international-phone/compare/v2.3.3...v3.0.0) (2023-08-15)
+
+
+* chore!: update to v3 ([266e8d7](https://github.com/goveo/react-international-phone/commit/266e8d7df80f070c1334edc8a0f0328f653b5c53))
+
+
+### BREAKING CHANGES
+
+* need to update to v3
+
 ## [2.3.3](https://github.com/goveo/react-international-phone/compare/v2.3.2...v2.3.3) (2023-08-15)
 
 
