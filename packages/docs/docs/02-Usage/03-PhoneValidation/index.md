@@ -1,8 +1,8 @@
 # Phone validation
 
-`react-international-phone` not providing validation functionality anymore.
+`react-international-phone` is not providing validation functionality anymore.
 
-To validate phone number we recommend using an [`google-libphonenumber`](https://www.npmjs.com/package/google-libphonenumber) library for that.<br/>
+To validate phone number we recommend to use a [`google-libphonenumber`](https://www.npmjs.com/package/google-libphonenumber) library.<br/>
 There is how you can create a validator function:
 
 ```ts
