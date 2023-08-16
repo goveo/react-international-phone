@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/goveo/react-international-phone/compare/v3.0.0...v3.0.1) (2023-08-16)
+
+
+### Bug Fixes
+
+* **build:** fit d.ts file extension for esm import ([e3a4f07](https://github.com/goveo/react-international-phone/commit/e3a4f0765dac544022a22f2b0841a4aa1c56c730))
+
 # [3.0.0](https://github.com/goveo/react-international-phone/compare/v2.3.3...v3.0.0) (2023-08-15)
 
 
