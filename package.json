@@ -22,7 +22,7 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./build/index.d.mts",
+        "types": "./build/index.d.ts",
         "default": "./build/index.mjs"
       },
       "require": {
