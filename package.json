@@ -38,7 +38,7 @@
     "build/**/*"
   ],
   "scripts": {
-    "build": "tsc --noEmit && tsup",
+    "build": "tsup && tsc --emitDeclarationOnly",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "storybook": "sb dev -p 6006",

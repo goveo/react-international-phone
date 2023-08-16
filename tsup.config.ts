@@ -5,8 +5,7 @@ export default defineConfig({
   entry: ['src/index.ts'],
   esbuildPlugins: [sassPlugin()],
   clean: true,
-  minify: 'terser',
+  minify: true,
   format: ['esm', 'cjs'],
-  dts: true,
   outDir: 'build',
 });
