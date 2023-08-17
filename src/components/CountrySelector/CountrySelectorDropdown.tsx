@@ -4,7 +4,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
-import { CountryData, CountryIso2, ParsedCountry } from '../../types';
+import {
+  CountryData,
+  CountryIso2,
+  CustomFlagImage,
+  ParsedCountry,
+} from '../../types';
 import { parseCountry, scrollToChild } from '../../utils';
 import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
 
@@ -33,6 +38,7 @@ export interface CountrySelectorDropdownProps
   dialCodePrefix?: string;
   selectedCountry: CountryIso2;
   countries?: CountryData[];
+  flags?: CustomFlagImage[];
   onSelect?: (country: ParsedCountry) => void;
   onClose?: () => void;
 }
@@ -44,6 +50,7 @@ export const CountrySelectorDropdown: React.FC<
   dialCodePrefix = '+',
   selectedCountry,
   countries = defaultCountries,
+  flags,
   onSelect,
   onClose,
   ...styleProps
@@ -228,6 +235,7 @@ export const CountrySelectorDropdown: React.FC<
         const country = parseCountry(c);
         const isSelected = country.iso2 === selectedCountry;
         const isFocused = index === focusedItemIndex;
+        const flag = flags?.find((f) => f.iso2 === country.iso2);
 
         return (
           <li
@@ -250,6 +258,7 @@ export const CountrySelectorDropdown: React.FC<
           >
             <FlagEmoji
               iso2={country.iso2}
+              src={flag?.src}
               className={buildClassNames({
                 addPrefix: ['country-selector-dropdown__list-item-flag-emoji'],
                 rawClassNames: [styleProps.listItemFlagClassName],

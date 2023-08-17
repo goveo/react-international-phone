@@ -38,26 +38,42 @@ const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
 interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
   iso2?: ParsedCountry['iso2'];
   size?: CSSProperties['width'];
+  src?: string;
   protocol?: 'http' | 'https';
   disableLazyLoading?: boolean;
 }
 
 export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   iso2,
-  size = '24px',
+  size,
+  src,
   protocol = 'https',
   disableLazyLoading,
   className,
+  style,
   ...restProps
 }) => {
   if (!iso2) {
     // render empty image to save place for flag
-    return <img width={size} height={size} {...restProps} />;
+    return (
+      <img
+        className={buildClassNames({
+          addPrefix: ['flag-emoji'],
+          rawClassNames: [className],
+        })}
+        width={size}
+        height={size}
+        {...restProps}
+      />
+    );
   }
 
-  const flagCodepoint = getFlagCodepointByIso2(iso2);
+  const getSrc = () => {
+    if (src) return src;
 
-  const src = `${protocol}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${flagCodepoint}.svg`;
+    const flagCodepoint = getFlagCodepointByIso2(iso2);
+    return `${protocol}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${flagCodepoint}.svg`;
+  };
 
   return (
     <img
@@ -65,12 +81,17 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
         addPrefix: ['flag-emoji'],
         rawClassNames: [className],
       })}
-      src={src}
+      src={getSrc()}
       width={size}
       height={size}
       draggable={false}
       data-country={iso2}
       loading={disableLazyLoading ? undefined : 'lazy'}
+      style={{
+        width: size,
+        height: size,
+        ...style,
+      }}
       {...restProps}
     />
   );

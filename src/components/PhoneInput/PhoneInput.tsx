@@ -64,6 +64,12 @@ export interface PhoneInputProps
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 
   /**
+   * @description Custom flag URLs
+   * @default undefined
+   */
+  flags?: CountrySelectorProps['flags'];
+
+  /**
    * @description Callback that calls on phone change
    * @params `phone` - new phone value, `country` - country iso2 value
    * @default undefined
@@ -77,6 +83,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
   disabled,
   showDisabledDialCodeAndPrefix,
   inputProps,
+  flags,
   onChange,
 
   style,
@@ -124,6 +131,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
     >
       <CountrySelector
         onSelect={(country) => setCountry(country.iso2)}
+        flags={flags}
         selectedCountry={country}
         countries={countries}
         disabled={disabled}
