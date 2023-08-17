@@ -44,6 +44,7 @@
     "test:coverage": "jest --coverage",
     "storybook": "sb dev -p 6006",
     "storybook:build": "sb build",
+    "storybook:preview": "npx http-server ./storybook-static",
     "storybook-test:chrome": "npx playwright test ./.storybook/browser.test --headed --browser=chromium",
     "storybook-test:firefox": "npx playwright test ./.storybook/browser.test --headed --browser=firefox",
     "storybook-test:safari": "npx playwright test ./.storybook/browser.test --headed --browser=webkit",
