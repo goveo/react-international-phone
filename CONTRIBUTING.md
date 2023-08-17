@@ -16,6 +16,8 @@ More info about forking and branching you can find on [GitHub Docs](https://docs
 Commit titles should correspond to [convention](https://www.conventionalcommits.org/en/v1.0.0/).
 This is needed for the commit analyzer and automatic release functionality 🙏
 
+💡 You can use `pnpm cm` command to commit your changes
+
 Examples:
 
 - fix(CountrySelector): add type="button" to selector button

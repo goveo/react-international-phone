@@ -38,6 +38,7 @@
     "build/**/*"
   ],
   "scripts": {
+    "cm": "cz",
     "build": "tsup && tsc --emitDeclarationOnly",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -95,6 +96,8 @@
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "antd": "^5.0.2",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "esbuild-sass-plugin": "^2.12.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
