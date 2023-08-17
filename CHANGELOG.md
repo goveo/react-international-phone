@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/goveo/react-international-phone/compare/v3.0.1...v3.0.2) (2023-08-17)
+
+
+### Bug Fixes
+
+* **CountrySelectorDropdown:** prevent form submit on select country ([2e3b817](https://github.com/goveo/react-international-phone/commit/2e3b817684cd247738bd5a1588222911761be112))
+
 ## [3.0.1](https://github.com/goveo/react-international-phone/compare/v3.0.0...v3.0.1) (2023-08-16)
 
 
