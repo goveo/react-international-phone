@@ -125,6 +125,7 @@ export const CountrySelectorDropdown: React.FC<
     e.stopPropagation();
 
     if (e.key === 'Enter') {
+      e.preventDefault();
       const focusedCountry = parseCountry(countries[focusedItemIndex]);
       handleCountrySelect(focusedCountry);
       return;
