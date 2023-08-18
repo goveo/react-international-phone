@@ -64,7 +64,7 @@ export interface PhoneInputProps
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 
   /**
-   * @description Custom flag URLs
+   * @description Custom flag URLs array
    * @default undefined
    */
   flags?: CountrySelectorProps['flags'];
