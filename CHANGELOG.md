@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/goveo/react-international-phone/compare/v3.0.2...v3.1.0) (2023-08-18)
+
+
+### Features
+
+* add flags prop for passing custom flag urls ([2a1a010](https://github.com/goveo/react-international-phone/commit/2a1a0106a6827225922deca3d22af532884af1de))
+
 ## [3.0.2](https://github.com/goveo/react-international-phone/compare/v3.0.1...v3.0.2) (2023-08-17)
 
 
