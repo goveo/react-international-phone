@@ -10,4 +10,5 @@ export default {
     storyStoreV7: true,
   },
   framework: '@storybook/react-vite',
+  staticDirs: ['./static'],
 };

@@ -9,6 +9,7 @@ import { buildCountryData } from '../../utils/countryUtils/buildCountryData';
 import {
   getCountrySelector,
   getCountrySelectorDropdown,
+  getCountrySelectorFlag,
   getDialCodePreview,
   getDropdownArrow,
   getDropdownOption,
@@ -971,5 +972,14 @@ describe('PhoneInput', () => {
 
       expect(country.dialCode === countryInSelector?.dialCode).toBe(true);
     }
+  });
+
+  describe('custom flags', () => {
+    test('should render custom flag-images from flags prop', () => {
+      const flagSrc = 'test/flag.svg';
+      render(<PhoneInput flags={[{ iso2: 'us', src: flagSrc }]} />);
+
+      expect(getCountrySelectorFlag()).toHaveAttribute('src', flagSrc);
+    });
   });
 });

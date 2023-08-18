@@ -253,3 +253,8 @@ export interface CountryGuessResult {
   country: ParsedCountry | undefined;
   fullDialCodeMatch: boolean;
 }
+
+export interface CustomFlagImage {
+  src: string;
+  iso2: CountryIso2;
+}

@@ -36,28 +36,64 @@ const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
 };
 
 interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
+  /**
+   * @description iso2 code of country flag
+   * @required
+   */
   iso2?: ParsedCountry['iso2'];
+  /**
+   * @description Size of flag
+   * @default undefined
+   */
   size?: CSSProperties['width'];
+  /**
+   * @description Custom src of flag
+   * @default undefined
+   */
+  src?: string;
+  /**
+   * @description Protocol to use with twemoji cnd
+   * @default "https"
+   */
   protocol?: 'http' | 'https';
+  /**
+   * @description Disable lazy loading of flags (loading="lazy" attribute will not be set)
+   * @default undefined
+   */
   disableLazyLoading?: boolean;
 }
 
 export const FlagEmoji: React.FC<FlagEmojiProps> = ({
   iso2,
-  size = '24px',
+  size,
+  src,
   protocol = 'https',
   disableLazyLoading,
   className,
+  style,
   ...restProps
 }) => {
   if (!iso2) {
     // render empty image to save place for flag
-    return <img width={size} height={size} {...restProps} />;
+    return (
+      <img
+        className={buildClassNames({
+          addPrefix: ['flag-emoji'],
+          rawClassNames: [className],
+        })}
+        width={size}
+        height={size}
+        {...restProps}
+      />
+    );
   }
 
-  const flagCodepoint = getFlagCodepointByIso2(iso2);
+  const getSrc = () => {
+    if (src) return src;
 
-  const src = `${protocol}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${flagCodepoint}.svg`;
+    const flagCodepoint = getFlagCodepointByIso2(iso2);
+    return `${protocol}://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${flagCodepoint}.svg`;
+  };
 
   return (
     <img
@@ -65,12 +101,17 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
         addPrefix: ['flag-emoji'],
         rawClassNames: [className],
       })}
-      src={src}
+      src={getSrc()}
       width={size}
       height={size}
       draggable={false}
       data-country={iso2}
       loading={disableLazyLoading ? undefined : 'lazy'}
+      style={{
+        width: size,
+        height: size,
+        ...style,
+      }}
       {...restProps}
     />
   );

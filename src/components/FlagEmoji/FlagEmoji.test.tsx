@@ -22,10 +22,24 @@ describe('FlagEmoji', () => {
     expect(getFlagEmoji()).not.toHaveAttribute('src');
   });
 
-  test('change flag size', () => {
+  test('should have proper className', () => {
     const { rerender } = render(<FlagEmoji iso2="ua" />);
+    expect(getFlagEmoji().className).toBe(
+      'react-international-phone-flag-emoji',
+    );
+
+    rerender(<FlagEmoji iso2="ua" className="test" />);
+    expect(getFlagEmoji().className).toBe(
+      'react-international-phone-flag-emoji test',
+    );
+  });
+
+  test('change flag size', () => {
+    const { rerender } = render(<FlagEmoji iso2="ua" size="24px" />);
     expect(getFlagEmoji()).toHaveAttribute('height', '24px');
     expect(getFlagEmoji()).toHaveAttribute('width', '24px');
+    expect(getFlagEmoji().style.height).toBe('24px');
+    expect(getFlagEmoji().style.width).toBe('24px');
 
     rerender(<FlagEmoji iso2="ua" size="30px" />);
     expect(getFlagEmoji()).toHaveAttribute('height', '30px');
@@ -53,5 +67,15 @@ describe('FlagEmoji', () => {
 
     rerender(<FlagEmoji iso2="ua" />);
     expect(getFlagEmoji().getAttribute('loading')).toBe('lazy');
+  });
+
+  test('should use src prop if passed', () => {
+    const imageSrc = '/public/ua.svg';
+
+    const { rerender } = render(<FlagEmoji iso2="ua" />);
+    expect(getFlagEmoji().getAttribute('src')).not.toBe(imageSrc);
+
+    rerender(<FlagEmoji iso2="ua" src={imageSrc} />);
+    expect(getFlagEmoji().getAttribute('src')).toBe(imageSrc);
   });
 });

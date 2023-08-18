@@ -4,3 +4,4 @@ dist
 coverage
 !*.css
 !*.scss
+/storybook-static

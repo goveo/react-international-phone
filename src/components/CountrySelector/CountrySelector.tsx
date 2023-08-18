@@ -53,6 +53,7 @@ export interface CountrySelectorProps extends CountrySelectorStyleProps {
   disabled?: boolean;
   hideDropdown?: boolean;
   countries?: CountryData[];
+  flags?: CountrySelectorDropdownProps['flags'];
   renderButtonWrapper?: (props: {
     children: React.ReactNode;
     rootProps: RenderButtonWrapperRootProps;
@@ -65,6 +66,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   disabled,
   hideDropdown,
   countries = defaultCountries,
+  flags,
   renderButtonWrapper,
   ...styleProps
 }) => {
@@ -115,6 +117,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       >
         <FlagEmoji
           iso2={selectedCountry}
+          src={flags?.find((f) => f.iso2 === selectedCountry)?.src}
           className={buildClassNames({
             addPrefix: [
               'country-selector-button__flag-emoji',
@@ -183,6 +186,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       <CountrySelectorDropdown
         show={showDropdown}
         countries={countries}
+        flags={flags}
         onSelect={(country) => {
           setShowDropdown(false);
           onSelect?.(country);
