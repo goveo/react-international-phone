@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/goveo/react-international-phone/compare/v3.1.0...v3.1.1) (2023-08-22)
+
+
+### Bug Fixes
+
+* **FlagEmoji:** add empty alt attribute to flag image, fix types for FlagEmojiProps ([17b2bb6](https://github.com/goveo/react-international-phone/commit/17b2bb66d81463876d403957d9c95f8b58d6358e))
+
 # [3.1.0](https://github.com/goveo/react-international-phone/compare/v3.0.2...v3.1.0) (2023-08-18)
 
 
