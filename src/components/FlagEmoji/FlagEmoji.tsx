@@ -35,7 +35,7 @@ const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
   return [codepoints[iso2[0]], codepoints[iso2[1]]].join('-');
 };
 
-interface FlagEmojiProps extends React.HTMLAttributes<HTMLImageElement> {
+interface FlagEmojiProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   /**
    * @description iso2 code of country flag
    * @required
@@ -112,6 +112,7 @@ export const FlagEmoji: React.FC<FlagEmojiProps> = ({
         height: size,
         ...style,
       }}
+      alt=""
       {...restProps}
     />
   );
