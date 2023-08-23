@@ -1,3 +1,4 @@
+import { defaultCountries } from '../../data/countryData';
 import {
   CountryData,
   CountryGuessResult,
@@ -10,11 +11,11 @@ import { parseCountry } from './parseCountry';
 
 export const guessCountryByPartialNumber = ({
   phone: partialPhone,
-  countries,
+  countries = defaultCountries,
   currentCountryIso2,
 }: {
   phone: string;
-  countries: CountryData[];
+  countries?: CountryData[];
   currentCountryIso2?: CountryIso2;
 }): CountryGuessResult => {
   const emptyResult = {

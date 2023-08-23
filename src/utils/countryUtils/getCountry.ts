@@ -1,3 +1,4 @@
+import { defaultCountries } from '../../data/countryData';
 import { CountryData, ParsedCountry } from '../../types';
 import { parseCountry } from './parseCountry';
 
@@ -6,13 +7,19 @@ const constructFieldNotSupportedErrorMessage = (field: keyof ParsedCountry) => {
 };
 
 export const getCountry = ({
-  value,
   field,
-  countries,
+  value,
+  countries = defaultCountries,
 }: {
-  value: CountryData[number];
+  /**
+   * field to search by
+   */
   field: keyof ParsedCountry;
-  countries: CountryData[];
+  /**
+   * value to search for
+   */
+  value: CountryData[number];
+  countries?: CountryData[];
 }): ParsedCountry | undefined => {
   if (['priority'].includes(field)) {
     throw new Error(constructFieldNotSupportedErrorMessage(field));
