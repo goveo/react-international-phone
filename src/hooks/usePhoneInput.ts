@@ -212,18 +212,21 @@ export const usePhoneInput = ({
 
   const [{ phone, country }, updateHistory, undo, redo] = useHistoryState(
     () => {
-      const countryGuessResult = guessCountryByPartialNumber({
-        phone: value,
-        countries,
-        currentCountryIso2: defaultCountry,
-      });
+      const countryGuessResult = disableDialCodeAndPrefix
+        ? null
+        : guessCountryByPartialNumber({
+            phone: value,
+            countries,
+            currentCountryIso2: defaultCountry,
+          });
 
-      const guessedCountryFull = (countryGuessResult.country ||
+      const guessedCountryFull =
+        countryGuessResult?.country ||
         getCountry({
           value: defaultCountry,
           field: 'iso2',
           countries,
-        })) as ParsedCountry;
+        });
 
       if (!guessedCountryFull) {
         // default country is not passed, or iso code do not match
