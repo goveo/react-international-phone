@@ -7,4 +7,10 @@ export { PhoneInput } from './components/PhoneInput/PhoneInput';
 export { defaultCountries } from './data/countryData';
 export { usePhoneInput } from './hooks/usePhoneInput';
 export type { CountryData, CountryIso2 } from './types';
-export { buildCountryData, parseCountry } from './utils';
+export {
+  buildCountryData,
+  getCountry,
+  guessCountryByPartialNumber as guessCountryByPartialPhoneNumber,
+  parseCountry,
+  removeDialCode,
+} from './utils';
