@@ -1,3 +1,12 @@
+## [3.1.2](https://github.com/goveo/react-international-phone/compare/v3.1.1...v3.1.2) (2023-08-23)
+
+
+### Bug Fixes
+
+* export guessCountryByPartialPhoneNumber, removeDialCode and getCountry helper functions ([04d46aa](https://github.com/goveo/react-international-phone/commit/04d46aaf7077710f9fc46ae1277fdd27bcf5cdee))
+* remove country guess from initial value when disableDialCodeAndPrefix is true ([d26b977](https://github.com/goveo/react-international-phone/commit/d26b977fadb4c28a2fc0cd3c0f3235a15da0f751))
+* set default value for country prop in guessCountryByPartialNumber and getCountry helpers ([c539617](https://github.com/goveo/react-international-phone/commit/c539617d11314c84eade44ca4be0cb64b5fe1aa0))
+
 ## [3.1.1](https://github.com/goveo/react-international-phone/compare/v3.1.0...v3.1.1) (2023-08-22)
 
 
