@@ -4,6 +4,7 @@ on:
     branches:
       - development
       - master
+      - next
 jobs:
   build:
     name: Build
