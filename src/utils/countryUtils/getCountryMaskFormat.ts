@@ -5,7 +5,7 @@ import { removeNonDigits } from '../common';
  * Get the country mask format based on the phone value.
  * Since country can have multiple mask formats this function select proper mask based on regex
  */
-export const getCountryCurrentFormat = ({
+export const getCountryMaskFormat = ({
   phone,
   country,
   prefix = '+',
