@@ -11,6 +11,7 @@ import {
   addDialCode,
   formatPhone,
   getCountry,
+  getCountryCurrentFormat,
   getCursorPosition,
   guessCountryByPartialNumber,
   parseCountry,
@@ -186,7 +187,13 @@ export const usePhoneInput = ({
     const phone = formatCountry
       ? formatPhone(value, {
           prefix,
-          mask: formatCountry.format || defaultMask,
+          mask: getCountryCurrentFormat({
+            phone: value,
+            country: formatCountry,
+            prefix,
+            defaultMask,
+            charAfterDialCode,
+          }),
           maskChar: MASK_CHAR,
           dialCode: formatCountry.dialCode,
           trimNonDigitsEnd,
