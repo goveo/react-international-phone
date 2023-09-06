@@ -155,11 +155,31 @@ export const E164Format = Template.bind({});
 E164Format.storyName = 'E164 Format';
 E164Format.argTypes = argTypes;
 
+const updateFormat = (format: string) => format?.replace(/[^\\.]*/g, ''); // remove all except dots
+
 const e164Countries = defaultCountries.map((c) => {
   const country = parseCountry(c);
+
+  // pass if format is undefined
+  if (!country.format) return buildCountryData(country);
+
+  // handle string format
+  if (typeof country.format === 'string') {
+    return buildCountryData({
+      ...country,
+      format: updateFormat(country.format),
+    });
+  }
+
+  // handle object format
+  const format = { ...country.format };
+  for (const key in format) {
+    format[key] = updateFormat(format[key]); // update every key in object
+  }
+
   return buildCountryData({
     ...country,
-    format: country.format?.replace(/[^\\.]*/g, ''), // remove all except dots
+    format,
   });
 });
 
