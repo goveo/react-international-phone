@@ -10,6 +10,7 @@ export type { CountryData, CountryIso2 } from './types';
 export {
   buildCountryData,
   getCountry,
+  getCountryMaskFormat,
   guessCountryByPartialNumber as guessCountryByPartialPhoneNumber,
   parseCountry,
   removeDialCode,
