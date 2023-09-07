@@ -4,12 +4,7 @@ import React, { useState } from 'react';
 import { CountrySelectorStyleProps } from '../components/CountrySelector/CountrySelector';
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { defaultCountries } from '../data/countryData';
-import {
-  getCountry,
-  guessCountryByPartialPhoneNumber,
-  parseCountry,
-  removeDialCode,
-} from '../index';
+import { parseCountry } from '../index';
 import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
 export default {
@@ -148,41 +143,12 @@ export const WrongDefaultCountryCode = () => {
 };
 
 export const WithoutDialCode = () => {
-  const initialPhone = '+14045555555';
-
-  const [country, setCountry] = useState(() => {
-    // guessing country of inital phone
-    return guessCountryByPartialPhoneNumber({ phone: initialPhone }).country;
-  });
-
-  const [phone, setPhone] = useState(
-    // removing dial code for inital phone
-    // '+14045555555' -> '4045555555'
-    removeDialCode({
-      phone: initialPhone,
-      dialCode: country?.dialCode || '',
-    }),
-  );
-
-  // constructing E164 format from country and phone value
-  const e164Phone = country
-    ? `+${country.dialCode}${phone.replace(/\D/g, '')}`
-    : '';
+  const [phone, setPhone] = useState('+14041234567');
 
   return (
     <div style={{ color: 'black', fontSize: '13px' }}>
-      <span>E164 phone: {e164Phone}</span>
-      <PhoneInput
-        value={phone}
-        onChange={(phone, country) => {
-          setPhone(phone);
-          // save country to get ability to construct E164
-          setCountry(getCountry({ field: 'iso2', value: country }));
-        }}
-        // passing country as "defaultCountry"
-        defaultCountry={country?.iso2}
-        disableDialCodeAndPrefix
-      />
+      <span>Phone: {phone}</span>
+      <PhoneInput value={phone} onChange={setPhone} disableDialCodeAndPrefix />
     </div>
   );
 };

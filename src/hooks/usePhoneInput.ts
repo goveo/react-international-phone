@@ -16,6 +16,7 @@ import {
   guessCountryByPartialNumber,
   parseCountry,
   removeNonDigits,
+  toE164,
 } from '../utils';
 import { useHistoryState } from './useHistoryState';
 
@@ -121,7 +122,11 @@ export interface UsePhoneInputConfig {
    * - *data.country* - new country value
    * @default undefined
    */
-  onChange?: (data: { phone: string; country: CountryIso2 }) => void;
+  onChange?: (data: {
+    phone: string;
+    e164Phone: string;
+    country: CountryIso2;
+  }) => void;
 }
 
 export const defaultConfig: Required<
@@ -185,23 +190,26 @@ export const usePhoneInput = ({
     const formatCountry = countryGuessResult?.country ?? country;
 
     const phone = formatCountry
-      ? formatPhone(value, {
-          prefix,
-          mask: getCountryMaskFormat({
-            phone: value,
-            country: formatCountry,
+      ? formatPhone(
+          toE164({ displayPhone: value, country, disableDialCodeAndPrefix }),
+          {
             prefix,
-            defaultMask,
+            mask: getCountryMaskFormat({
+              phone: value,
+              country: formatCountry,
+              prefix,
+              defaultMask,
+              charAfterDialCode,
+            }),
+            maskChar: MASK_CHAR,
+            dialCode: formatCountry.dialCode,
+            trimNonDigitsEnd,
             charAfterDialCode,
-          }),
-          maskChar: MASK_CHAR,
-          dialCode: formatCountry.dialCode,
-          trimNonDigitsEnd,
-          charAfterDialCode,
-          forceDialCode,
-          insertDialCodeOnEmpty,
-          disableDialCodeAndPrefix,
-        })
+            forceDialCode,
+            insertDialCodeOnEmpty,
+            disableDialCodeAndPrefix,
+          },
+        )
       : value;
 
     return { phone, countryGuessResult, formatCountry };
@@ -217,55 +225,65 @@ export const usePhoneInput = ({
     });
   };
 
-  const [{ phone, country }, updateHistory, undo, redo] = useHistoryState(
-    () => {
-      const countryGuessResult = disableDialCodeAndPrefix
-        ? null
-        : guessCountryByPartialNumber({
-            phone: value,
+  const [{ phone, e164Phone, country }, updateHistory, undo, redo] =
+    useHistoryState(
+      () => {
+        const countryGuessResult = disableDialCodeAndPrefix
+          ? null
+          : guessCountryByPartialNumber({
+              phone: value,
+              countries,
+              currentCountryIso2: defaultCountry,
+            });
+
+        const guessedCountryFull =
+          countryGuessResult?.country ||
+          getCountry({
+            value: defaultCountry,
+            field: 'iso2',
             countries,
-            currentCountryIso2: defaultCountry,
           });
 
-      const guessedCountryFull =
-        countryGuessResult?.country ||
-        getCountry({
-          value: defaultCountry,
-          field: 'iso2',
-          countries,
+        if (!guessedCountryFull) {
+          // default country is not passed, or iso code do not match
+          console.error(
+            `[react-international-phone]: can not find a country with "${defaultCountry}" iso2 code`,
+          );
+        }
+
+        const defaultCountryFull =
+          guessedCountryFull || // set "us" if user provided not valid country
+          parseCountry(
+            countries.find((c) => parseCountry(c).iso2 === 'us') as CountryData,
+          );
+
+        const e164Phone = toE164({
+          displayPhone: value,
+          country: defaultCountryFull,
+          disableDialCodeAndPrefix,
         });
 
-      if (!guessedCountryFull) {
-        // default country is not passed, or iso code do not match
-        console.error(
-          `[react-international-phone]: can not find a country with "${defaultCountry}" iso2 code`,
-        );
-      }
+        const phone = formatPhoneValue({
+          value: e164Phone,
+          country: defaultCountryFull,
+          insertDialCodeOnEmpty: !disableDialCodePrefill,
+        }).phone;
 
-      const defaultCountryFull =
-        guessedCountryFull || // set "us" if user provided not valid country
-        parseCountry(
-          countries.find((c) => parseCountry(c).iso2 === 'us') as CountryData,
-        );
+        setCursorPosition(phone.length);
 
-      const phone = formatPhoneValue({
-        value,
-        country: defaultCountryFull,
-        insertDialCodeOnEmpty: !disableDialCodePrefill,
-      }).phone;
-
-      setCursorPosition(phone.length);
-
-      return {
-        phone,
-        country: defaultCountryFull.iso2,
-      };
-    },
-    {
-      overrideLastItemDebounceMS: historySaveDebounceMS,
-      onChange,
-    },
-  );
+        return {
+          phone,
+          e164Phone,
+          country: defaultCountryFull.iso2,
+        };
+      },
+      {
+        overrideLastItemDebounceMS: historySaveDebounceMS,
+        onChange: ({ phone, e164Phone, country }) => {
+          onChange?.({ phone, e164Phone, country });
+        },
+      },
+    );
 
   const fullCountry = useMemo(() => {
     return getCountry({
@@ -350,6 +368,11 @@ export const usePhoneInput = ({
 
     updateHistory({
       phone: phoneValue,
+      e164Phone: toE164({
+        displayPhone: phoneValue,
+        country: newCountry,
+        disableDialCodeAndPrefix,
+      }),
       country: newCountry.iso2,
     });
 
@@ -436,6 +459,11 @@ export const usePhoneInput = ({
 
     updateHistory({
       phone: newPhoneValue,
+      e164Phone: toE164({
+        displayPhone: newPhoneValue,
+        country: newCountry,
+        disableDialCodeAndPrefix,
+      }),
       country: newCountry.iso2,
     });
 
@@ -449,19 +477,29 @@ export const usePhoneInput = ({
 
   // Handle value update
   useEffect(() => {
+    const e164Value = toE164({
+      displayPhone: value,
+      country: fullCountry,
+      disableDialCodeAndPrefix,
+    });
+
     if (!initialized) {
       setInitialized(true);
 
-      if (value !== phone) {
+      if (e164Value !== e164Phone) {
         // Can call onChange directly because phone value was formatted inside the useHistoryState setter
-        onChange?.({ phone, country });
+        onChange?.({
+          phone,
+          e164Phone,
+          country,
+        });
       }
 
       // skip value handling on initial render
       return;
     }
 
-    if (value === phone) return;
+    if (e164Value === e164Phone) return;
 
     handleValueChange(value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -469,6 +507,7 @@ export const usePhoneInput = ({
 
   return {
     phone, // Formatted phone string.
+    e164Phone, // Phone in E164 format
     country, // Current country iso code.
     setCountry: setNewCountry, // Country setter.
     handlePhoneValueChange, // Change handler for input component

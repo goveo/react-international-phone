@@ -67,19 +67,25 @@ describe('PhoneInput', () => {
 
       fireEvent.change(getInput(), { target: { value: '38099' } });
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+380 (99) ');
+      expect(onChange.mock.calls[0][0]).toBe('+38099');
+      expect(onChange.mock.calls[0][1].formattedPhone).toBe('+380 (99) ');
 
       fireEvent.change(getInput(), { target: { value: '+380 (99) 999' } });
       expect(onChange.mock.calls.length).toBe(2);
-      expect(onChange.mock.calls[1][0]).toBe('+380 (99) 999 ');
+      expect(onChange.mock.calls[1][0]).toBe('+38099999');
+      expect(onChange.mock.calls[1][1].formattedPhone).toBe('+380 (99) 999 ');
 
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(onChange.mock.calls.length).toBe(3);
       expect(onChange.mock.calls[2][0]).toBe('');
+      expect(onChange.mock.calls[2][1].formattedPhone).toBe('');
 
       fireEvent.change(getInput(), { target: { value: '+1 403 555-6666' } });
       expect(onChange.mock.calls.length).toBe(4);
-      expect(onChange.mock.calls[3][0]).toBe('+1 (403) 555-6666');
+      expect(onChange.mock.calls[3][0]).toBe('+14035556666');
+      expect(onChange.mock.calls[3][1].formattedPhone).toBe(
+        '+1 (403) 555-6666',
+      );
     });
 
     test('should call onChange on initialization (value is not formatted)', () => {
@@ -93,7 +99,7 @@ describe('PhoneInput', () => {
       );
 
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 (999) 999-9999');
+      expect(onChange.mock.calls[0][0]).toBe('+19999999999');
     });
 
     test('should call onChange on initialization (value is empty string)', () => {
@@ -101,7 +107,7 @@ describe('PhoneInput', () => {
       render(<PhoneInput value="" defaultCountry="us" onChange={onChange} />);
 
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
     });
 
     test('should call onChange on initialization (value is not provided)', () => {
@@ -109,36 +115,36 @@ describe('PhoneInput', () => {
       render(<PhoneInput defaultCountry="us" onChange={onChange} />);
 
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
     });
 
     test('should call onChange on country change', () => {
       const onChange = jest.fn();
       render(<PhoneInput defaultCountry="us" onChange={onChange} />);
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
 
       fireEvent.click(getCountrySelector());
       fireEvent.click(getDropdownOption('ua'));
 
       expect(onChange.mock.calls.length).toBe(2);
-      expect(onChange.mock.calls[1][0]).toBe('+380 ');
+      expect(onChange.mock.calls[1][0]).toBe('+380');
 
       // set Canada
       fireEvent.change(getInput(), { target: { value: '+1 (204) ' } });
       expect(onChange.mock.calls.length).toBe(3);
-      expect(onChange.mock.calls[2][0]).toBe('+1 (204) ');
+      expect(onChange.mock.calls[2][0]).toBe('+1204');
 
       fireEvent.click(getCountrySelector());
       fireEvent.click(getDropdownOption('ca'));
       expect(onChange.mock.calls.length).toBe(4);
-      expect(onChange.mock.calls[3][0]).toBe('+1 ');
+      expect(onChange.mock.calls[3][0]).toBe('+1');
 
       // should fire change even if phone is not changed
       fireEvent.click(getCountrySelector());
       fireEvent.click(getDropdownOption('us'));
       expect(onChange.mock.calls.length).toBe(5);
-      expect(onChange.mock.calls[4][0]).toBe('+1 ');
+      expect(onChange.mock.calls[4][0]).toBe('+1');
     });
 
     test('should call onChange on undo/redo', () => {
@@ -152,15 +158,18 @@ describe('PhoneInput', () => {
         />,
       );
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
+      expect(onChange.mock.calls[0][1].formattedPhone).toBe('+1 ');
 
       fireEvent.change(getInput(), { target: { value: '+38099' } });
       expect(onChange.mock.calls.length).toBe(2);
-      expect(onChange.mock.calls[1][0]).toBe('+380 (99) ');
+      expect(onChange.mock.calls[1][0]).toBe('+38099');
+      expect(onChange.mock.calls[1][1].formattedPhone).toBe('+380 (99) ');
 
       fireEvent.change(getInput(), { target: { value: '+38099 99' } });
       expect(onChange.mock.calls.length).toBe(3);
-      expect(onChange.mock.calls[2][0]).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[2][0]).toBe('+3809999');
+      expect(onChange.mock.calls[2][1].formattedPhone).toBe('+380 (99) 99');
 
       // undo
       fireEvent.keyDown(getInput(), {
@@ -170,7 +179,8 @@ describe('PhoneInput', () => {
         shiftKey: false,
       });
       expect(onChange.mock.calls.length).toBe(4);
-      expect(onChange.mock.calls[3][0]).toBe('+380 (99) ');
+      expect(onChange.mock.calls[3][0]).toBe('+38099');
+      expect(onChange.mock.calls[3][1].formattedPhone).toBe('+380 (99) ');
 
       // redo
       fireEvent.keyDown(getInput(), {
@@ -180,7 +190,8 @@ describe('PhoneInput', () => {
         shiftKey: true,
       });
       expect(onChange.mock.calls.length).toBe(5);
-      expect(onChange.mock.calls[4][0]).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[4][0]).toBe('+3809999');
+      expect(onChange.mock.calls[4][1].formattedPhone).toBe('+380 (99) 99');
     });
   });
 

@@ -35,7 +35,7 @@ export interface FormatPhoneConfig {
 }
 
 export const formatPhone = (
-  phone: string,
+  e164Phone: string,
   config: FormatPhoneConfig,
 ): string => {
   const shouldForceDialCode = config.disableDialCodeAndPrefix
@@ -46,7 +46,7 @@ export const formatPhone = (
     ? false
     : config.insertDialCodeOnEmpty;
 
-  let phoneValue = phone;
+  let phoneValue = e164Phone;
 
   const handleResult = (result: string) => {
     if (config.trimNonDigitsEnd) {
@@ -109,10 +109,7 @@ export const formatPhone = (
   }
 
   const slicePhone = () => {
-    let mainPartStartIndex = config.dialCode.length;
-    if (config.disableDialCodeAndPrefix) {
-      mainPartStartIndex = 0;
-    }
+    const mainPartStartIndex = config.dialCode.length;
 
     const phoneLeftSide = phoneValue.slice(0, mainPartStartIndex);
     const phoneRightSide = phoneValue.slice(mainPartStartIndex);
