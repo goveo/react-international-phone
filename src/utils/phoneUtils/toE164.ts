@@ -5,12 +5,17 @@ export const toE164 = ({
   displayPhone,
   country,
   disableDialCodeAndPrefix,
+  allowEmpty,
 }: {
   displayPhone: string;
   country: ParsedCountry;
   disableDialCodeAndPrefix?: boolean;
+  allowEmpty?: boolean;
 }) => {
-  if (!displayPhone) return '';
+  if (!displayPhone)
+    return allowEmpty
+      ? ''
+      : `+${country.dialCode}${removeNonDigits(displayPhone)}`;
 
   if (disableDialCodeAndPrefix) {
     return displayPhone.startsWith(`+${country.dialCode}`)

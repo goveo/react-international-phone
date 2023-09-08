@@ -52,17 +52,25 @@ describe('PhoneInput', () => {
     mockScrollIntoView();
   });
 
-  test('should set phone value', () => {
-    render(<PhoneInput value="+38099109" defaultCountry="ua" />);
-    expect(getInput().value).toBe('+380 (99) 109 ');
+  describe('render value', () => {
+    test('should set phone value', () => {
+      render(<PhoneInput value="+38099109" defaultCountry="ua" />);
+      expect(getInput().value).toBe('+380 (99) 109 ');
+    });
+
+    test('should call update input value on state change', () => {
+      const { rerender } = render(<PhoneInput value="+12345" />);
+      expect(getInput().value).toBe('+1 (234) 5');
+
+      rerender(<PhoneInput value="+123456" />);
+      expect(getInput().value).toBe('+1 (234) 56');
+    });
   });
 
   describe('onChange', () => {
     test('should call onChange when input value is updated', async () => {
       const onChange = jest.fn();
-      render(
-        <PhoneInput value="+1 " defaultCountry="us" onChange={onChange} />,
-      );
+      render(<PhoneInput value="+1" defaultCountry="us" onChange={onChange} />);
       expect(onChange.mock.calls.length).toBe(0);
 
       fireEvent.change(getInput(), { target: { value: '38099' } });
@@ -88,11 +96,11 @@ describe('PhoneInput', () => {
       );
     });
 
-    test('should call onChange on initialization (value is not formatted)', () => {
+    test('should call onChange on initialization (value is not in e164 format)', () => {
       const onChange = jest.fn();
       render(
         <PhoneInput
-          value="+19999999999"
+          value="+1 (999) 999 9999"
           defaultCountry="us"
           onChange={onChange}
         />,
@@ -476,14 +484,14 @@ describe('PhoneInput', () => {
   describe('disableDialCodeAndPrefix', () => {
     test('should not include dial code inside input', () => {
       render(<PhoneInput defaultCountry="us" disableDialCodeAndPrefix />);
-      fireEvent.change(getInput(), { target: { value: '1234567890' } });
+      fireEvent.change(getInput(), { target: { value: '+11234567890' } });
       expect(getInput().value).toBe('(123) 456-7890');
 
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(getInput().value).toBe('');
 
       fireEvent.change(getInput(), { target: { value: '+123' } });
-      expect(getInput().value).toBe('(123) ');
+      expect(getInput().value).toBe('(23');
     });
 
     test('should ignore disableCountryGuess and forceDialCode', () => {

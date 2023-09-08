@@ -152,3 +152,24 @@ export const WithoutDialCode = () => {
     </div>
   );
 };
+
+export const Test = () => {
+  const [phone, setPhone] = useState('+1');
+
+  return (
+    <div style={{ color: 'black', fontSize: '13px' }}>
+      <div>
+        <button
+          onClick={() => {
+            setPhone('+12041234567');
+          }}
+        >
+          Set Canada
+        </button>
+      </div>
+
+      <span>Phone: {phone}</span>
+      <PhoneInput value={phone} onChange={setPhone} disableDialCodeAndPrefix />
+    </div>
+  );
+};
