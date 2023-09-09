@@ -6,7 +6,7 @@ import {
   getCountry,
   guessCountryByPartialNumber,
   parseCountry,
-  toE164,
+  removeNonDigits,
 } from '../utils';
 import {
   handlePhoneChange,
@@ -163,6 +163,7 @@ export const usePhoneInput = ({
   const [{ phone, e164Phone, country }, updateHistory, undo, redo] =
     useHistoryState(
       () => {
+        // TODO: guess initial country event when dial code is disabled
         const countryGuessResult = disableDialCodeAndPrefix
           ? null
           : guessCountryByPartialNumber({
@@ -192,7 +193,7 @@ export const usePhoneInput = ({
             countries.find((c) => parseCountry(c).iso2 === 'us') as CountryData,
           );
 
-        const { phone } = handlePhoneChange({
+        const { phone, e164Phone } = handlePhoneChange({
           value,
           country: defaultCountryFull,
           insertDialCodeOnEmpty: !disableDialCodePrefill,
@@ -203,11 +204,7 @@ export const usePhoneInput = ({
 
         return {
           phone,
-          e164Phone: toE164({
-            displayPhone: value,
-            country: defaultCountryFull,
-            disableDialCodeAndPrefix,
-          }),
+          e164Phone,
           country: defaultCountryFull.iso2,
         };
       },
@@ -257,24 +254,20 @@ export const usePhoneInput = ({
 
     const {
       phone: newPhone,
+      e164Phone: newE164Phone,
       country: newCountry,
       cursorPosition: newCursorPosition,
     } = handleUserInput(e, {
       country: fullCountry,
       phoneBeforeInput: phone,
-      insertDialCodeOnEmpty: false,
+      insertDialCodeOnEmpty: false, // allow user to clear input
 
       ...phoneFormattingConfig,
     });
 
     updateHistory({
       phone: newPhone,
-      e164Phone: toE164({
-        displayPhone: newPhone,
-        country: newCountry,
-        disableDialCodeAndPrefix,
-        allowEmpty: true,
-      }),
+      e164Phone: newE164Phone,
       country: newCountry.iso2,
     });
 
@@ -297,11 +290,7 @@ export const usePhoneInput = ({
 
     updateHistory({
       phone: newPhoneValue,
-      e164Phone: toE164({
-        displayPhone: newPhoneValue,
-        country: newCountry,
-        disableDialCodeAndPrefix,
-      }),
+      e164Phone: `${prefix}${removeNonDigits(newPhoneValue)}`,
       country: newCountry.iso2,
     });
 
@@ -335,7 +324,11 @@ export const usePhoneInput = ({
 
     // new value has been provided to the "value" prop (updated not via input field)
 
-    const { phone: newPhone, country: newCountry } = handlePhoneChange({
+    const {
+      phone: newPhone,
+      e164Phone: newE164Phone,
+      country: newCountry,
+    } = handlePhoneChange({
       value,
       country: fullCountry,
       insertDialCodeOnEmpty: !disableDialCodePrefill,
@@ -344,12 +337,7 @@ export const usePhoneInput = ({
 
     updateHistory({
       phone: newPhone,
-      e164Phone: toE164({
-        displayPhone: newPhone,
-        country: newCountry,
-        disableDialCodeAndPrefix,
-        allowEmpty: true,
-      }),
+      e164Phone: newE164Phone,
       country: newCountry.iso2,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

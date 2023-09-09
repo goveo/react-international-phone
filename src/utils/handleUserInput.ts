@@ -33,7 +33,12 @@ export const handleUserInput = (
     defaultMask,
     countries,
   }: HandleUserInputOptions,
-) => {
+): {
+  phone: string;
+  e164Phone: string;
+  cursorPosition: number;
+  country: ParsedCountry;
+} => {
   // Didn't find out how to properly type it
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nativeEvent: any = e.nativeEvent;
@@ -72,15 +77,21 @@ export const handleUserInput = (
     if (!fullPhoneInsert) {
       // Prevent change of dial code and set the cursor to beginning
       // (after formatting it will be set after dial code)
+      // TODO: set cursor after dial code
       return {
         phone: phoneBeforeInput,
+        e164Phone: `${prefix}${removeNonDigits(phoneBeforeInput)}`,
         cursorPosition: phoneBeforeInput.length,
         country,
       };
     }
   }
 
-  const { phone: newPhone, country: newCountry } = handlePhoneChange({
+  const {
+    phone: newPhone,
+    e164Phone: newE164Phone,
+    country: newCountry,
+  } = handlePhoneChange({
     value: userInput,
     country,
 
@@ -111,6 +122,7 @@ export const handleUserInput = (
 
   return {
     phone: newPhone,
+    e164Phone: newE164Phone,
     cursorPosition: newCursorPosition,
     country: newCountry,
   };

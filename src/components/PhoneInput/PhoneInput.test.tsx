@@ -372,21 +372,11 @@ describe('PhoneInput', () => {
 
   test('should render placeholder', () => {
     const { rerender } = render(
-      <PhoneInput
-        defaultCountry="us"
-        disableDialCodePrefill
-        placeholder="Phone input"
-      />,
+      <PhoneInput defaultCountry="us" placeholder="Phone input" />,
     );
     expect(getInput()).toHaveProperty('placeholder', 'Phone input');
 
-    rerender(
-      <PhoneInput
-        defaultCountry="us"
-        disableDialCodePrefill
-        placeholder="Test placeholder"
-      />,
-    );
+    rerender(<PhoneInput defaultCountry="us" placeholder="Test placeholder" />);
     expect(getInput()).toHaveProperty('placeholder', 'Test placeholder');
   });
 
