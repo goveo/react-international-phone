@@ -494,22 +494,8 @@ describe('PhoneInput', () => {
       expect(getInput().value).toBe('(23');
     });
 
-    test('should ignore disableCountryGuess and forceDialCode', () => {
-      const { rerender } = render(
-        <PhoneInput
-          defaultCountry="us"
-          disableDialCodeAndPrefix
-          disableCountryGuess
-        />,
-      );
-      fireEvent.change(getInput(), { target: { value: '1234567890' } });
-      expect(getInput().value).toBe('(123) 456-7890');
-      fireEvent.change(getInput(), { target: { value: '' } });
-      expect(getInput().value).toBe('');
-      fireEvent.change(getInput(), { target: { value: '+38099' } });
-      expect(getInput().value).toBe('(380) 99');
-
-      rerender(
+    test('should ignore forceDialCode', () => {
+      render(
         <PhoneInput
           defaultCountry="us"
           disableDialCodeAndPrefix
@@ -520,7 +506,21 @@ describe('PhoneInput', () => {
       expect(getInput().value).toBe('(123) 456-7890');
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(getInput().value).toBe('');
-      fireEvent.change(getInput(), { target: { value: '+38099' } });
+      fireEvent.change(getInput(), { target: { value: '38099' } });
+      expect(getInput().value).toBe('(380) 99');
+    });
+
+    test('should not guess country if typed value with prefix', async () => {
+      const user = userEvent.setup();
+
+      render(<PhoneInput defaultCountry="us" disableDialCodeAndPrefix />);
+      await user.type(getInput(), '1234567890');
+      expect(getInput().value).toBe('(123) 456-7890');
+
+      await user.clear(getInput());
+      expect(getInput().value).toBe('');
+
+      await user.type(getInput(), '+38099');
       expect(getInput().value).toBe('(380) 99');
     });
   });

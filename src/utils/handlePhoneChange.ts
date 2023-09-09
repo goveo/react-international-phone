@@ -1,48 +1,58 @@
 import { MASK_CHAR } from '../hooks/usePhoneInput';
-import { CountryData, CountryGuessResult, ParsedCountry } from '../types';
+import { CountryData, ParsedCountry } from '../types';
 import {
   getCountryMaskFormat,
   guessCountryByPartialNumber,
 } from './countryUtils';
 import { formatPhone, toE164 } from './phoneUtils';
 
-interface HandlePhoneChangeProps {
-  value: string;
-  country?: ParsedCountry;
-  trimNonDigitsEnd: boolean;
-  insertDialCodeOnEmpty: boolean;
-  forceDisableCountryGuess: boolean;
-  countryGuessingEnabled: boolean;
+export interface PhoneFormattingConfig {
   countries: CountryData[];
-  disableDialCodeAndPrefix: boolean;
   prefix: string;
-  defaultMask: string;
   charAfterDialCode: string;
   forceDialCode: boolean;
+  disableDialCodeAndPrefix: boolean;
+  defaultMask: string;
+  countryGuessingEnabled: boolean;
+}
+
+interface HandlePhoneChangeProps extends PhoneFormattingConfig {
+  value: string;
+  country: ParsedCountry;
+  insertDialCodeOnEmpty: boolean;
+  trimNonDigitsEnd?: boolean;
+  lastTypedChar?: string;
 }
 
 export function handlePhoneChange({
   value,
   country,
-  trimNonDigitsEnd,
   insertDialCodeOnEmpty,
-  forceDisableCountryGuess,
-  countryGuessingEnabled,
+  trimNonDigitsEnd,
+  lastTypedChar,
+
   countries,
-  disableDialCodeAndPrefix,
   prefix,
-  defaultMask,
   charAfterDialCode,
   forceDialCode,
+  disableDialCodeAndPrefix,
+  defaultMask,
+  countryGuessingEnabled,
 }: HandlePhoneChangeProps): {
   phone: string;
-  countryGuessResult?: CountryGuessResult | undefined;
-  formatCountry?: ParsedCountry | undefined;
+  country: ParsedCountry;
 } {
-  const shouldGuessCountry =
-    !forceDisableCountryGuess && countryGuessingEnabled;
+  const shouldGuessCountry = () => {
+    if (disableDialCodeAndPrefix) {
+      // if last typed char is prefix -> ignore country guess (user can add "+" to the beginning of input)
+      if (lastTypedChar === prefix) return false;
+      // guess country only if value starts with dial code (handle past form clipboard or autofill)
+      return value.startsWith(prefix);
+    }
+    return countryGuessingEnabled;
+  };
 
-  const countryGuessResult = shouldGuessCountry
+  const countryGuessResult = shouldGuessCountry()
     ? guessCountryByPartialNumber({
         phone: value,
         countries,
@@ -80,5 +90,5 @@ export function handlePhoneChange({
       )
     : value;
 
-  return { phone, countryGuessResult, formatCountry };
+  return { phone, country: formatCountry };
 }

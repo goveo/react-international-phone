@@ -1,6 +1,6 @@
-import { CountryData, ParsedCountry } from '../types';
+import { ParsedCountry } from '../types';
 import { removeNonDigits } from './common';
-import { handlePhoneChange } from './handlePhoneChange';
+import { handlePhoneChange, PhoneFormattingConfig } from './handlePhoneChange';
 import { getCursorPosition } from './phoneUtils';
 
 const getDeletionType = (inputType?: string) => {
@@ -12,23 +12,10 @@ const getDeletionType = (inputType?: string) => {
     : 'backward';
 };
 
-type DeletionType = 'forward' | 'backward' | undefined;
-
-interface HandleUserInputOptions {
+interface HandleUserInputOptions extends PhoneFormattingConfig {
   country: ParsedCountry;
-  deletion?: DeletionType;
-  inserted?: boolean;
-  cursorPosition?: number;
-
   insertDialCodeOnEmpty: boolean;
-  prefix: string;
-  forceDialCode: boolean;
-  disableDialCodeAndPrefix: boolean;
   phoneBeforeInput: string;
-  countryGuessingEnabled: boolean;
-  charAfterDialCode: string;
-  countries: CountryData[];
-  defaultMask: string;
 }
 
 export const handleUserInput = (
@@ -47,15 +34,21 @@ export const handleUserInput = (
     countries,
   }: HandleUserInputOptions,
 ) => {
-  // Possible input types:
-  // https://rawgit.com/w3c/input-events/v1/index.html#interface-InputEvent-Attributes
   // Didn't find out how to properly type it
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const inputType: string | undefined = (e.nativeEvent as any).inputType;
+  const nativeEvent: any = e.nativeEvent;
+
+  // Possible input types:
+  // https://rawgit.com/w3c/input-events/v1/index.html#interface-InputEvent-Attributes
+  const inputType: string | undefined = nativeEvent.inputType;
 
   const deletion = getDeletionType(inputType);
 
-  const isInserted = inputType?.startsWith('insertFrom');
+  const isInserted = !!inputType?.startsWith('insertFrom');
+
+  const nativeEventData: string | null | undefined = nativeEvent?.data;
+  // Last char that user typed on a keyboard
+  const lastTypedChar = nativeEventData || undefined;
 
   const userInput = e.target.value;
   const cursorPositionAfterInput = e.target.selectionStart ?? 0;
@@ -73,7 +66,7 @@ export const handleUserInput = (
     const fullPhoneInsert =
       isInserted &&
       userInput.startsWith(prefix) &&
-      // cursor position was set to 0 before the input
+      // cursor position was set to 0 before the input (selected all)
       userInput.length - cursorPositionAfterInput === 0;
 
     if (!fullPhoneInsert) {
@@ -87,39 +80,29 @@ export const handleUserInput = (
     }
   }
 
-  const { phone: phoneValue, countryGuessResult } = handlePhoneChange({
+  const { phone: newPhone, country: newCountry } = handlePhoneChange({
     value: userInput,
     country,
 
     trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
     insertDialCodeOnEmpty,
-    forceDisableCountryGuess:
-      forceDialCode &&
-      !!deletion &&
-      removeNonDigits(userInput).length < country.dialCode.length,
 
     countryGuessingEnabled,
+    lastTypedChar,
+
     countries,
-    disableDialCodeAndPrefix,
     prefix,
-    defaultMask,
     charAfterDialCode,
     forceDialCode,
+    disableDialCodeAndPrefix,
+    defaultMask,
   });
 
-  const newCountry =
-    countryGuessingEnabled &&
-    countryGuessResult?.country &&
-    countryGuessResult.country.iso2 !== country.iso2 &&
-    countryGuessResult.fullDialCodeMatch
-      ? countryGuessResult.country
-      : country;
-
   const newCursorPosition = getCursorPosition({
-    cursorPositionAfterInput: cursorPositionAfterInput ?? 0,
-    phoneBeforeInput: phoneBeforeInput,
-    phoneAfterInput: e.target.value,
-    phoneAfterFormatted: phoneValue,
+    cursorPositionAfterInput,
+    phoneBeforeInput,
+    phoneAfterInput: userInput,
+    phoneAfterFormatted: newPhone,
     leftOffset: forceDialCode
       ? prefix.length + country.dialCode.length + charAfterDialCode.length
       : 0,
@@ -127,7 +110,7 @@ export const handleUserInput = (
   });
 
   return {
-    phone: phoneValue,
+    phone: newPhone,
     cursorPosition: newCursorPosition,
     country: newCountry,
   };
