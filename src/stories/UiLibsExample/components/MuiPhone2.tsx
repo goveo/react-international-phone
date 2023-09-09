@@ -10,7 +10,7 @@ export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
       defaultCountry: 'us',
       value,
       onChange: (data) => {
-        onChange(data.phone);
+        onChange(data.e164Phone);
       },
     });
 

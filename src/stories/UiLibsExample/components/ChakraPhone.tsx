@@ -16,7 +16,7 @@ export const ChakraPhone: React.FC<ChakraPhoneProps> = ({
     defaultCountry: 'us',
     value,
     onChange: (data) => {
-      onChange(data.phone);
+      onChange(data.e164Phone);
     },
   });
 

@@ -28,11 +28,11 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
 }) => {
   const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      defaultCountry: 'us',
+      defaultCountry: 'au',
       value,
       countries: defaultCountries,
       onChange: (data) => {
-        onChange(data.phone);
+        onChange(data.e164Phone);
       },
     });
 
