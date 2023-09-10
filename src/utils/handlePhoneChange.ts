@@ -21,7 +21,6 @@ interface HandlePhoneChangeProps extends PhoneFormattingConfig {
   country: ParsedCountry;
   insertDialCodeOnEmpty: boolean;
   trimNonDigitsEnd?: boolean;
-  lastTypedChar?: string;
 }
 
 export function handlePhoneChange({
@@ -29,7 +28,6 @@ export function handlePhoneChange({
   country,
   insertDialCodeOnEmpty,
   trimNonDigitsEnd,
-  lastTypedChar,
 
   countries,
   prefix,
@@ -47,23 +45,12 @@ export function handlePhoneChange({
 
   // make sure that inputPhone starts with dial code when dial code is disabled
   if (disableDialCodeAndPrefix) {
-    // TODO: allow dial code change when new e164 phone pasted from clipboard
-    inputPhone = inputPhone.startsWith(`${prefix}${country.dialCode}`)
+    inputPhone = inputPhone.startsWith(`${prefix}`)
       ? inputPhone
       : `${prefix}${country.dialCode}${inputPhone}`;
   }
 
-  const shouldGuessCountry = () => {
-    if (disableDialCodeAndPrefix) {
-      // if last typed char is prefix -> ignore country guess (user can add "+" to the beginning of input)
-      if (lastTypedChar === prefix) return false;
-      // guess country only if value starts with dial code (handle past form clipboard or autofill)
-      return inputPhone.startsWith(prefix);
-    }
-    return countryGuessingEnabled;
-  };
-
-  const countryGuessResult = shouldGuessCountry()
+  const countryGuessResult = countryGuessingEnabled
     ? guessCountryByPartialNumber({
         phone: inputPhone,
         countries,

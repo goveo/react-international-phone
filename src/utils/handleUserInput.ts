@@ -113,9 +113,7 @@ export const handleUserInput = (
 
     trimNonDigitsEnd: deletion === 'backward', // trim values if user deleting chars (delete mask's whitespace and brackets)
     insertDialCodeOnEmpty,
-
     countryGuessingEnabled,
-    lastTypedChar,
 
     countries,
     prefix,

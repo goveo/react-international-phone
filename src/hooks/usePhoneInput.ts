@@ -163,39 +163,34 @@ export const usePhoneInput = ({
   const [{ phone, e164Phone, country }, updateHistory, undo, redo] =
     useHistoryState(
       () => {
-        // TODO: guess initial country event when dial code is disabled
-        const countryGuessResult = disableDialCodeAndPrefix
-          ? null
-          : guessCountryByPartialNumber({
-              phone: value,
-              countries,
-              currentCountryIso2: defaultCountry,
-            });
+        const defaultCountryFull = getCountry({
+          value: defaultCountry,
+          field: 'iso2',
+          countries,
+        });
 
-        const guessedCountryFull =
-          countryGuessResult?.country ||
-          getCountry({
-            value: defaultCountry,
-            field: 'iso2',
-            countries,
-          });
-
-        if (!guessedCountryFull) {
+        if (!defaultCountryFull) {
           // default country is not passed, or iso code do not match
           console.error(
             `[react-international-phone]: can not find a country with "${defaultCountry}" iso2 code`,
           );
         }
 
-        const defaultCountryFull =
-          guessedCountryFull || // set "us" if user provided not valid country
-          parseCountry(
-            countries.find((c) => parseCountry(c).iso2 === 'us') as CountryData,
-          );
+        const initialCountry =
+          defaultCountryFull || // fallback to "us" if user provided not valid country
+          (getCountry({
+            value: 'us',
+            field: 'iso2',
+            countries,
+          }) as ParsedCountry);
 
-        const { phone, e164Phone } = handlePhoneChange({
+        const {
+          phone,
+          e164Phone,
+          country: formatCountry,
+        } = handlePhoneChange({
           value,
-          country: defaultCountryFull,
+          country: initialCountry,
           insertDialCodeOnEmpty: !disableDialCodePrefill,
           ...phoneFormattingConfig,
         });
@@ -205,7 +200,7 @@ export const usePhoneInput = ({
         return {
           phone,
           e164Phone,
-          country: defaultCountryFull.iso2,
+          country: formatCountry.iso2,
         };
       },
       {
