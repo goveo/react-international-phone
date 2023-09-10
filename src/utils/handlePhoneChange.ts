@@ -72,8 +72,6 @@ export function handlePhoneChange({
       }) // FIXME: should not guess country on every change
     : undefined;
 
-  // TODO: fix partial country guess
-  // current country Ukraine and "+3" input -> guess as Greece (should keep Ukraine because not full dial code match)
   const formatCountry = countryGuessResult?.country ?? country;
 
   const phone = formatPhone(inputPhone, {
@@ -94,13 +92,18 @@ export function handlePhoneChange({
     disableDialCodeAndPrefix,
   });
 
+  const resultCountry =
+    countryGuessingEnabled && !countryGuessResult?.fullDialCodeMatch
+      ? country
+      : formatCountry;
+
   const getE164Phone = () => {
     if (disableDialCodeAndPrefix) {
-      return `${prefix}${formatCountry.dialCode}${removeNonDigits(phone)}`;
+      return `${prefix}${resultCountry.dialCode}${removeNonDigits(phone)}`;
     }
 
     return phone ? `${prefix}${removeNonDigits(phone)}` : '';
   };
 
-  return { phone, e164Phone: getE164Phone(), country: formatCountry };
+  return { phone, e164Phone: getE164Phone(), country: resultCountry };
 }
