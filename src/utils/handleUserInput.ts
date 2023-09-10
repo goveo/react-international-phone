@@ -1,7 +1,7 @@
 import { ParsedCountry } from '../types';
-import { removeNonDigits } from './common';
+import { isNumeric, removeNonDigits } from './common';
 import { handlePhoneChange, PhoneFormattingConfig } from './handlePhoneChange';
-import { getCursorPosition } from './phoneUtils';
+import { getCursorPosition, toE164 } from './phoneUtils';
 
 const getDeletionType = (inputType?: string) => {
   const isDeletion = inputType?.toLocaleLowerCase().includes('delete') ?? false;
@@ -50,6 +50,7 @@ export const handleUserInput = (
   const deletion = getDeletionType(inputType);
 
   const isInserted = !!inputType?.startsWith('insertFrom');
+  const isTyped = inputType === 'insertText';
 
   const nativeEventData: string | null | undefined = nativeEvent?.data;
   // Last char that user typed on a keyboard
@@ -85,6 +86,21 @@ export const handleUserInput = (
         country,
       };
     }
+  }
+
+  // ignore if typed non-digit character
+  if (isTyped && !isNumeric(lastTypedChar)) {
+    return {
+      phone: phoneBeforeInput,
+      e164Phone: toE164({
+        phone: disableDialCodeAndPrefix
+          ? `${country.dialCode}${phoneBeforeInput}`
+          : phoneBeforeInput,
+        prefix,
+      }),
+      cursorPosition: cursorPositionAfterInput - (lastTypedChar?.length ?? 0),
+      country,
+    };
   }
 
   const {
