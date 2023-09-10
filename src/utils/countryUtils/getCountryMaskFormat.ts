@@ -9,13 +9,11 @@ export const getCountryMaskFormat = ({
   phone,
   country,
   prefix = '+',
-  charAfterDialCode = ' ',
   defaultMask = '............', // 12 chars
 }: {
   phone: string;
   country: ParsedCountry;
   prefix?: string;
-  charAfterDialCode?: string;
   /**
    * defaultMask is returned when country's format is undefined or not valid
    */
@@ -50,7 +48,7 @@ export const getCountryMaskFormat = ({
     // trim first and last symbols (to pass raw regex value to constructor)
     const regex = new RegExp(key.substring(1, key.length - 1));
     const valueWithoutDialCode = phone.replace(
-      `${prefix}${country.dialCode}${charAfterDialCode}`,
+      `${prefix}${country.dialCode}`,
       '',
     );
 

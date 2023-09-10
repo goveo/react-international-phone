@@ -81,7 +81,6 @@ export function handlePhoneChange({
       country: formatCountry,
       prefix,
       defaultMask,
-      charAfterDialCode,
     }),
     maskChar: MASK_CHAR,
     dialCode: formatCountry.dialCode,
