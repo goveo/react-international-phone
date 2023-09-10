@@ -1,11 +1,10 @@
 import { MASK_CHAR } from '../hooks/usePhoneInput';
 import { CountryData, ParsedCountry } from '../types';
-import { removeNonDigits } from './common';
 import {
   getCountryMaskFormat,
   guessCountryByPartialNumber,
 } from './countryUtils';
-import { formatPhone } from './phoneUtils';
+import { formatPhone, toE164 } from './phoneUtils';
 
 export interface PhoneFormattingConfig {
   countries: CountryData[];
@@ -96,13 +95,14 @@ export function handlePhoneChange({
       ? country
       : formatCountry;
 
-  const getE164Phone = () => {
-    if (disableDialCodeAndPrefix) {
-      return `${prefix}${resultCountry.dialCode}${removeNonDigits(phone)}`;
-    }
-
-    return phone ? `${prefix}${removeNonDigits(phone)}` : '';
+  return {
+    phone,
+    e164Phone: toE164({
+      phone: disableDialCodeAndPrefix
+        ? `${resultCountry.dialCode}${phone}`
+        : phone,
+      prefix,
+    }),
+    country: resultCountry,
   };
-
-  return { phone, e164Phone: getE164Phone(), country: resultCountry };
 }
