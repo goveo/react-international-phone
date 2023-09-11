@@ -883,7 +883,7 @@ describe('PhoneInput', () => {
         initialSelectionStart: '+'.length,
       });
       expect(getInput().value).toBe('+1 (111) 11');
-      expect(getCursorPosition()).toBe(''.length);
+      expect(getCursorPosition()).toBe('+'.length);
     });
 
     test('should handle delete key', async () => {
