@@ -59,9 +59,13 @@ export const handleUserInput = (
   const userInput = e.target.value;
   const cursorPositionAfterInput = e.target.selectionStart ?? 0;
 
-  // TODO: allow type "+" if input is empty
-  // ignore if typed non-digit character
-  if (isTyped && !isNumeric(lastTypedChar)) {
+  // ignore user input if typed non-digit character
+  if (
+    isTyped &&
+    !isNumeric(lastTypedChar) &&
+    // allow type prefix when input value is empty
+    userInput !== prefix
+  ) {
     return {
       phone: phoneBeforeInput,
       e164Phone: toE164({
