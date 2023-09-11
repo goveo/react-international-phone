@@ -472,6 +472,39 @@ describe('PhoneInput', () => {
   });
 
   describe('disableDialCodeAndPrefix', () => {
+    test('should return valid phone in onChange callback', async () => {
+      const onChange = jest.fn();
+
+      render(
+        <PhoneInput
+          defaultCountry="us"
+          disableDialCodeAndPrefix
+          onChange={onChange}
+        />,
+      );
+
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1');
+      expect(getInput().value).toBe('');
+
+      fireEvent.change(getInput(), { target: { value: '2345' } });
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+12345');
+      expect(getInput().value).toBe('(234) 5');
+
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('+1');
+      expect(getInput().value).toBe('');
+
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('ua'));
+
+      expect(onChange.mock.calls.length).toBe(4);
+      expect(onChange.mock.calls[3][0]).toBe('+380');
+      expect(getInput().value).toBe('');
+    });
+
     test('should not include dial code inside input', () => {
       render(<PhoneInput defaultCountry="us" disableDialCodeAndPrefix />);
       fireEvent.change(getInput(), { target: { value: '+11234567890' } });

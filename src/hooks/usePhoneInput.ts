@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../data/countryData';
 import { CountryData, CountryIso2, ParsedCountry } from '../types';
-import { getCountry, removeNonDigits } from '../utils';
+import { getCountry } from '../utils';
 import {
   handlePhoneChange,
   PhoneFormattingConfig,
@@ -280,7 +280,7 @@ export const usePhoneInput = ({
 
     updateHistory({
       phone: newPhoneValue,
-      e164Phone: `${prefix}${removeNonDigits(newPhoneValue)}`,
+      e164Phone: `${prefix}${newCountry.dialCode}`,
       country: newCountry.iso2,
     });
 
