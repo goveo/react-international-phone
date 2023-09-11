@@ -2,12 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../data/countryData';
 import { CountryData, CountryIso2, ParsedCountry } from '../types';
-import {
-  getCountry,
-  guessCountryByPartialNumber,
-  parseCountry,
-  removeNonDigits,
-} from '../utils';
+import { getCountry, removeNonDigits } from '../utils';
 import {
   handlePhoneChange,
   PhoneFormattingConfig,

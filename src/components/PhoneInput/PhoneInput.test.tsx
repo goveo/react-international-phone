@@ -456,7 +456,7 @@ describe('PhoneInput', () => {
       setCursorPosition(0, getInput().value.length);
       getInput().focus();
       await user.paste('38099');
-      expect(getInput().value).toBe('+1 ');
+      expect(getInput().value).toBe('+380 (99) ');
 
       setCursorPosition(0, getInput().value.length);
       getInput().focus();

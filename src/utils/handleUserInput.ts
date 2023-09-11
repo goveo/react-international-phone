@@ -59,35 +59,7 @@ export const handleUserInput = (
   const userInput = e.target.value;
   const cursorPositionAfterInput = e.target.selectionStart ?? 0;
 
-  // handle forceDialCode edge case
-  if (
-    forceDialCode &&
-    !disableDialCodeAndPrefix &&
-    // dial code has been changed
-    !removeNonDigits(userInput).startsWith(country.dialCode) &&
-    // but phone was not removed completely
-    !!userInput
-  ) {
-    // Allow dial code change when selected all (ctrl+a) and inserted new value that starts with prefix
-    const fullPhoneInsert =
-      isInserted &&
-      userInput.startsWith(prefix) &&
-      // cursor position was set to 0 before the input (selected all)
-      userInput.length - cursorPositionAfterInput === 0;
-
-    if (!fullPhoneInsert) {
-      // Prevent change of dial code and set the cursor to beginning
-      // (after formatting it will be set after dial code)
-      // TODO: set cursor after dial code
-      return {
-        phone: phoneBeforeInput,
-        e164Phone: `${prefix}${removeNonDigits(phoneBeforeInput)}`,
-        cursorPosition: phoneBeforeInput.length,
-        country,
-      };
-    }
-  }
-
+  // TODO: allow type "+" if input is empty
   // ignore if typed non-digit character
   if (isTyped && !isNumeric(lastTypedChar)) {
     return {
@@ -99,6 +71,25 @@ export const handleUserInput = (
         prefix,
       }),
       cursorPosition: cursorPositionAfterInput - (lastTypedChar?.length ?? 0),
+      country,
+    };
+  }
+
+  // forceDialCode: ignore dial code change (only if prefixed phone was not inserted)
+  if (
+    forceDialCode &&
+    // dial code has been changed
+    !userInput.startsWith(`${prefix}${country.dialCode}`) &&
+    // was not inserted with ctrl+v
+    !isInserted
+  ) {
+    return {
+      phone: userInput
+        ? phoneBeforeInput
+        : `${prefix}${country.dialCode}${charAfterDialCode}`,
+      e164Phone: `${prefix}${removeNonDigits(phoneBeforeInput)}`,
+      cursorPosition:
+        prefix.length + country.dialCode.length + charAfterDialCode.length, // set cursor position after dial code
       country,
     };
   }
