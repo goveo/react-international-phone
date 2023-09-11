@@ -1,6 +1,4 @@
-const isDigit = (str: string) => {
-  return /\d/.test(str);
-};
+import { isNumeric } from '../common';
 
 interface GetCursorPositionProps {
   phoneBeforeInput: string;
@@ -31,7 +29,7 @@ export const getCursorPosition = ({
 
   // iterate from right to left and get first digit char
   for (let index = cursorPositionAfterInput - 1; index >= 0; index -= 1) {
-    if (isDigit(phoneAfterInput[index])) {
+    if (isNumeric(phoneAfterInput[index])) {
       afterInputPointIndex = index;
       break;
     }
@@ -39,7 +37,7 @@ export const getCursorPosition = ({
 
   if (afterInputPointIndex === null) {
     for (let index = 0; index < phoneAfterInput.length; index += 1) {
-      if (isDigit(phoneAfterFormatted[index])) {
+      if (isNumeric(phoneAfterFormatted[index])) {
         return index;
       }
     }
@@ -50,7 +48,7 @@ export const getCursorPosition = ({
   // find "digit index" of new char (only digits count)
   let digitIndex = 0;
   for (let index = 0; index < afterInputPointIndex; index += 1) {
-    if (isDigit(phoneAfterInput[index])) {
+    if (isNumeric(phoneAfterInput[index])) {
       digitIndex += 1;
     }
   }
@@ -61,7 +59,7 @@ export const getCursorPosition = ({
   for (let index = 0; index < phoneAfterFormatted.length; index += 1) {
     cursorPosition += 1;
 
-    if (isDigit(phoneAfterFormatted[index])) {
+    if (isNumeric(phoneAfterFormatted[index])) {
       digitsCounter += 1;
     }
 
@@ -73,7 +71,7 @@ export const getCursorPosition = ({
   // set cursor before next digit (jump over mask chars on the right side)
   if (deletion !== 'backward') {
     while (
-      !isDigit(phoneAfterFormatted[cursorPosition]) &&
+      !isNumeric(phoneAfterFormatted[cursorPosition]) &&
       cursorPosition < phoneAfterFormatted.length
     ) {
       cursorPosition += 1;
