@@ -78,7 +78,7 @@ export interface PhoneInputProps
     e164Phone: string,
     meta: {
       country: ParsedCountry | undefined;
-      formattedPhone: string;
+      displayValue: string;
     },
   ) => void;
 }
@@ -111,7 +111,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
       onChange: (data) => {
         onChange?.(data.e164Phone, {
           country: getCountry({ field: 'iso2', value: data.country }),
-          formattedPhone: data.phone,
+          displayValue: data.phone,
         });
       },
     });
