@@ -13,7 +13,7 @@ export const Default: TestStory = {
 
     const phoneInput = utils.getPhoneInput();
     // should be prefilled by default
-    await expect(phoneInput.value).toBe('TODO: remove crash');
+    await expect(phoneInput.value).toBe('+1 ');
 
     await userEvent.type(phoneInput, '1234567890', { delay: 100 });
     await expect(phoneInput.value).toBe('+1 (123) 456-7890');
