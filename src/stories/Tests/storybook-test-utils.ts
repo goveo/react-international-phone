@@ -1,5 +1,4 @@
-import { within } from '@storybook/testing-library';
-import { queries } from '@testing-library/dom';
+import { queries, within } from '@storybook/testing-library';
 
 import { CountryIso2, getCountry } from '../../index';
 

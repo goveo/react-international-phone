@@ -196,7 +196,7 @@ describe('CountrySelectorDropdown', () => {
         />,
       );
       expect(scrollToChildSpy).toBeCalledTimes(1);
-      await user.keyboard('{arrowup>10}');
+      await user.keyboard('{arrowup>11}');
       expect(scrollToChildSpy).toBeCalledTimes(11);
     });
   });
