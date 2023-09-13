@@ -69,6 +69,7 @@ describe('getCursorPosition', () => {
         phoneAfterInput: '',
         cursorPositionAfterInput: 0,
         phoneAfterFormatted: '+1',
+        leftOffset: '+1'.length,
       }),
     ).toBe('+1'.length);
 
@@ -153,7 +154,7 @@ describe('getCursorPosition', () => {
         phoneAfterFormatted: '+1 (111) 111-1111',
         deletion: 'backward',
       }),
-    ).toBe(0);
+    ).toBe('+'.length);
 
     expect(
       getCursorPosition({
@@ -163,7 +164,7 @@ describe('getCursorPosition', () => {
         phoneAfterFormatted: '+380 ',
         deletion: 'backward',
       }),
-    ).toBe(0);
+    ).toBe('+'.length);
 
     expect(
       getCursorPosition({

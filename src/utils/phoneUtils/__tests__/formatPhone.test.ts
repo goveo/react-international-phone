@@ -131,8 +131,8 @@ describe('formatPhone', () => {
       mask: '(...) ... ... ...',
       disableDialCodeAndPrefix: true,
     };
-    expect(formatPhone('380', config)).toBe('(380) ');
-    expect(formatPhone('499', config)).toBe('(499) ');
+    expect(formatPhone('+499380', config)).toBe('(380) ');
+    expect(formatPhone('+499', config)).toBe('');
 
     expect(
       formatPhone('+380 (99) 111 22 33', {
@@ -140,7 +140,7 @@ describe('formatPhone', () => {
         dialCode: '380',
         disableDialCodeAndPrefix: true,
       }),
-    ).toBe('(38) 099 11 12');
+    ).toBe('(99) 111 22 33');
 
     expect(
       formatPhone('380', {
@@ -148,7 +148,7 @@ describe('formatPhone', () => {
         dialCode: '380',
         disableDialCodeAndPrefix: true,
       }),
-    ).toBe('(38) 0');
+    ).toBe('');
 
     expect(
       formatPhone('38', {
@@ -156,6 +156,6 @@ describe('formatPhone', () => {
         dialCode: '380',
         disableDialCodeAndPrefix: true,
       }),
-    ).toBe('(38) ');
+    ).toBe('');
   });
 });

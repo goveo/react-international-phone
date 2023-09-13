@@ -13,7 +13,7 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
     defaultCountry: 'us',
     value,
     onChange: (data) => {
-      onChange(data.phone);
+      onChange(data.e164Phone);
     },
   });
 

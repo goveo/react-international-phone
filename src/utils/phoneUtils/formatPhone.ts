@@ -109,10 +109,7 @@ export const formatPhone = (
   }
 
   const slicePhone = () => {
-    let mainPartStartIndex = config.dialCode.length;
-    if (config.disableDialCodeAndPrefix) {
-      mainPartStartIndex = 0;
-    }
+    const mainPartStartIndex = config.dialCode.length;
 
     const phoneLeftSide = phoneValue.slice(0, mainPartStartIndex);
     const phoneRightSide = phoneValue.slice(mainPartStartIndex);
@@ -137,7 +134,9 @@ export const formatPhone = (
     value: phoneRightSide,
     mask: config.mask,
     maskSymbol: config.maskChar,
-    trimNonMaskCharsLeftover: config.trimNonDigitsEnd,
+    trimNonMaskCharsLeftover:
+      config.trimNonDigitsEnd ||
+      (config.disableDialCodeAndPrefix && phoneRightSide.length === 0),
   });
 
   if (config.disableDialCodeAndPrefix) {

@@ -50,9 +50,9 @@ import {PhoneInput} from 'react-international-phone';
 
 ## Events
 
-| Event    | Type                                            | Description                         |
-| -------- | ----------------------------------------------- | ----------------------------------- |
-| onChange | `(phone: string, country: CountryIso2) => void` | Callback that calls on phone change |
+| Event    | Type                                                                                 | Description                         |
+| -------- | ------------------------------------------------------------------------------------ | ----------------------------------- |
+| onChange | `(phone: string, country: { country: ParsedCountry, displayValue: string }) => void` | Callback that calls on phone change |
 
 Input events like **`onFocus`** and **`onBlur`** can be passed to the `inputProps`
 

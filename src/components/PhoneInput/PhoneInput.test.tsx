@@ -52,48 +52,60 @@ describe('PhoneInput', () => {
     mockScrollIntoView();
   });
 
-  test('should set phone value', () => {
-    render(<PhoneInput value="+38099109" defaultCountry="ua" />);
-    expect(getInput().value).toBe('+380 (99) 109 ');
+  describe('render value', () => {
+    test('should set phone value', () => {
+      render(<PhoneInput value="+38099109" defaultCountry="ua" />);
+      expect(getInput().value).toBe('+380 (99) 109 ');
+    });
+
+    test('should call update input value on state change', () => {
+      const { rerender } = render(<PhoneInput value="+12345" />);
+      expect(getInput().value).toBe('+1 (234) 5');
+
+      rerender(<PhoneInput value="+123456" />);
+      expect(getInput().value).toBe('+1 (234) 56');
+    });
   });
 
   describe('onChange', () => {
     test('should call onChange when input value is updated', async () => {
       const onChange = jest.fn();
-      render(
-        <PhoneInput value="+1 " defaultCountry="us" onChange={onChange} />,
-      );
+      render(<PhoneInput value="+1" defaultCountry="us" onChange={onChange} />);
       expect(onChange.mock.calls.length).toBe(0);
 
       fireEvent.change(getInput(), { target: { value: '38099' } });
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+380 (99) ');
+      expect(onChange.mock.calls[0][0]).toBe('+38099');
+      expect(onChange.mock.calls[0][1].displayValue).toBe('+380 (99) ');
 
       fireEvent.change(getInput(), { target: { value: '+380 (99) 999' } });
       expect(onChange.mock.calls.length).toBe(2);
-      expect(onChange.mock.calls[1][0]).toBe('+380 (99) 999 ');
+      expect(onChange.mock.calls[1][0]).toBe('+38099999');
+      expect(onChange.mock.calls[1][1].displayValue).toBe('+380 (99) 999 ');
 
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(onChange.mock.calls.length).toBe(3);
       expect(onChange.mock.calls[2][0]).toBe('');
+      expect(onChange.mock.calls[2][1].displayValue).toBe('');
 
       fireEvent.change(getInput(), { target: { value: '+1 403 555-6666' } });
       expect(onChange.mock.calls.length).toBe(4);
-      expect(onChange.mock.calls[3][0]).toBe('+1 (403) 555-6666');
+      expect(onChange.mock.calls[3][0]).toBe('+14035556666');
+      expect(onChange.mock.calls[3][1].displayValue).toBe('+1 (403) 555-6666');
     });
 
-    test('should call onChange on initialization (value is not formatted)', () => {
+    test('should call onChange on initialization (value is not in e164 format)', () => {
       const onChange = jest.fn();
       render(
         <PhoneInput
-          value="+19999999999"
+          value="+1 (999) 999 9999"
           defaultCountry="us"
           onChange={onChange}
         />,
       );
 
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 (999) 999-9999');
+      expect(onChange.mock.calls[0][0]).toBe('+19999999999');
     });
 
     test('should call onChange on initialization (value is empty string)', () => {
@@ -101,7 +113,7 @@ describe('PhoneInput', () => {
       render(<PhoneInput value="" defaultCountry="us" onChange={onChange} />);
 
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
     });
 
     test('should call onChange on initialization (value is not provided)', () => {
@@ -109,36 +121,36 @@ describe('PhoneInput', () => {
       render(<PhoneInput defaultCountry="us" onChange={onChange} />);
 
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
     });
 
     test('should call onChange on country change', () => {
       const onChange = jest.fn();
       render(<PhoneInput defaultCountry="us" onChange={onChange} />);
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
 
       fireEvent.click(getCountrySelector());
       fireEvent.click(getDropdownOption('ua'));
 
       expect(onChange.mock.calls.length).toBe(2);
-      expect(onChange.mock.calls[1][0]).toBe('+380 ');
+      expect(onChange.mock.calls[1][0]).toBe('+380');
 
       // set Canada
       fireEvent.change(getInput(), { target: { value: '+1 (204) ' } });
       expect(onChange.mock.calls.length).toBe(3);
-      expect(onChange.mock.calls[2][0]).toBe('+1 (204) ');
+      expect(onChange.mock.calls[2][0]).toBe('+1204');
 
       fireEvent.click(getCountrySelector());
       fireEvent.click(getDropdownOption('ca'));
       expect(onChange.mock.calls.length).toBe(4);
-      expect(onChange.mock.calls[3][0]).toBe('+1 ');
+      expect(onChange.mock.calls[3][0]).toBe('+1');
 
       // should fire change even if phone is not changed
       fireEvent.click(getCountrySelector());
       fireEvent.click(getDropdownOption('us'));
       expect(onChange.mock.calls.length).toBe(5);
-      expect(onChange.mock.calls[4][0]).toBe('+1 ');
+      expect(onChange.mock.calls[4][0]).toBe('+1');
     });
 
     test('should call onChange on undo/redo', () => {
@@ -152,15 +164,21 @@ describe('PhoneInput', () => {
         />,
       );
       expect(onChange.mock.calls.length).toBe(1);
-      expect(onChange.mock.calls[0][0]).toBe('+1 ');
+      expect(onChange.mock.calls[0][0]).toBe('+1');
+      expect(onChange.mock.calls[0][1].displayValue).toBe('+1 ');
+      expect(onChange.mock.calls[0][1].displayValue).toBe(getInput().value);
 
       fireEvent.change(getInput(), { target: { value: '+38099' } });
       expect(onChange.mock.calls.length).toBe(2);
-      expect(onChange.mock.calls[1][0]).toBe('+380 (99) ');
+      expect(onChange.mock.calls[1][0]).toBe('+38099');
+      expect(onChange.mock.calls[1][1].displayValue).toBe('+380 (99) ');
+      expect(onChange.mock.calls[1][1].displayValue).toBe(getInput().value);
 
       fireEvent.change(getInput(), { target: { value: '+38099 99' } });
       expect(onChange.mock.calls.length).toBe(3);
-      expect(onChange.mock.calls[2][0]).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[2][0]).toBe('+3809999');
+      expect(onChange.mock.calls[2][1].displayValue).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[2][1].displayValue).toBe(getInput().value);
 
       // undo
       fireEvent.keyDown(getInput(), {
@@ -170,7 +188,9 @@ describe('PhoneInput', () => {
         shiftKey: false,
       });
       expect(onChange.mock.calls.length).toBe(4);
-      expect(onChange.mock.calls[3][0]).toBe('+380 (99) ');
+      expect(onChange.mock.calls[3][0]).toBe('+38099');
+      expect(onChange.mock.calls[3][1].displayValue).toBe('+380 (99) ');
+      expect(onChange.mock.calls[3][1].displayValue).toBe(getInput().value);
 
       // redo
       fireEvent.keyDown(getInput(), {
@@ -180,7 +200,36 @@ describe('PhoneInput', () => {
         shiftKey: true,
       });
       expect(onChange.mock.calls.length).toBe(5);
-      expect(onChange.mock.calls[4][0]).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[4][0]).toBe('+3809999');
+      expect(onChange.mock.calls[4][1].displayValue).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[4][1].displayValue).toBe(getInput().value);
+    });
+
+    test('should return data object as second argument', () => {
+      const onChange = jest.fn();
+      render(<PhoneInput defaultCountry="us" onChange={onChange} />);
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1');
+      expect(onChange.mock.calls[0][1]).toMatchObject({
+        country: getCountry({ field: 'iso2', value: 'us' }),
+        displayValue: '+1 ',
+      });
+
+      fireEvent.change(getInput(), { target: { value: '+1234' } });
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+1234');
+      expect(onChange.mock.calls[1][1]).toMatchObject({
+        country: getCountry({ field: 'iso2', value: 'us' }),
+        displayValue: '+1 (234) ',
+      });
+
+      fireEvent.change(getInput(), { target: { value: '+380991234567' } });
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('+380991234567');
+      expect(onChange.mock.calls[2][1]).toMatchObject({
+        country: getCountry({ field: 'iso2', value: 'ua' }),
+        displayValue: '+380 (99) 123 45 67',
+      });
     });
   });
 
@@ -353,21 +402,11 @@ describe('PhoneInput', () => {
 
   test('should render placeholder', () => {
     const { rerender } = render(
-      <PhoneInput
-        defaultCountry="us"
-        disableDialCodePrefill
-        placeholder="Phone input"
-      />,
+      <PhoneInput defaultCountry="us" placeholder="Phone input" />,
     );
     expect(getInput()).toHaveProperty('placeholder', 'Phone input');
 
-    rerender(
-      <PhoneInput
-        defaultCountry="us"
-        disableDialCodePrefill
-        placeholder="Test placeholder"
-      />,
-    );
+    rerender(<PhoneInput defaultCountry="us" placeholder="Test placeholder" />);
     expect(getInput()).toHaveProperty('placeholder', 'Test placeholder');
   });
 
@@ -447,7 +486,7 @@ describe('PhoneInput', () => {
       setCursorPosition(0, getInput().value.length);
       getInput().focus();
       await user.paste('38099');
-      expect(getInput().value).toBe('+1 ');
+      expect(getInput().value).toBe('+380 (99) ');
 
       setCursorPosition(0, getInput().value.length);
       getInput().focus();
@@ -463,34 +502,53 @@ describe('PhoneInput', () => {
   });
 
   describe('disableDialCodeAndPrefix', () => {
+    test('should return valid phone in onChange callback', async () => {
+      const onChange = jest.fn();
+
+      render(
+        <PhoneInput
+          defaultCountry="us"
+          disableDialCodeAndPrefix
+          onChange={onChange}
+        />,
+      );
+
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1');
+      expect(getInput().value).toBe('');
+
+      fireEvent.change(getInput(), { target: { value: '2345' } });
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+12345');
+      expect(getInput().value).toBe('(234) 5');
+
+      fireEvent.change(getInput(), { target: { value: '' } });
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('+1');
+      expect(getInput().value).toBe('');
+
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('ua'));
+
+      expect(onChange.mock.calls.length).toBe(4);
+      expect(onChange.mock.calls[3][0]).toBe('+380');
+      expect(getInput().value).toBe('');
+    });
+
     test('should not include dial code inside input', () => {
       render(<PhoneInput defaultCountry="us" disableDialCodeAndPrefix />);
-      fireEvent.change(getInput(), { target: { value: '1234567890' } });
+      fireEvent.change(getInput(), { target: { value: '+11234567890' } });
       expect(getInput().value).toBe('(123) 456-7890');
 
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(getInput().value).toBe('');
 
       fireEvent.change(getInput(), { target: { value: '+123' } });
-      expect(getInput().value).toBe('(123) ');
+      expect(getInput().value).toBe('(23');
     });
 
-    test('should ignore disableCountryGuess and forceDialCode', () => {
-      const { rerender } = render(
-        <PhoneInput
-          defaultCountry="us"
-          disableDialCodeAndPrefix
-          disableCountryGuess
-        />,
-      );
-      fireEvent.change(getInput(), { target: { value: '1234567890' } });
-      expect(getInput().value).toBe('(123) 456-7890');
-      fireEvent.change(getInput(), { target: { value: '' } });
-      expect(getInput().value).toBe('');
-      fireEvent.change(getInput(), { target: { value: '+38099' } });
-      expect(getInput().value).toBe('(380) 99');
-
-      rerender(
+    test('should ignore forceDialCode', () => {
+      render(
         <PhoneInput
           defaultCountry="us"
           disableDialCodeAndPrefix
@@ -501,7 +559,21 @@ describe('PhoneInput', () => {
       expect(getInput().value).toBe('(123) 456-7890');
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(getInput().value).toBe('');
-      fireEvent.change(getInput(), { target: { value: '+38099' } });
+      fireEvent.change(getInput(), { target: { value: '38099' } });
+      expect(getInput().value).toBe('(380) 99');
+    });
+
+    test('should not guess country if typed value with prefix', async () => {
+      const user = userEvent.setup();
+
+      render(<PhoneInput defaultCountry="us" disableDialCodeAndPrefix />);
+      await user.type(getInput(), '1234567890');
+      expect(getInput().value).toBe('(123) 456-7890');
+
+      await user.clear(getInput());
+      expect(getInput().value).toBe('');
+
+      await user.type(getInput(), '+38099');
       expect(getInput().value).toBe('(380) 99');
     });
   });
@@ -841,7 +913,7 @@ describe('PhoneInput', () => {
         initialSelectionStart: '+'.length,
       });
       expect(getInput().value).toBe('+1 (111) 11');
-      expect(getCursorPosition()).toBe(''.length);
+      expect(getCursorPosition()).toBe('+'.length);
     });
 
     test('should handle delete key', async () => {
