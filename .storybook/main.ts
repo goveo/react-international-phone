@@ -1,6 +1,10 @@
 export default {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-controls', '@storybook/preset-scss'],
+  addons: [
+    '@storybook/addon-controls',
+    '@storybook/preset-scss',
+    '@storybook/addon-interactions',
+  ],
   refs: {
     '@chakra-ui/react': { disable: true },
     '@mui/material': { disable: true },
