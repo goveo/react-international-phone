@@ -1,5 +1,4 @@
-import { queries, within } from '@storybook/testing-library';
-import { userEvent } from '@storybook/testing-library';
+import { queries, userEvent, within } from '@storybook/testing-library';
 
 import { CountryIso2, getCountry } from '../../index';
 
@@ -33,12 +32,13 @@ export class StorybookTestUtils {
     );
   };
 
-  selectCountry = (country: CountryIso2) => {
+  selectCountry = async (country: CountryIso2) => {
     const countrySelector = this.getCountrySelector();
-    countrySelector.click();
+    await userEvent.click(countrySelector);
 
     const option = this.getCountryDropdownOption(country);
-    option.click();
+
+    await userEvent.click(option);
   };
 
   getCursorSelection = () => {
@@ -71,5 +71,9 @@ export class StorybookTestUtils {
 
   pressBackspace = async (times = 1) => {
     return userEvent.keyboard(`{Backspace>${times}/}`);
+  };
+
+  pressDelete = async (times = 1) => {
+    return userEvent.keyboard(`{Delete>${times}/}`);
   };
 }

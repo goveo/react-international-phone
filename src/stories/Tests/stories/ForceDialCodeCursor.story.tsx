@@ -17,6 +17,7 @@ export const ForceDialCodeCursor: TestStory = {
     // should be prefilled by default
     await expect(phoneInput.value).toBe('+1 ');
 
+    // should handle cursor if type in the end of input
     await userEvent.type(phoneInput, '1');
     await expect(phoneInput.value).toBe('+1 (1');
     await expect(utils.getCursorPosition()).toBe('+1 (1'.length);
@@ -56,6 +57,21 @@ export const ForceDialCodeCursor: TestStory = {
     await userEvent.type(phoneInput, '0');
     await expect(phoneInput.value).toBe('+1 (123) 456-7890');
     await expect(utils.getCursorPosition()).toBe('+1 (123) 456-7890'.length);
+
+    await userEvent.type(phoneInput, '4');
+    await expect(phoneInput.value).toBe('+1 (123) 456-7890');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 456-7890'.length); // ignore overflow typing
+
+    // should set cursor when press backspace in the end of input
+    utils.setCursorPosition('+1 (123) 456-7890'.length);
+    await utils.pressBackspace(3);
+    await expect(phoneInput.value).toBe('+1 (123) 456-7');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 456-7'.length);
+    await utils.pressBackspace();
+    await expect(phoneInput.value).toBe('+1 (123) 456');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 456'.length);
+
+    await userEvent.type(phoneInput, '7890');
 
     // should set cursor when press backspace in the middle of input
     utils.setCursorPosition('+1 (123) 45'.length);
@@ -98,12 +114,67 @@ export const ForceDialCodeCursor: TestStory = {
 
     utils.setCursorSelection(0, phoneInput.value.length);
     await utils.pressBackspace();
-    // should not allow to clear dial code
     await expect(phoneInput.value).toBe('+1 ');
 
-    // TODO: add ctrl+backspace
-    // TODO: add delete
-    // TODO: add ctrl+delete
-    // TODO: add country change
+    // should set cursor when press delete in the middle of input
+    await userEvent.type(phoneInput, '(123) 456-7890');
+    await expect(phoneInput.value).toBe('+1 (123) 456-7890');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 456-7890'.length);
+
+    utils.setCursorPosition('+1 (123) 45'.length);
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 457-890');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 45'.length);
+
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 458-90');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 45'.length);
+
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 459-0');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 45'.length);
+
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 450-');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 45'.length);
+
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 45');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 45'.length);
+
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 45');
+    await expect(utils.getCursorPosition()).toBe('+1 (123) 45'.length);
+
+    // should not change dial code if on delete press
+    utils.setCursorSelection(0, phoneInput.value.length);
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 ');
+    await expect(utils.getCursorPosition()).toBe('+1 '.length);
+
+    await userEvent.type(phoneInput, '(123) 456-7890');
+
+    utils.setCursorSelection(0, '+1 '.length);
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 456-7890');
+    await expect(utils.getCursorPosition()).toBe('+1 '.length);
+
+    utils.setCursorPosition('+'.length);
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 456-7890');
+    await expect(utils.getCursorPosition()).toBe('+1 '.length);
+
+    utils.setCursorPosition('+1'.length);
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 456-7890');
+    await expect(utils.getCursorPosition()).toBe('+1 '.length);
+
+    await utils.pressDelete();
+    await expect(phoneInput.value).toBe('+1 (123) 456-7890');
+    await expect(utils.getCursorPosition()).toBe('+1 ('.length);
+
+    // should set cursor after dropdown country change
+    await utils.selectCountry('cz');
+    await expect(utils.getCursorPosition()).toBe('+420 '.length);
   },
 };

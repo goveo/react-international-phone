@@ -30,7 +30,7 @@ export const ForceDialCode: TestStory = {
     await userEvent.type(phoneInput, '+38099', { delay: 100 });
     await expect(phoneInput.value).toBe('+1 (380) 99');
 
-    utils.selectCountry('ca');
+    await utils.selectCountry('ca');
     await expect(phoneInput.value).toBe('+1 ');
   },
 };
