@@ -32,6 +32,11 @@ export class StorybookTestUtils {
     );
   };
 
+  getSelectedCountry = () => {
+    const countrySelector = this.getCountrySelector();
+    return countrySelector.getAttribute('data-country');
+  };
+
   selectCountry = async (country: CountryIso2) => {
     const countrySelector = this.getCountrySelector();
     await userEvent.click(countrySelector);
@@ -67,6 +72,11 @@ export class StorybookTestUtils {
     const phoneInput = this.getPhoneInput();
     phoneInput.selectionStart = cursorPosition;
     phoneInput.selectionEnd = cursorPosition;
+  };
+
+  selectAll = () => {
+    const phoneInput = this.getPhoneInput();
+    this.setCursorSelection(0, phoneInput.value.length);
   };
 
   pressBackspace = async (times = 1) => {

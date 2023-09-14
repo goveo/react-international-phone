@@ -14,7 +14,9 @@ export type TestStory = StoryObj<typeof PhoneInput>;
 import { Default } from './stories/Default.story';
 import { ForceDialCode } from './stories/ForceDialCode.story';
 import { ForceDialCodeCursor } from './stories/ForceDialCodeCursor.story';
+import { DisableDialCodeAndPrefix } from './stories/DisableDialCodeAndPrefix.story';
 
 export const _Default = Default;
 export const _ForceDialCode = ForceDialCode;
 export const _ForceDialCodeCursor = ForceDialCodeCursor;
+export const _DisableDialCodeAndPrefix = DisableDialCodeAndPrefix;
