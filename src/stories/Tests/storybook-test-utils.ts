@@ -1,4 +1,5 @@
 import { queries, within } from '@storybook/testing-library';
+import { userEvent } from '@storybook/testing-library';
 
 import { CountryIso2, getCountry } from '../../index';
 
@@ -38,5 +39,37 @@ export class StorybookTestUtils {
 
     const option = this.getCountryDropdownOption(country);
     option.click();
+  };
+
+  getCursorSelection = () => {
+    const phoneInput = this.getPhoneInput();
+    const start = phoneInput.selectionStart;
+    const end = phoneInput.selectionEnd;
+
+    return {
+      start,
+      end,
+    };
+  };
+
+  getCursorPosition = () => {
+    const { start, end } = this.getCursorSelection();
+    return start === end ? start : undefined;
+  };
+
+  setCursorSelection = (start: number, end: number) => {
+    const phoneInput = this.getPhoneInput();
+    phoneInput.selectionStart = start;
+    phoneInput.selectionEnd = end;
+  };
+
+  setCursorPosition = (cursorPosition: number) => {
+    const phoneInput = this.getPhoneInput();
+    phoneInput.selectionStart = cursorPosition;
+    phoneInput.selectionEnd = cursorPosition;
+  };
+
+  pressBackspace = async (times = 1) => {
+    return userEvent.keyboard(`{Backspace>${times}/}`);
   };
 }
