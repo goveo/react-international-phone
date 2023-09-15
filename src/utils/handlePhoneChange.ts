@@ -14,6 +14,7 @@ export interface PhoneFormattingConfig {
   disableDialCodeAndPrefix: boolean;
   defaultMask: string;
   countryGuessingEnabled: boolean;
+  disableFormatting: boolean;
 }
 
 interface HandlePhoneChangeProps extends PhoneFormattingConfig {
@@ -36,6 +37,7 @@ export function handlePhoneChange({
   disableDialCodeAndPrefix,
   defaultMask,
   countryGuessingEnabled,
+  disableFormatting,
 }: HandlePhoneChangeProps): {
   phone: string;
   e164Phone: string;
@@ -60,14 +62,22 @@ export function handlePhoneChange({
 
   const formatCountry = countryGuessResult?.country ?? country;
 
-  const phone = formatPhone(inputPhone, {
-    prefix,
-    mask: getCountryMaskFormat({
+  const getMask = (): string => {
+    const mask = getCountryMaskFormat({
       phone: inputPhone,
       country: formatCountry,
       prefix,
       defaultMask,
-    }),
+    });
+
+    return disableFormatting
+      ? mask.replace(new RegExp(`[^${MASK_CHAR}]`, 'g'), '') // remove non MASK_CHAR symbols
+      : mask;
+  };
+
+  const phone = formatPhone(inputPhone, {
+    prefix,
+    mask: getMask(),
     maskChar: MASK_CHAR,
     dialCode: formatCountry.dialCode,
     trimNonDigitsEnd,

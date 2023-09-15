@@ -1054,4 +1054,41 @@ describe('PhoneInput', () => {
       expect(getCountrySelectorFlag()).toHaveAttribute('src', flagSrc);
     });
   });
+
+  describe('disableFormatting', () => {
+    test('should remove mask chars from input if disableFormatting is set to true', async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(<PhoneInput disableFormatting />);
+      expect(getInput().value).toBe('+1 ');
+
+      await user.type(getInput(), '1234');
+      expect(getInput().value).toBe('+1 1234');
+      await user.type(getInput(), '5678');
+      expect(getInput().value).toBe('+1 12345678');
+      await user.type(getInput(), '9000');
+      expect(getInput().value).toBe('+1 1234567890');
+
+      await user.clear(getInput());
+      expect(getInput().value).toBe('');
+      await user.type(getInput(), '+1 (123) 456-7890');
+      expect(getInput().value).toBe('+1 1234567890');
+    });
+
+    test('should work with charAfterDialCode prop', async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(<PhoneInput disableFormatting charAfterDialCode="" />);
+      expect(getInput().value).toBe('+1');
+
+      await user.type(getInput(), '1234567890');
+      expect(getInput().value).toBe('+11234567890');
+
+      await user.clear(getInput());
+      expect(getInput().value).toBe('');
+
+      await user.type(getInput(), '+1 (123) 456-7890');
+      expect(getInput().value).toBe('+11234567890');
+    });
+  });
 });
