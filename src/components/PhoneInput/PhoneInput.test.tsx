@@ -1075,6 +1075,17 @@ describe('PhoneInput', () => {
       expect(getInput().value).toBe('+1 1234567890');
     });
 
+    test('should remove handle default mask', async () => {
+      const user = userEvent.setup({ delay: null });
+
+      render(<PhoneInput disableFormatting defaultMask="(...) ... ... ..." />);
+
+      await user.clear(getInput());
+
+      await user.type(getInput(), '+355123456789000');
+      expect(getInput().value).toBe('+355 123456789000');
+    });
+
     test('should work with charAfterDialCode prop', async () => {
       const user = userEvent.setup({ delay: null });
 

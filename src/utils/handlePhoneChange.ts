@@ -62,22 +62,15 @@ export function handlePhoneChange({
 
   const formatCountry = countryGuessResult?.country ?? country;
 
-  const getMask = (): string => {
-    const mask = getCountryMaskFormat({
+  const phone = formatPhone(inputPhone, {
+    prefix,
+    mask: getCountryMaskFormat({
       phone: inputPhone,
       country: formatCountry,
       prefix,
       defaultMask,
-    });
-
-    return disableFormatting
-      ? mask.replace(new RegExp(`[^${MASK_CHAR}]`, 'g'), '') // remove non MASK_CHAR symbols
-      : mask;
-  };
-
-  const phone = formatPhone(inputPhone, {
-    prefix,
-    mask: getMask(),
+      disableFormatting,
+    }),
     maskChar: MASK_CHAR,
     dialCode: formatCountry.dialCode,
     trimNonDigitsEnd,
