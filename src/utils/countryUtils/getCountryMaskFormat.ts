@@ -1,3 +1,4 @@
+import { MASK_CHAR } from '../../hooks/usePhoneInput';
 import { ParsedCountry } from '../../types';
 import { removeNonDigits } from '../common';
 
@@ -10,6 +11,7 @@ export const getCountryMaskFormat = ({
   country,
   prefix = '+',
   defaultMask = '............', // 12 chars
+  disableFormatting = false,
 }: {
   phone: string;
   country: ParsedCountry;
@@ -18,17 +20,29 @@ export const getCountryMaskFormat = ({
    * defaultMask is returned when country's format is undefined or not valid
    */
   defaultMask?: string;
+  disableFormatting?: boolean;
 }): string => {
   const format = country.format;
-  if (!format) return defaultMask;
 
-  if (typeof format === 'string') return format;
+  const handleReturn = (mask: string) => {
+    return disableFormatting
+      ? mask.replace(new RegExp(`[^${MASK_CHAR}]`, 'g'), '') // remove non MASK_CHAR symbols
+      : mask;
+  };
+
+  if (!format) {
+    return handleReturn(defaultMask);
+  }
+
+  if (typeof format === 'string') {
+    return handleReturn(format);
+  }
 
   if (!format['default']) {
     console.error(
       `[react-international-phone]: default mask for ${country.iso2} is not provided`,
     );
-    return defaultMask;
+    return handleReturn(defaultMask);
   }
 
   // format is object value -> parse key regex and get format string
@@ -55,5 +69,7 @@ export const getCountryMaskFormat = ({
     return regex.test(removeNonDigits(valueWithoutDialCode));
   });
 
-  return matchedFormatKey ? format[matchedFormatKey] : format['default'];
+  return handleReturn(
+    matchedFormatKey ? format[matchedFormatKey] : format['default'],
+  );
 };

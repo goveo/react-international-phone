@@ -14,6 +14,7 @@ export interface PhoneFormattingConfig {
   disableDialCodeAndPrefix: boolean;
   defaultMask: string;
   countryGuessingEnabled: boolean;
+  disableFormatting: boolean;
 }
 
 interface HandlePhoneChangeProps extends PhoneFormattingConfig {
@@ -36,6 +37,7 @@ export function handlePhoneChange({
   disableDialCodeAndPrefix,
   defaultMask,
   countryGuessingEnabled,
+  disableFormatting,
 }: HandlePhoneChangeProps): {
   phone: string;
   e164Phone: string;
@@ -67,6 +69,7 @@ export function handlePhoneChange({
       country: formatCountry,
       prefix,
       defaultMask,
+      disableFormatting,
     }),
     maskChar: MASK_CHAR,
     dialCode: formatCountry.dialCode,

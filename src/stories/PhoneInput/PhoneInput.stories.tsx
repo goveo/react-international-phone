@@ -22,7 +22,7 @@ import { WithCodePreview } from './stories/WithCodePreview.story';
 import { CustomStyles } from './stories/CustomStyles.story';
 import { OnlyBalticCountries } from './stories/OnlyBalticCountries.story';
 import { WithAutofocus } from './stories/WithAutofocus.story';
-import { E164Format } from './stories/E164Format.story';
+import { DisableFormatting } from './stories/DisableFormatting.story';
 import { ControlledMode } from './stories/ControlledMode.story';
 import { CustomFlags } from './stories/CustomFlags.story';
 
@@ -37,6 +37,6 @@ export const _WithCodePreview = WithCodePreview;
 export const _CustomStyles = CustomStyles;
 export const _OnlyBalticCountries = OnlyBalticCountries;
 export const _WithAutofocus = WithAutofocus;
-export const _E164Format = E164Format;
+export const _DisableFormatting = DisableFormatting;
 export const _ControlledMode = ControlledMode;
 export const _CustomFlags = CustomFlags;

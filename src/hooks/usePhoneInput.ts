@@ -87,6 +87,12 @@ export interface UsePhoneInputConfig {
   disableDialCodeAndPrefix?: boolean;
 
   /**
+   * @description Disable phone value mask formatting. All formatting characters will not be displayed, but the mask length will be preserved.
+   * @default false
+   */
+  disableFormatting?: boolean;
+
+  /**
    * @description Callback that calls on phone change
    * @params new phone input state
    * - *data.phone* - new phone value
@@ -113,6 +119,7 @@ export const defaultConfig: Required<
   disableDialCodePrefill: false,
   forceDialCode: false,
   disableDialCodeAndPrefix: false,
+  disableFormatting: false,
   countries: defaultCountries,
 };
 
@@ -128,6 +135,7 @@ export const usePhoneInput = ({
   disableDialCodePrefill = defaultConfig.disableDialCodePrefill,
   forceDialCode: forceDialCodeConfig = defaultConfig.forceDialCode,
   disableDialCodeAndPrefix = defaultConfig.disableDialCodeAndPrefix,
+  disableFormatting = defaultConfig.disableFormatting,
   onChange,
 }: UsePhoneInputConfig) => {
   const countryGuessingEnabled = !disableCountryGuess;
@@ -141,6 +149,7 @@ export const usePhoneInput = ({
     disableDialCodeAndPrefix,
     defaultMask,
     countryGuessingEnabled,
+    disableFormatting,
   };
 
   const inputRef = useRef<HTMLInputElement | null>(null);
