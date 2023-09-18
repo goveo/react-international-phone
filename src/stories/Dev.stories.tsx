@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { CountrySelectorStyleProps } from '../components/CountrySelector/CountrySelector';
 import { PhoneInput } from '../components/PhoneInput/PhoneInput';
@@ -9,7 +9,7 @@ import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
 export default {
   title: 'Dev',
-  includeStories: [], // Comment this line to show stories
+  // includeStories: [], // Comment this line to show stories
 } as Meta;
 
 const Title: React.FC<{
@@ -149,6 +149,33 @@ export const WithoutDialCode = () => {
     <div style={{ color: 'black', fontSize: '13px' }}>
       <span>Phone: {phone}</span>
       <PhoneInput value={phone} onChange={setPhone} disableDialCodeAndPrefix />
+    </div>
+  );
+};
+
+export const InputRef = () => {
+  const [phone, setPhone] = useState('');
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div style={{ color: 'black', fontSize: '13px' }}>
+      <button
+        onClick={() => {
+          if (!inputRef.current) {
+            return;
+          }
+
+          inputRef.current.selectionStart = 0;
+          inputRef.current.selectionEnd = inputRef.current.value.length;
+
+          inputRef.current.focus();
+        }}
+      >
+        Select all
+      </button>
+      <div>Phone: {phone}</div>
+      <PhoneInput value={phone} onChange={setPhone} inputRef={inputRef} />
     </div>
   );
 };
