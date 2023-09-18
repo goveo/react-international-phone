@@ -446,20 +446,60 @@ describe('PhoneInput', () => {
   });
 
   describe('forceDialCode', () => {
-    test('should not allow dial code change with input', () => {
+    test('should not call onChange when initial phone is in E164 format', () => {
+      const onChange = jest.fn();
       render(
-        <PhoneInput value="12345678900" defaultCountry="us" forceDialCode />,
+        <PhoneInput
+          value="+12345678900"
+          defaultCountry="us"
+          forceDialCode
+          onChange={onChange}
+        />,
       );
       expect(getInput().value).toBe('+1 (234) 567-8900');
+      expect(onChange.mock.calls.length).toBe(0);
+    });
+
+    test('should call onChange when initial phone is not in E164 format', () => {
+      const onChange = jest.fn();
+      render(
+        <PhoneInput
+          value="12345678900"
+          defaultCountry="us"
+          forceDialCode
+          onChange={onChange}
+        />,
+      );
+      expect(getInput().value).toBe('+1 (234) 567-8900');
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+12345678900');
+    });
+
+    test('should not allow dial code change with input', () => {
+      const onChange = jest.fn();
+      render(
+        <PhoneInput
+          value="+12345678900"
+          defaultCountry="us"
+          forceDialCode
+          onChange={onChange}
+        />,
+      );
+      expect(getInput().value).toBe('+1 (234) 567-8900');
+      expect(onChange.mock.calls.length).toBe(0);
 
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(getInput().value).toBe('+1 ');
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1');
 
       fireEvent.change(getInput(), { target: { value: '+' } });
       expect(getInput().value).toBe('+1 ');
+      expect(onChange.mock.calls.length).toBe(1); // not changed
 
       fireEvent.change(getInput(), { target: { value: '+21' } });
       expect(getInput().value).toBe('+1 ');
+      expect(onChange.mock.calls.length).toBe(1); // not changed
     });
 
     test('should allow change dial code with country selector', () => {
@@ -482,22 +522,29 @@ describe('PhoneInput', () => {
         <PhoneInput defaultCountry="us" forceDialCode onChange={onChange} />,
       );
       expect(getInput().value).toBe('+1 ');
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+1');
 
       setCursorPosition(0, getInput().value.length);
       getInput().focus();
       await user.paste('38099');
       expect(getInput().value).toBe('+380 (99) ');
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+38099');
 
       setCursorPosition(0, getInput().value.length);
       getInput().focus();
       await user.paste('+38099');
       expect(getInput().value).toBe('+380 (99) ');
+      expect(onChange.mock.calls.length).toBe(2); // not changed
 
       // insert after prefix
       setCursorPosition(1, getInput().value.length);
       getInput().focus();
       await user.paste('48 123-456-789');
       expect(getInput().value).toBe('+48 123-456-789');
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('+48123456789');
     });
   });
 

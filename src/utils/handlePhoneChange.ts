@@ -85,14 +85,16 @@ export function handlePhoneChange({
       ? country
       : formatCountry;
 
+  const e164Phone = toE164({
+    phone: disableDialCodeAndPrefix
+      ? `${resultCountry.dialCode}${phone}`
+      : phone,
+    prefix,
+  });
+
   return {
     phone,
-    e164Phone: toE164({
-      phone: disableDialCodeAndPrefix
-        ? `${resultCountry.dialCode}${phone}`
-        : phone,
-      prefix,
-    }),
+    e164Phone,
     country: resultCountry,
   };
 }

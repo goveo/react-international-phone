@@ -1,5 +1,5 @@
 import { ParsedCountry } from '../types';
-import { isNumeric, removeNonDigits } from './common';
+import { isNumeric } from './common';
 import { handlePhoneChange, PhoneFormattingConfig } from './handlePhoneChange';
 import { getCursorPosition, toE164 } from './phoneUtils';
 
@@ -88,11 +88,13 @@ export const handleUserInput = (
     // was not inserted with ctrl+v
     !isInserted
   ) {
+    const phoneValue = userInput
+      ? phoneBeforeInput
+      : `${prefix}${country.dialCode}${charAfterDialCode}`;
+
     return {
-      phone: userInput
-        ? phoneBeforeInput
-        : `${prefix}${country.dialCode}${charAfterDialCode}`,
-      e164Phone: `${prefix}${removeNonDigits(phoneBeforeInput)}`,
+      phone: phoneValue,
+      e164Phone: toE164({ phone: phoneValue, prefix }),
       cursorPosition:
         prefix.length + country.dialCode.length + charAfterDialCode.length, // set cursor position after dial code
       country,
