@@ -9,7 +9,7 @@ import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
 export default {
   title: 'Dev',
-  // includeStories: [], // Comment this line to show stories
+  includeStories: [], // Comment this line to show stories
 } as Meta;
 
 const Title: React.FC<{
@@ -176,6 +176,35 @@ export const InputRef = () => {
       </button>
       <div>Phone: {phone}</div>
       <PhoneInput value={phone} onChange={setPhone} inputRef={inputRef} />
+    </div>
+  );
+};
+
+export const Ref = () => {
+  const [phone, setPhone] = useState('');
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  return (
+    <div style={{ color: 'black', fontSize: '13px' }}>
+      <div>Phone: {phone}</div>
+      <PhoneInput value={phone} onChange={setPhone} ref={ref} />
+      <div
+        style={{
+          height: '150vh',
+          background: 'lightgray',
+        }}
+      >
+        Scroll to bottom
+      </div>
+      <button
+        onClick={() => {
+          if (!ref.current) return;
+          ref.current.scrollIntoView();
+        }}
+      >
+        Scroll to phone
+      </button>
     </div>
   );
 };
