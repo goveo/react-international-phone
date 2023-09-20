@@ -1,11 +1,11 @@
 import './PhoneInput.style.scss';
 
-import React, { forwardRef, useMemo } from 'react';
+import React, { forwardRef, useImperativeHandle, useMemo } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
 import { buildClassNames } from '../../style/buildClassNames';
-import { ParsedCountry } from '../../types';
+import { CountryIso2, ParsedCountry } from '../../types';
 import { getCountry } from '../../utils';
 import {
   CountrySelector,
@@ -83,7 +83,13 @@ export interface PhoneInputProps
   ) => void;
 }
 
-export const PhoneInput = forwardRef<HTMLDivElement, PhoneInputProps>(
+export type PhoneInputRefType =
+  | null
+  | (HTMLInputElement & {
+      setCountry: (iso2: CountryIso2) => void;
+    });
+
+export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
   (
     {
       hideDropdown,
@@ -133,6 +139,19 @@ export const PhoneInput = forwardRef<HTMLDivElement, PhoneInputProps>(
       usePhoneInputConfig.disableDialCodeAndPrefix &&
       showDisabledDialCodeAndPrefix &&
       fullCountry?.dialCode;
+
+    useImperativeHandle<PhoneInputRefType, PhoneInputRefType>(
+      ref,
+      () => {
+        if (!inputRef.current) return null;
+
+        return Object.assign(inputRef.current, {
+          // extend input ref with additional properties
+          setCountry,
+        });
+      },
+      [inputRef, setCountry],
+    );
 
     return (
       <div
