@@ -84,3 +84,35 @@ Input events like **`onFocus`** and **`onBlur`** can be passed to the `inputProp
 :::info
 You can find more styling properties and CSS variables in [Subcomponents](/docs/subcomponents%20API/)
 :::
+
+## Ref forwarding
+
+You can pass ref to a PhoneInput component.<br/>
+Ref object refers to inner **input element** with some additional properties.
+
+```tsx
+const PhoneWithRef = () => {
+  const ref = useRef(null);
+  return (
+    <PhoneInput ref={ref}>;
+  )
+}
+```
+
+:::note
+If you use typescript you should use `PhoneInputRefType` for as ref type:
+
+```tsx
+const ref = useRef<PhoneInputRefType>(null);
+```
+
+:::
+
+### Ref additional properties
+
+In addition to the [HTMLInputElement API](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement), ref also allows you to use these methods:
+
+#### `setCountry`
+
+- **Type:** `(iso2: CountryIso2) => void`
+- **Description:** Set some country value (works same as country selector country item click handler)

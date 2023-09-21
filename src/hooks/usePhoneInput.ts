@@ -104,10 +104,16 @@ export interface UsePhoneInputConfig {
     e164Phone: string;
     country: CountryIso2;
   }) => void;
+
+  /**
+   * @description Ref for the input element.
+   * @default undefined
+   */
+  inputRef?: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 export const defaultConfig: Required<
-  Omit<UsePhoneInputConfig, 'onChange'> // omit props with no default value
+  Omit<UsePhoneInputConfig, 'onChange' | 'inputRef'> // omit props with no default value
 > = {
   defaultCountry: 'us',
   value: '',
@@ -137,6 +143,7 @@ export const usePhoneInput = ({
   disableDialCodeAndPrefix = defaultConfig.disableDialCodeAndPrefix,
   disableFormatting = defaultConfig.disableFormatting,
   onChange,
+  inputRef: inputRefProp,
 }: UsePhoneInputConfig) => {
   const countryGuessingEnabled = !disableCountryGuess;
   const forceDialCode = disableDialCodeAndPrefix ? false : forceDialCodeConfig;
@@ -152,7 +159,8 @@ export const usePhoneInput = ({
     disableFormatting,
   };
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const ref = useRef<HTMLInputElement | null>(null);
+  const inputRef = inputRefProp || ref;
 
   const setCursorPosition = (cursorPosition: number) => {
     /**

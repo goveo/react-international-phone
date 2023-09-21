@@ -1,8 +1,11 @@
 import { Meta } from '@storybook/react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { CountrySelectorStyleProps } from '../components/CountrySelector/CountrySelector';
-import { PhoneInput } from '../components/PhoneInput/PhoneInput';
+import {
+  PhoneInput,
+  PhoneInputRefType,
+} from '../components/PhoneInput/PhoneInput';
 import { defaultCountries } from '../data/countryData';
 import { parseCountry } from '../index';
 import { MuiPhone } from './UiLibsExample/components/MuiPhone';
@@ -149,6 +152,57 @@ export const WithoutDialCode = () => {
     <div style={{ color: 'black', fontSize: '13px' }}>
       <span>Phone: {phone}</span>
       <PhoneInput value={phone} onChange={setPhone} disableDialCodeAndPrefix />
+    </div>
+  );
+};
+
+export const Ref = () => {
+  const [phone, setPhone] = useState('');
+
+  const ref = useRef<PhoneInputRefType>(null);
+
+  return (
+    <div
+      style={{
+        color: 'black',
+        fontSize: '13px',
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        maxWidth: '230px',
+        gap: '10px',
+      }}
+    >
+      <div>Phone: {phone}</div>
+      <PhoneInput value={phone} onChange={setPhone} ref={ref} />
+
+      <button
+        onClick={() => {
+          if (!ref.current) return;
+
+          ref.current.setCountry('ua');
+          ref.current.focus();
+        }}
+      >
+        Set Ukraine
+      </button>
+
+      <div
+        style={{
+          height: '150vh',
+          background: 'ghostwhite',
+        }}
+      >
+        Scroll to bottom
+      </div>
+      <button
+        onClick={() => {
+          if (!ref.current) return;
+          ref.current.scrollIntoView({ behavior: 'smooth' });
+        }}
+      >
+        Scroll to phone
+      </button>
     </div>
   );
 };
