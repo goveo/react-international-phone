@@ -1,3 +1,5 @@
+import PropDescription from '@site/src/components/PropDescription'
+
 # PhoneInput API
 
 **PhoneInput** is a highly customizable phone input component.
@@ -28,34 +30,161 @@ import {PhoneInput} from 'react-international-phone';
 
 ## Properties
 
-| Prop                          | Type                  | Description                                                                                                                                                                                                          | Default value               |
-| ----------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
-| defaultCountry                | `CountryIso2`         | Default country value (iso2).                                                                                                                                                                                        | `"us"`                      |
-| value                         | `string`              | Phone value.                                                                                                                                                                                                         | `""`                        |
-| countries                     | `CountryData[]`       | An array of available countries to select (and guess)                                                                                                                                                                | `defaultCountries`          |
-| hideDropdown                  | `boolean`             | Hide the dropdown icon. Make country selection not accessible.                                                                                                                                                       | `false`                     |
-| placeholder                   | `string`              | Input's placeholder                                                                                                                                                                                                  | `undefined`                 |
-| disabled                      | `boolean`             | Disable phone input and country selector.                                                                                                                                                                            | `false`                     |
-| prefix                        | `string`              | Prefix for phone value.                                                                                                                                                                                              | `"+"`                       |
-| defaultMask                   | `string`              | This mask will apply on countries that does not have specified mask.                                                                                                                                                 | `"............"` (12 chars) |
-| charAfterDialCode             | `string`              | Char that renders after country dial code.                                                                                                                                                                           | `" "`                       |
-| historySaveDebounceMS         | `number`              | Save value to history if there were not any changes in provided milliseconds timeslot.<br />Undo/redo (ctrl+z/ctrl+shift+z) works only with values that are saved in history                                         | `200`                       |
-| disableCountryGuess           | `boolean`             | Disable country guess on value change.<br />- _onCountryGuess_ callback would not be called.                                                                                                                         | `false`                     |
-| disableDialCodePrefill        | `boolean`             | Disable dial code prefill on initialization.<br />Dial code prefill works only when "empty" phone value have been provided.                                                                                          | `false`                     |
-| forceDialCode                 | `boolean`             | Always display the dial code.<br />Dial code can't be removed/changed by keyboard events, but it can be changed by pasting another country phone value.                                                              | `false`                     |
-| disableDialCodeAndPrefix      | `boolean`             | Phone value will not include passed _dialCode_ and _prefix_ if set to _true_.<br />- _disableCountryGuess_ value will be ignored and set to _true_.<br />- _forceDialCode_ value will be ignored and set to _false_. | `false`                     |
-| showDisabledDialCodeAndPrefix | `boolean`             | Show prefix and dial code between country selector and phone input.<br />- Works only when _disableDialCodeAndPrefix_ is _true_                                                                                      | `false`                     |
-| disableFormatting             | `boolean`             | Disable phone value mask formatting. All formatting characters will not be displayed, but the mask length will be preserved.                                                                                         | `false`                     |
-| flags                         | `CustomFlagImage[]`   | Custom flag URLs array                                                                                                                                                                                               | `undefined`                 |
-| inputProps                    | `InputHTMLAttributes` | Default input component props                                                                                                                                                                                        | `undefined`                 |
+### `value`
 
-## Events
+<PropDescription
+type="string"
+description="Phone value."
+defaultValue={'""'}
+/>
 
-| Event    | Type                                                                                 | Description                         |
-| -------- | ------------------------------------------------------------------------------------ | ----------------------------------- |
-| onChange | `(phone: string, country: { country: ParsedCountry, displayValue: string }) => void` | Callback that calls on phone change |
+### `onChange`
 
+<PropDescription
+type="(phone: string, country: { country: ParsedCountry, displayValue: string }) => void"
+description="Callback that calls on phone change"
+defaultValue="undefined"
+/>
+
+### `defaultCountry`
+
+<PropDescription
+type="CountryIso2"
+description="Default country value (iso2)."
+defaultValue={'"us"'}
+/>
+
+### `countries`
+
+<PropDescription
+type="CountryData[]"
+description="An array of available countries to select (and guess)"
+defaultValue="defaultCountries"
+/>
+
+### `hideDropdown`
+
+<PropDescription
+type="boolean"
+description="Hide the dropdown icon. Make country selection not accessible."
+defaultValue="false"
+/>
+
+### `placeholder`
+
+<PropDescription
+type="string"
+description="Input's placeholder"
+defaultValue="undefined"
+/>
+
+### `disabled`
+
+<PropDescription
+type="boolean"
+description="Disable phone input and country selector."
+defaultValue="false"
+/>
+
+### `prefix`
+
+<PropDescription
+type="string"
+description="Prefix for phone value."
+defaultValue="+"
+/>
+
+### `defaultMask`
+
+<PropDescription
+type="string"
+description="This mask will apply on countries that does not have specified mask."
+defaultValue={'"............"'}
+/>
+
+### `charAfterDialCode`
+
+<PropDescription
+type="string"
+description="Char that renders after country dial code."
+defaultValue={'" "'}
+/>
+
+### `historySaveDebounceMS`
+
+<PropDescription
+type="number"
+description="Save value to history if there were not any changes in provided milliseconds timeslot. Undo/redo (ctrl+z/ctrl+shift+z) works only with values that are saved in history"
+defaultValue="200"
+/>
+
+### `disableCountryGuess`
+
+<PropDescription
+type="boolean"
+description={<span>Disable country guess on value change. <code>onCountryGuess</code> callback would not be called.</span>}
+defaultValue="false"
+/>
+
+### `disableDialCodePrefill`
+
+<PropDescription
+type="boolean"
+description="Disable dial code prefill on initialization. Dial code prefill works only when empty phone value have been provided."
+defaultValue="false"
+/>
+
+### `forceDialCode`
+
+<PropDescription
+type="boolean"
+description="Always display the dial code. Dial code can't be removed/changed by keyboard events, but it can be changed by pasting another country phone value."
+defaultValue={'""'}
+/>
+
+### `disableDialCodeAndPrefix`
+
+<PropDescription
+type="boolean"
+description={<span>Display phone value will not include passed <code>dialCode</code> and <code>prefix</code> if set to <code>true</code>. <code>forceDialCode</code> value will be ignored.</span>}
+defaultValue={'""'}
+/>
+
+### `showDisabledDialCodeAndPrefix`
+
+<PropDescription
+type="boolean"
+description={<span>Show prefix and dial code between country selector and phone input. Works only when <code>disableDialCodeAndPrefix</code> is <code>true</code></span>}
+defaultValue={'""'}
+/>
+
+### `disableFormatting`
+
+<PropDescription
+type="boolean"
+description=" Disable phone value mask formatting. All formatting characters will not be displayed, but the mask length will be preserved."
+defaultValue={'""'}
+/>
+
+### `flags`
+
+<PropDescription
+type="CustomFlagImage[]"
+description="Custom flag URLs array"
+defaultValue={'""'}
+/>
+
+### `inputProps`
+
+<PropDescription
+type="InputHTMLAttributes"
+description="Default input component props"
+defaultValue={'""'}
+/>
+
+:::note
 Input events like **`onFocus`** and **`onBlur`** can be passed to the `inputProps`
+:::
 
 ## Style properties
 
@@ -114,5 +243,7 @@ In addition to the [HTMLInputElement API](https://developer.mozilla.org/en-US/do
 
 #### `setCountry`
 
-- **Type:** `(iso2: CountryIso2) => void`
-- **Description:** Set some country value (works same as country selector country item click handler)
+<PropDescription
+type="(iso2: CountryIso2) => void"
+description="Set some country value (works same as country selector country item click handler)"
+/>

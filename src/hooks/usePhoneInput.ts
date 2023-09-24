@@ -80,8 +80,8 @@ export interface UsePhoneInputConfig {
   forceDialCode?: boolean;
 
   /**
-   * @description Phone value will not include passed *dialCode* and *prefix* if set to *true*.
-   * @ignore *forceDialCode* value will be ignored and set to *false*.
+   * @description Display phone value will not include passed *dialCode* and *prefix* if set to *true*.
+   * @ignore *forceDialCode* value will be ignored.
    * @default false
    */
   disableDialCodeAndPrefix?: boolean;
