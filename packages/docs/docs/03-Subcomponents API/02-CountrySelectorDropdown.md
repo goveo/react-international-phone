@@ -1,4 +1,5 @@
 import RequiredMark from '@site/src/components/RequiredMark'
+import PropDescription from '@site/src/components/PropDescription'
 
 # CountrySelectorDropdown API
 
@@ -29,20 +30,46 @@ import { CountrySelectorDropdown } from 'react-international-phone';
 
 <CountrySelectorDropdown show={true} selectedCountry="al" style={{ position: 'relative', top: '0' }} />
 
-### Properties
+## Properties
 
-| Prop                 | Type          | Description                         | Default value |
-| -------------------- | ------------- | ----------------------------------- | ------------- |
-| show <RequiredMark/> | `boolean`     | Show dropdown                       |               |
-| dialCodePrefix       | `string`      | Prefix for country code             | `"+" `        |
-| selectedCountry      | `CountryIso2` | Selected option country code (iso2) | `undefined`   |
+### `show` <RequiredMark/>
 
-### Events
+<PropDescription
+type="boolean"
+description="Show dropdown"
+/>
 
-| Prop     | Type                               | Description                                                                                |
-| -------- | ---------------------------------- | ------------------------------------------------------------------------------------------ |
-| onSelect | `(country: ParsedCountry) => void` | Callback that calls on option select                                                       |
-| onClose  | `() => void`                       | Callback that calls on dropdown close without select any item (usually by keyboard events) |
+### `dialCodePrefix`
+
+<PropDescription
+type="string"
+description="Prefix for country code"
+defaultValue={`"+"`}
+/>
+
+### `selectedCountry`
+
+<PropDescription
+type="CountryIso2"
+description="Selected option country code (iso2)"
+defaultValue="undefined"
+/>
+
+### `onSelect`
+
+<PropDescription
+type="(country: ParsedCountry) => void"
+description="Callback that calls on option select"
+defaultValue="undefined"
+/>
+
+### `onClose`
+
+<PropDescription
+type="() => void"
+description="Callback that calls on dropdown close without select any item (usually by keyboard events)"
+defaultValue="undefined"
+/>
 
 ### Style properties (`CountrySelectorDropdownStyleProps` type)
 
