@@ -91,7 +91,7 @@ defaultValue="false"
 <PropDescription
 type="string"
 description="Prefix for phone value."
-defaultValue="+"
+defaultValue={'"+"'}
 />
 
 ### `defaultMask`
@@ -139,7 +139,7 @@ defaultValue="false"
 <PropDescription
 type="boolean"
 description="Always display the dial code. Dial code can't be removed/changed by keyboard events, but it can be changed by pasting another country phone value."
-defaultValue={'""'}
+defaultValue="false"
 />
 
 ### `disableDialCodeAndPrefix`
@@ -147,7 +147,7 @@ defaultValue={'""'}
 <PropDescription
 type="boolean"
 description={<span>Display phone value will not include passed <code>dialCode</code> and <code>prefix</code> if set to <code>true</code>. <code>forceDialCode</code> value will be ignored.</span>}
-defaultValue={'""'}
+defaultValue="false"
 />
 
 ### `showDisabledDialCodeAndPrefix`
@@ -155,15 +155,15 @@ defaultValue={'""'}
 <PropDescription
 type="boolean"
 description={<span>Show prefix and dial code between country selector and phone input. Works only when <code>disableDialCodeAndPrefix</code> is <code>true</code></span>}
-defaultValue={'""'}
+defaultValue="false"
 />
 
 ### `disableFormatting`
 
 <PropDescription
 type="boolean"
-description=" Disable phone value mask formatting. All formatting characters will not be displayed, but the mask length will be preserved."
-defaultValue={'""'}
+description="Disable phone value mask formatting. All formatting characters will not be displayed, but the mask length will be preserved."
+defaultValue="false"
 />
 
 ### `flags`
@@ -171,7 +171,7 @@ defaultValue={'""'}
 <PropDescription
 type="CustomFlagImage[]"
 description="Custom flag URLs array"
-defaultValue={'""'}
+defaultValue="undefined"
 />
 
 ### `inputProps`
@@ -179,7 +179,7 @@ defaultValue={'""'}
 <PropDescription
 type="InputHTMLAttributes"
 description="Default input component props"
-defaultValue={'""'}
+defaultValue="undefined"
 />
 
 :::note
