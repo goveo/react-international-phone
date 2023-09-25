@@ -12,14 +12,20 @@ Use `phone` (as value), `handlePhoneValueChange` (as onChange callback) and `inp
 ```ts
 // import { usePhoneInput } from 'react-international-phone';
 
-const { country, setCountry, phone, handlePhoneValueChange, inputRef } =
-  usePhoneInput({
-    defaultCountry: 'us',
-    value: '+1 (234)',
-    onChange: ({ phone, country }) => {
-      // make something on change
-    },
-  });
+const {
+  country,
+  setCountry,
+  phone,
+  e164Phone,
+  handlePhoneValueChange,
+  inputRef,
+} = usePhoneInput({
+  defaultCountry: 'us',
+  value: '+1 (234)',
+  onChange: ({ phone, e164Phone, country }) => {
+    // make something on change
+  },
+});
 ```
 
 ## Hook arguments
@@ -128,13 +134,28 @@ description="Disable phone value mask formatting. All formatting characters will
 defaultValue="false"
 />
 
+### `inputRef`
+
+<PropDescription
+type="React.MutableRefObject<HTMLInputElement | null>"
+description="Ref for the input element."
+defaultValue="undefined"
+/>
+
 ## Returned values
 
 ### `phone`
 
 <PropDescription
 type="string"
-description="Formatted phone string."
+description="Formatted phone string. Value that should be rendered inside input element."
+/>
+
+### `e164Phone`
+
+<PropDescription
+type="string"
+description="Phone in E164 format."
 />
 
 ### `handlePhoneValueChange`

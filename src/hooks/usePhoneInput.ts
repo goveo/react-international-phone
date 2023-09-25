@@ -94,9 +94,10 @@ export interface UsePhoneInputConfig {
 
   /**
    * @description Callback that calls on phone change
-   * @params new phone input state
-   * - *data.phone* - new phone value
-   * - *data.country* - new country value
+   * @param data - New phone data
+   * @param data.phone - Formatted phone string.
+   * @param data.e164Phone - Phone in E164 format
+   * @param data.country - Current country iso code.
    * @default undefined
    */
   onChange?: (data: {
@@ -351,7 +352,7 @@ export const usePhoneInput = ({
   }, [value]);
 
   return {
-    phone, // Formatted phone string.
+    phone, // Formatted phone string. Value that should be rendered inside input element.
     e164Phone, // Phone in E164 format
     country, // Current country iso code.
     setCountry: setNewCountry, // Country setter.
