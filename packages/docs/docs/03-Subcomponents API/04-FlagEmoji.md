@@ -1,4 +1,5 @@
 import RequiredMark from '@site/src/components/RequiredMark'
+import PropDescription from '@site/src/components/PropDescription'
 
 # FlagEmoji API
 
@@ -25,14 +26,38 @@ import { FlagEmoji } from 'react-international-phone';
 
 <FlagEmoji iso2="ua" size="30px" />
 
-### Properties
+## Properties
 
-| Prop                 | Type                           | Description                                                                | Default value |
-| -------------------- | ------------------------------ | -------------------------------------------------------------------------- | ------------- |
-| iso2 <RequiredMark/> | `string`                       | iso2 code of country flag                                                  |               |
-| src                  | `string`                       | Custom src of flag                                                         | `undefined`   |
-| protocol             | <code>"http" \| "https"</code> | Protocol to use with twemoji cnd                                           | `"https"`     |
-| disableLazyLoading   | `boolean`                      | Disable lazy loading of flags (`loading="lazy"` attribute will not be set) | `undefined`   |
+### `iso2` <RequiredMark/>
+
+<PropDescription
+type="string"
+description="iso2 code of country flag"
+/>
+
+### `src`
+
+<PropDescription
+type="string"
+description="Custom src of flag"
+defaultValue="undefined"
+/>
+
+### `protocol`
+
+<PropDescription
+type={`"http" | "https"`}
+description="Protocol to use with twemoji cnd"
+defaultValue={`"https"`}
+/>
+
+### `disableLazyLoading`
+
+<PropDescription
+type="boolean"
+description={<span>Disable lazy loading of flags (<code>loading="lazy"</code> attribute will not be set)</span>}
+defaultValue={`"https"`}
+/>
 
 ### Style properties
 

@@ -38,7 +38,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
       value,
       countries: defaultCountries,
       onChange: (data) => {
-        onChange(data.phone);
+        onChange(data.e164Phone);
       },
     });
 
