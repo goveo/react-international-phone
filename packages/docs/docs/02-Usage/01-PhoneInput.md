@@ -70,14 +70,6 @@ description="Hide the dropdown icon. Make country selection not accessible."
 defaultValue="false"
 />
 
-### `placeholder`
-
-<PropDescription
-type="string"
-description="Input's placeholder"
-defaultValue="undefined"
-/>
-
 ### `disabled`
 
 <PropDescription
@@ -183,7 +175,8 @@ defaultValue="undefined"
 />
 
 :::note
-Input events like **`onFocus`** and **`onBlur`** can be passed to the `inputProps`
+Input props like `onFocus`, `onBlur`, `name`, `placeholder`, `disabled`, `required` and `autoFocus` also supported as top-level props.<br/>
+If you want add some additional attributes to the input element, you can do it using `inputProps`
 :::
 
 ## Style properties

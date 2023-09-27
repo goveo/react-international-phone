@@ -28,6 +28,8 @@ export interface PhoneInputStyleProps {
   dialCodePreviewStyleProps?: DialCodePreviewStyleProps;
 }
 
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+
 export interface PhoneInputProps
   extends Omit<UsePhoneInputConfig, 'onChange'>,
     PhoneInputStyleProps {
@@ -38,30 +40,12 @@ export interface PhoneInputProps
   hideDropdown?: CountrySelectorProps['hideDropdown'];
 
   /**
-   * @description Input's placeholder
-   * @default undefined
-   */
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
-
-  /**
-   * @description Disable phone input and country selector.
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
    * @description
    * Show prefix and dial code between country selector and phone input.
    * Works only when *disableDialCodeAndPrefix* is *true*
    * @default false
    */
   showDisabledDialCodeAndPrefix?: boolean;
-
-  /**
-   * @description Default input component props
-   * @default undefined
-   */
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 
   /**
    * @description Custom flag URLs array
@@ -81,6 +65,21 @@ export interface PhoneInputProps
       displayValue: string;
     },
   ) => void;
+
+  /**
+   * @description Default input component props
+   * @default undefined
+   */
+  inputProps?: InputProps;
+
+  // pass most used input props as top level props for easy integration
+  onFocus?: InputProps['onFocus'];
+  onBlur?: InputProps['onBlur'];
+  name?: InputProps['name'];
+  required?: InputProps['required'];
+  autoFocus?: InputProps['autoFocus'];
+  disabled?: InputProps['disabled'];
+  placeholder?: InputProps['placeholder'];
 }
 
 export type PhoneInputRefType =
@@ -92,13 +91,12 @@ export type PhoneInputRefType =
 export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
   (
     {
-      hideDropdown,
-      placeholder,
-      disabled,
-      showDisabledDialCodeAndPrefix,
-      inputProps,
-      flags,
+      value,
       onChange,
+      countries = defaultCountries,
+      hideDropdown,
+      showDisabledDialCodeAndPrefix,
+      flags,
 
       style,
       className,
@@ -107,8 +105,15 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
       countrySelectorStyleProps,
       dialCodePreviewStyleProps,
 
-      value,
-      countries = defaultCountries,
+      inputProps,
+      placeholder,
+      disabled,
+      name,
+      onFocus,
+      onBlur,
+      required,
+      autoFocus,
+
       ...usePhoneInputConfig
     },
     ref,
@@ -193,6 +198,11 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
           placeholder={placeholder}
           disabled={disabled}
           style={inputStyle}
+          name={name}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          autoFocus={autoFocus}
+          required={required}
           {...inputProps}
         />
       </div>
