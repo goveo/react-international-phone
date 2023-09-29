@@ -17,7 +17,7 @@ export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <CountrySelector
-        selectedCountry={country}
+        selectedCountry={country.iso2}
         onSelect={(country) => setCountry(country.iso2)}
         renderButtonWrapper={({ children, rootProps }) => (
           <IconButton

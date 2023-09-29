@@ -240,3 +240,31 @@ In addition to the [HTMLInputElement API](https://developer.mozilla.org/en-US/do
 type="(iso2: CountryIso2) => void"
 description="Set some country value (works same as country selector country item click handler)"
 />
+
+## `ParsedCountry` type
+
+`onChange` callback provides `country` object with `ParsedCountry` type:
+
+```ts
+interface ParsedCountry {
+  name: string;
+  iso2: CountryIso2;
+  dialCode: string;
+  format: string | FormatConfig | undefined;
+  priority: number | undefined;
+  areaCodes: string[] | undefined;
+}
+```
+
+Parsed country object example:
+
+```ts
+{
+  name: 'Ukraine';
+  iso2: 'ua';
+  dialCode: '380';
+  format: '(..) ... .. ..';
+  priority: undefined;
+  areaCodes: undefined;
+}
+```

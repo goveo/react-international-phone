@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../data/countryData';
 import { CountryData, CountryIso2, ParsedCountry } from '../types';
@@ -97,13 +97,13 @@ export interface UsePhoneInputConfig {
    * @param data - New phone data
    * @param data.phone - Formatted phone string.
    * @param data.e164Phone - Phone in E164 format
-   * @param data.country - Current country iso code.
+   * @param data.country - Current country object.
    * @default undefined
    */
   onChange?: (data: {
     phone: string;
     e164Phone: string;
-    country: CountryIso2;
+    country: ParsedCountry;
   }) => void;
 
   /**
@@ -219,18 +219,25 @@ export const usePhoneInput = ({
       {
         overrideLastItemDebounceMS: historySaveDebounceMS,
         onChange: ({ phone, e164Phone, country }) => {
-          onChange?.({ phone, e164Phone, country });
+          onChange?.({ phone, e164Phone, country: getFullCountry(country) });
         },
       },
     );
 
+  const getFullCountry = useCallback(
+    (iso2: string) => {
+      return getCountry({
+        value: iso2,
+        field: 'iso2',
+        countries,
+      }) as ParsedCountry;
+    },
+    [countries],
+  );
+
   const fullCountry = useMemo(() => {
-    return getCountry({
-      value: country,
-      field: 'iso2',
-      countries,
-    }) as ParsedCountry;
-  }, [countries, country]);
+    return getFullCountry(country);
+  }, [country, getFullCountry]);
 
   // Handle undo/redo events
   useEffect(() => {
@@ -320,7 +327,7 @@ export const usePhoneInput = ({
         onChange?.({
           phone,
           e164Phone,
-          country,
+          country: fullCountry,
         });
       }
 
@@ -354,7 +361,7 @@ export const usePhoneInput = ({
   return {
     phone, // Formatted phone string. Value that should be rendered inside input element.
     e164Phone, // Phone in E164 format
-    country, // Current country iso code.
+    country: fullCountry, // Current country object.
     setCountry: setNewCountry, // Country setter.
     handlePhoneValueChange, // Change handler for input component
     inputRef, // Ref object for input component (handles caret position, focus and undo/redo).

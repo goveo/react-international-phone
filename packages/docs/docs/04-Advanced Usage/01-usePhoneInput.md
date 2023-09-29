@@ -41,7 +41,7 @@ defaultValue={'""'}
 ### `onChange`
 
 <PropDescription
-type="(data: { phone: string; country: CountryIso2 }) => void"
+type="(data: { phone: string; e164Phone: string; country: ParsedCountry }) => void"
 description="Callback that calls on phone change"
 defaultValue="undefined"
 />
@@ -175,8 +175,8 @@ description="Ref object for input component (handles caret position, focus and u
 ### `country`
 
 <PropDescription
-type="CountryIso2"
-description="Current country iso code."
+type="ParsedCountry"
+description="Current country object."
 />
 
 ### `setCountry`

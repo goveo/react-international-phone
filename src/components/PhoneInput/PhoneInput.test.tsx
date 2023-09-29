@@ -807,27 +807,52 @@ describe('PhoneInput', () => {
         return ['us', 'ua', 'cz'].includes(iso2);
       });
 
+      const onChange = jest.fn();
+
       render(
-        <PhoneInput defaultCountry="us" value="+1234" countries={countries} />,
+        <PhoneInput
+          defaultCountry="us"
+          value="+1234"
+          countries={countries}
+          onChange={onChange}
+        />,
       );
 
       expect(getCountrySelectorDropdown().childNodes.length).toBe(
         countries.length,
       );
 
+      expect(onChange.mock.calls.length).toBe(0);
+
       fireChangeEvent('44444');
 
       // not supported country was not set (+44 should set uk by default)
       expect(getInput().value).toBe('+4 (444) 4');
       expect(getCountrySelector()).toHaveAttribute('title', 'United States');
+      expect(onChange.mock.calls.length).toBe(1);
+      expect(onChange.mock.calls[0][0]).toBe('+44444');
+      expect(onChange.mock.calls[0][1].country.iso2).toBe('us');
+
+      fireChangeEvent('+1 (204) 555-5555');
+      expect(getInput().value).toBe('+1 (204) 555-5555');
+      expect(getCountrySelector()).toHaveAttribute('title', 'United States'); // not change to canada
+      expect(onChange.mock.calls.length).toBe(2);
+      expect(onChange.mock.calls[1][0]).toBe('+12045555555');
+      expect(onChange.mock.calls[1][1].country.iso2).toBe('us');
 
       fireChangeEvent('420123');
       expect(getInput().value).toBe('+420 123 ');
       expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+      expect(onChange.mock.calls.length).toBe(3);
+      expect(onChange.mock.calls[2][0]).toBe('+420123');
+      expect(onChange.mock.calls[2][1].country.iso2).toBe('cz');
 
       fireChangeEvent('555555');
       expect(getInput().value).toBe('+555 555 ');
       expect(getCountrySelector()).toHaveAttribute('title', 'Czech Republic');
+      expect(onChange.mock.calls.length).toBe(4);
+      expect(onChange.mock.calls[3][0]).toBe('+555555');
+      expect(onChange.mock.calls[3][1].country.iso2).toBe('cz');
     });
 
     test('should support country change', () => {

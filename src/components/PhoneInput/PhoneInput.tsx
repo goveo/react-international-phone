@@ -1,12 +1,11 @@
 import './PhoneInput.style.scss';
 
-import React, { forwardRef, useImperativeHandle, useMemo } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryIso2, ParsedCountry } from '../../types';
-import { getCountry } from '../../utils';
 import {
   CountrySelector,
   CountrySelectorProps,
@@ -125,25 +124,16 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
         ...usePhoneInputConfig,
         onChange: (data) => {
           onChange?.(data.e164Phone, {
-            country: getCountry({ field: 'iso2', value: data.country }),
+            country: data.country,
             displayValue: data.phone,
           });
         },
       });
 
-    const fullCountry = useMemo(() => {
-      if (!country) return;
-      return getCountry({
-        value: country,
-        field: 'iso2',
-        countries,
-      });
-    }, [countries, country]);
-
     const showDialCodePreview =
       usePhoneInputConfig.disableDialCodeAndPrefix &&
       showDisabledDialCodeAndPrefix &&
-      fullCountry?.dialCode;
+      country?.dialCode;
 
     useImperativeHandle<PhoneInputRefType, PhoneInputRefType>(
       ref,
@@ -170,7 +160,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
         <CountrySelector
           onSelect={(country) => setCountry(country.iso2)}
           flags={flags}
-          selectedCountry={country}
+          selectedCountry={country.iso2}
           countries={countries}
           disabled={disabled}
           hideDropdown={hideDropdown}
@@ -179,7 +169,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
 
         {showDialCodePreview && (
           <DialCodePreview
-            dialCode={fullCountry.dialCode}
+            dialCode={country.dialCode}
             prefix={usePhoneInputConfig.prefix ?? '+'}
             disabled={disabled}
             {...dialCodePreviewStyleProps}

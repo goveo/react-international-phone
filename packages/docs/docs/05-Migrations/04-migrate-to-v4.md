@@ -23,3 +23,8 @@ Before: `(phone: string, country: CountryIso2) => void`<br/>
 After: `(phone: string, data: { country: ParsedCountry, displayValue: string }) => void`.
 
 The second argument is now an object that contains additional information about the phone.
+
+## usePhoneInput now returns country object
+
+`usePhoneInput` returns a parsed [country object](/docs/Usage/PhoneInput#parsedcountry-type) instead of iso2 code.<br/>
+Check updated `usePhoneInput` API reference [here](/docs/Advanced%20Usage/usePhoneInput).

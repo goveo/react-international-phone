@@ -80,7 +80,7 @@ export const MuiPhoneJsx = ({ value, onChange, ...restProps }) => {
                   right: 0,
                 },
               }}
-              value={country}
+              value={country.iso2}
               onChange={(e) => setCountry(e.target.value)}
               renderValue={(value) => (
                 <FlagEmoji iso2={value} style={{ display: 'flex' }} />

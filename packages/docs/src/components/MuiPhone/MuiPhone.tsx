@@ -91,7 +91,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
                   right: 0,
                 },
               }}
-              value={country}
+              value={country.iso2}
               onChange={(e) => setCountry(e.target.value as CountryIso2)}
               renderValue={(value) => (
                 <FlagEmoji iso2={value} style={{ display: 'flex' }} />
