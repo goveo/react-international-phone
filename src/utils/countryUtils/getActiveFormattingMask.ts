@@ -6,16 +6,14 @@ import { removeNonDigits } from '../common';
  * Get the country mask format based on the phone value.
  * Since country can have multiple mask formats this function select proper mask based on regex
  */
-export const getCountryMaskFormat = ({
+export const getActiveFormattingMask = ({
   phone,
   country,
-  prefix = '+',
   defaultMask = '............', // 12 chars
   disableFormatting = false,
 }: {
   phone: string;
   country: ParsedCountry;
-  prefix?: string;
   /**
    * defaultMask is returned when country's format is undefined or not valid
    */
@@ -61,10 +59,7 @@ export const getCountryMaskFormat = ({
 
     // trim first and last symbols (to pass raw regex value to constructor)
     const regex = new RegExp(key.substring(1, key.length - 1));
-    const valueWithoutDialCode = phone.replace(
-      `${prefix}${country.dialCode}`,
-      '',
-    );
+    const valueWithoutDialCode = phone.replace(country.dialCode, '');
 
     return regex.test(removeNonDigits(valueWithoutDialCode));
   });

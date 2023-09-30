@@ -94,9 +94,9 @@ export interface UsePhoneInputConfig {
 
   /**
    * @description Callback that calls on phone change
-   * @param data - New phone data
+   * @param data - New phone data.
    * @param data.phone - Formatted phone string.
-   * @param data.e164Phone - Phone in E164 format
+   * @param data.e164Phone - Phone in E164 format.
    * @param data.country - Current country object.
    * @default undefined
    */
@@ -219,7 +219,14 @@ export const usePhoneInput = ({
       {
         overrideLastItemDebounceMS: historySaveDebounceMS,
         onChange: ({ phone, e164Phone, country }) => {
-          onChange?.({ phone, e164Phone, country: getFullCountry(country) });
+          if (!onChange) return;
+
+          const fullCountry = getFullCountry(country);
+          onChange({
+            phone,
+            e164Phone,
+            country: fullCountry,
+          });
         },
       },
     );

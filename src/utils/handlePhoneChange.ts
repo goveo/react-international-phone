@@ -1,7 +1,7 @@
 import { MASK_CHAR } from '../hooks/usePhoneInput';
 import { CountryData, ParsedCountry } from '../types';
 import {
-  getCountryMaskFormat,
+  getActiveFormattingMask,
   guessCountryByPartialNumber,
 } from './countryUtils';
 import { formatPhone, toE164 } from './phoneUtils';
@@ -64,10 +64,9 @@ export function handlePhoneChange({
 
   const phone = formatPhone(inputPhone, {
     prefix,
-    mask: getCountryMaskFormat({
+    mask: getActiveFormattingMask({
       phone: inputPhone,
       country: formatCountry,
-      prefix,
       defaultMask,
       disableFormatting,
     }),

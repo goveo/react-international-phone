@@ -54,13 +54,16 @@ export interface PhoneInputProps
 
   /**
    * @description Callback that calls on phone change
-   * @params `phone` - new phone value, `country` - country iso2 value
+   * @param e164Phone - New phone value in E.164 format.
+   * @param meta - Additional information about the phone.
+   * @param data.country - New phone country object.
+   * @param data.displayValue - Value that is displayed in input element.
    * @default undefined
    */
   onChange?: (
     e164Phone: string,
     meta: {
-      country: ParsedCountry | undefined;
+      country: ParsedCountry;
       displayValue: string;
     },
   ) => void;

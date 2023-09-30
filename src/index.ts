@@ -9,8 +9,8 @@ export { usePhoneInput } from './hooks/usePhoneInput';
 export type { CountryData, CountryIso2 } from './types';
 export {
   buildCountryData,
+  getActiveFormattingMask,
   getCountry,
-  getCountryMaskFormat,
   guessCountryByPartialNumber as guessCountryByPartialPhoneNumber,
   parseCountry,
   removeDialCode,
