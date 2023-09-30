@@ -95,14 +95,14 @@ export interface UsePhoneInputConfig {
   /**
    * @description Callback that calls on phone change
    * @param data - New phone data.
-   * @param data.phone - Formatted phone string.
-   * @param data.e164Phone - Phone in E164 format.
+   * @param data.phone - Phone in E164 format.
+   * @param data.inputValue - Formatted phone string.
    * @param data.country - Current country object.
    * @default undefined
    */
   onChange?: (data: {
     phone: string;
-    e164Phone: string;
+    inputValue: string;
     country: ParsedCountry;
   }) => void;
 
@@ -173,7 +173,12 @@ export const usePhoneInput = ({
     });
   };
 
-  const [{ phone, e164Phone, country }, updateHistory, undo, redo] =
+  /**
+   * phone - E.164 formatted phone
+   * inputValue - value that should be rendered in the input element
+   * country - current country code
+   */
+  const [{ phone, inputValue, country }, updateHistory, undo, redo] =
     useHistoryState(
       () => {
         const defaultCountryFull = getCountry({
@@ -199,7 +204,7 @@ export const usePhoneInput = ({
 
         const {
           phone,
-          e164Phone,
+          inputValue,
           country: formatCountry,
         } = handlePhoneChange({
           value,
@@ -208,23 +213,23 @@ export const usePhoneInput = ({
           ...phoneFormattingConfig,
         });
 
-        setCursorPosition(phone.length);
+        setCursorPosition(inputValue.length);
 
         return {
           phone,
-          e164Phone,
+          inputValue,
           country: formatCountry.iso2,
         };
       },
       {
         overrideLastItemDebounceMS: historySaveDebounceMS,
-        onChange: ({ phone, e164Phone, country }) => {
+        onChange: ({ inputValue, phone, country }) => {
           if (!onChange) return;
 
           const fullCountry = getFullCountry(country);
           onChange({
             phone,
-            e164Phone,
+            inputValue,
             country: fullCountry,
           });
         },
@@ -276,20 +281,20 @@ export const usePhoneInput = ({
 
     const {
       phone: newPhone,
-      e164Phone: newE164Phone,
+      inputValue: newInputValue,
       country: newCountry,
       cursorPosition: newCursorPosition,
     } = handleUserInput(e, {
       country: fullCountry,
-      phoneBeforeInput: phone,
+      phoneBeforeInput: inputValue,
       insertDialCodeOnEmpty: false, // allow user to clear input
 
       ...phoneFormattingConfig,
     });
 
     updateHistory({
+      inputValue: newInputValue,
       phone: newPhone,
-      e164Phone: newE164Phone,
       country: newCountry.iso2,
     });
 
@@ -306,13 +311,13 @@ export const usePhoneInput = ({
     });
     if (!newCountry) return;
 
-    const newPhoneValue = disableDialCodeAndPrefix
+    const inputValue = disableDialCodeAndPrefix
       ? ''
       : `${prefix}${newCountry.dialCode}${charAfterDialCode}`;
 
     updateHistory({
-      phone: newPhoneValue,
-      e164Phone: `${prefix}${newCountry.dialCode}`,
+      inputValue,
+      phone: `${prefix}${newCountry.dialCode}`,
       country: newCountry.iso2,
     });
 
@@ -329,11 +334,11 @@ export const usePhoneInput = ({
     if (!initialized) {
       setInitialized(true);
 
-      if (value !== e164Phone) {
+      if (value !== phone) {
         // Can call onChange directly because phone value was formatted inside the useHistoryState setter
         onChange?.({
+          inputValue,
           phone,
-          e164Phone,
           country: fullCountry,
         });
       }
@@ -342,13 +347,13 @@ export const usePhoneInput = ({
       return;
     }
 
-    if (value === e164Phone) return;
+    if (value === phone) return;
 
     // new value has been provided to the "value" prop (updated not via input field)
 
     const {
       phone: newPhone,
-      e164Phone: newE164Phone,
+      inputValue: newInputValue,
       country: newCountry,
     } = handlePhoneChange({
       value,
@@ -359,15 +364,15 @@ export const usePhoneInput = ({
 
     updateHistory({
       phone: newPhone,
-      e164Phone: newE164Phone,
+      inputValue: newInputValue,
       country: newCountry.iso2,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return {
-    phone, // Formatted phone string. Value that should be rendered inside input element.
-    e164Phone, // Phone in E164 format
+    phone, // Phone in E164 format
+    inputValue, // Formatted phone string. Value that should be rendered inside input element.
     country: fullCountry, // Current country object.
     setCountry: setNewCountry, // Country setter.
     handlePhoneValueChange, // Change handler for input component

@@ -36,7 +36,7 @@ export const handleUserInput = (
   }: HandleUserInputOptions,
 ): {
   phone: string;
-  e164Phone: string;
+  inputValue: string;
   cursorPosition: number;
   country: ParsedCountry;
 } => {
@@ -68,8 +68,8 @@ export const handleUserInput = (
     userInput !== prefix
   ) {
     return {
-      phone: phoneBeforeInput,
-      e164Phone: toE164({
+      inputValue: phoneBeforeInput,
+      phone: toE164({
         phone: disableDialCodeAndPrefix
           ? `${country.dialCode}${phoneBeforeInput}`
           : phoneBeforeInput,
@@ -88,13 +88,13 @@ export const handleUserInput = (
     // was not inserted with ctrl+v
     !isInserted
   ) {
-    const phoneValue = userInput
+    const inputValue = userInput
       ? phoneBeforeInput
       : `${prefix}${country.dialCode}${charAfterDialCode}`;
 
     return {
-      phone: phoneValue,
-      e164Phone: toE164({ phone: phoneValue, prefix }),
+      inputValue,
+      phone: toE164({ phone: inputValue, prefix }),
       cursorPosition:
         prefix.length + country.dialCode.length + charAfterDialCode.length, // set cursor position after dial code
       country,
@@ -103,7 +103,7 @@ export const handleUserInput = (
 
   const {
     phone: newPhone,
-    e164Phone: newE164Phone,
+    inputValue: newInputValue,
     country: newCountry,
   } = handlePhoneChange({
     value: userInput,
@@ -126,7 +126,7 @@ export const handleUserInput = (
     cursorPositionAfterInput,
     phoneBeforeInput,
     phoneAfterInput: userInput,
-    phoneAfterFormatted: newPhone,
+    phoneAfterFormatted: newInputValue,
     leftOffset: forceDialCode
       ? prefix.length + country.dialCode.length + charAfterDialCode.length
       : 0,
@@ -135,7 +135,7 @@ export const handleUserInput = (
 
   return {
     phone: newPhone,
-    e164Phone: newE164Phone,
+    inputValue: newInputValue,
     cursorPosition: newCursorPosition,
     country: newCountry,
   };

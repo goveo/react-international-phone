@@ -54,14 +54,14 @@ export interface PhoneInputProps
 
   /**
    * @description Callback that calls on phone change
-   * @param e164Phone - New phone value in E.164 format.
+   * @param phone - New phone value in E.164 format.
    * @param meta - Additional information about the phone.
    * @param data.country - New phone country object.
    * @param data.displayValue - Value that is displayed in input element.
    * @default undefined
    */
   onChange?: (
-    e164Phone: string,
+    phone: string,
     meta: {
       country: ParsedCountry;
       displayValue: string;
@@ -120,18 +120,23 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
     },
     ref,
   ) => {
-    const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
-      usePhoneInput({
-        value,
-        countries,
-        ...usePhoneInputConfig,
-        onChange: (data) => {
-          onChange?.(data.e164Phone, {
-            country: data.country,
-            displayValue: data.phone,
-          });
-        },
-      });
+    const {
+      inputValue,
+      inputRef,
+      country,
+      setCountry,
+      handlePhoneValueChange,
+    } = usePhoneInput({
+      value,
+      countries,
+      ...usePhoneInputConfig,
+      onChange: (data) => {
+        onChange?.(data.phone, {
+          country: data.country,
+          displayValue: data.inputValue,
+        });
+      },
+    });
 
     const showDialCodePreview =
       usePhoneInputConfig.disableDialCodeAndPrefix &&
@@ -181,7 +186,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
 
         <input
           onChange={handlePhoneValueChange}
-          value={phone}
+          value={inputValue}
           type="tel"
           ref={inputRef}
           className={buildClassNames({

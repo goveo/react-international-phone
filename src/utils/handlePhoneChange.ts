@@ -40,7 +40,7 @@ export function handlePhoneChange({
   disableFormatting,
 }: HandlePhoneChangeProps): {
   phone: string;
-  e164Phone: string;
+  inputValue: string;
   country: ParsedCountry;
 } {
   let inputPhone = value;
@@ -62,7 +62,7 @@ export function handlePhoneChange({
 
   const formatCountry = countryGuessResult?.country ?? country;
 
-  const phone = formatPhone(inputPhone, {
+  const inputValue = formatPhone(inputPhone, {
     prefix,
     mask: getActiveFormattingMask({
       phone: inputPhone,
@@ -84,16 +84,16 @@ export function handlePhoneChange({
       ? country
       : formatCountry;
 
-  const e164Phone = toE164({
+  const phone = toE164({
     phone: disableDialCodeAndPrefix
-      ? `${resultCountry.dialCode}${phone}`
-      : phone,
+      ? `${resultCountry.dialCode}${inputValue}`
+      : inputValue,
     prefix,
   });
 
   return {
     phone,
-    e164Phone,
+    inputValue,
     country: resultCountry,
   };
 }

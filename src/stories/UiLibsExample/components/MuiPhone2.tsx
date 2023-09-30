@@ -5,12 +5,12 @@ import { CountrySelector, usePhoneInput } from '../../../index';
 import { MUIPhoneProps } from './MuiPhone';
 
 export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
-  const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
+  const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: 'us',
       value,
       onChange: (data) => {
-        onChange(data.e164Phone);
+        onChange(data.phone);
       },
     });
 
@@ -32,7 +32,7 @@ export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
       <TextField
         label="Phone number"
         color="primary"
-        value={phone}
+        value={inputValue}
         onChange={handlePhoneValueChange}
         inputRef={inputRef}
       />
