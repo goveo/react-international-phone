@@ -225,7 +225,7 @@ type FormatConfig = Record<string, string> & {
 
 type CountryDataWithFormat = [
   ...BaseCountryData,
-  string | FormatConfig, // format
+  FormatConfig | string, // format
 ];
 
 type CountryDataWithOrder = [
