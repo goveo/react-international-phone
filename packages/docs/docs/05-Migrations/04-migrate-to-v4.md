@@ -32,7 +32,7 @@ E.164 format phone returned in callback even if `disabledDialCodeAndPrefix` was 
 
 `onChange` callback type is changed: <br/>
 Before: `(phone: string, country: CountryIso2) => void`<br/>
-After: `(phone: string, data: { country: ParsedCountry, displayValue: string }) => void`.
+After: `(phone: string, data: { country: ParsedCountry, inputValue: string }) => void`.
 
 The second argument is now an object that contains additional information about the phone.
 

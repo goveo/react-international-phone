@@ -41,7 +41,7 @@ defaultValue={'""'}
 ### `onChange`
 
 <PropDescription
-type="(phone: string, meta: { country: ParsedCountry, displayValue: string }) => void"
+type="(phone: string, meta: { country: ParsedCountry, inputValue: string }) => void"
 description="Callback that calls on phone change"
 defaultValue="undefined"
 />

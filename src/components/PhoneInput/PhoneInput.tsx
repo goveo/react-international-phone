@@ -57,14 +57,14 @@ export interface PhoneInputProps
    * @param phone - New phone value in E.164 format.
    * @param meta - Additional information about the phone.
    * @param data.country - New phone country object.
-   * @param data.displayValue - Value that is displayed in input element.
+   * @param data.inputValue - Value that is displayed in input element.
    * @default undefined
    */
   onChange?: (
     phone: string,
     meta: {
       country: ParsedCountry;
-      displayValue: string;
+      inputValue: string;
     },
   ) => void;
 
@@ -133,7 +133,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
       onChange: (data) => {
         onChange?.(data.phone, {
           country: data.country,
-          displayValue: data.inputValue,
+          inputValue: data.inputValue,
         });
       },
     });
