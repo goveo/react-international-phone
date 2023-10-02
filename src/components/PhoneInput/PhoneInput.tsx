@@ -88,6 +88,11 @@ export type PhoneInputRefType =
   | null
   | (HTMLInputElement & {
       setCountry: (iso2: CountryIso2) => void;
+      state: {
+        phone: string;
+        inputValue: string;
+        country: ParsedCountry;
+      };
     });
 
 export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
@@ -121,6 +126,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
     ref,
   ) => {
     const {
+      phone,
       inputValue,
       inputRef,
       country,
@@ -151,9 +157,14 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
         return Object.assign(inputRef.current, {
           // extend input ref with additional properties
           setCountry,
+          state: {
+            phone,
+            inputValue,
+            country,
+          },
         });
       },
-      [inputRef, setCountry],
+      [inputRef, setCountry, phone, inputValue, country],
     );
 
     return (

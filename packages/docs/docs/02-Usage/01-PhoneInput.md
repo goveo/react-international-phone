@@ -241,6 +241,13 @@ type="(iso2: CountryIso2) => void"
 description="Set some country value (works same as country selector country item click handler)"
 />
 
+#### `state`
+
+<PropDescription
+type="{ phone: string; inputValue: string; country: ParsedCountry }"
+description="State of the phone input"
+/>
+
 ## `ParsedCountry` type
 
 `onChange` callback provides `country` object with `ParsedCountry` type:
