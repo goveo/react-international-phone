@@ -62,7 +62,7 @@ Each country in `defaultCountries` follows this format:
   string, // country name
   CountryIso2, // iso2 code
   string, // international dial code
-  string | FormatConfig, // format (optional)
+  FormatConfig | string, // format (optional)
   number, // order priority (optional)
   string[], // area codes (optional)
 ]

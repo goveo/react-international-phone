@@ -13,7 +13,7 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
     defaultCountry: 'us',
     value,
     onChange: (data) => {
-      onChange(data.e164Phone);
+      onChange(data.phone);
     },
   });
 
@@ -53,9 +53,11 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
         <Input
           placeholder="Phone number"
           type="tel"
-          value={phoneInput.phone}
+          value={phoneInput.inputValue}
           onChange={phoneInput.handlePhoneValueChange}
           ref={inputRef}
+          name="phone"
+          autoComplete="tel"
         />
       </Space.Compact>
     </div>

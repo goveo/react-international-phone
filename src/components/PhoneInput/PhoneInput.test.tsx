@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -17,7 +17,7 @@ import {
   increaseSystemTime,
   mockScrollIntoView,
 } from '../../utils/test-utils';
-import { PhoneInput } from './PhoneInput';
+import { PhoneInput, PhoneInputRefType } from './PhoneInput';
 
 export const fireChangeEvent = (
   value: string,
@@ -76,22 +76,22 @@ describe('PhoneInput', () => {
       fireEvent.change(getInput(), { target: { value: '38099' } });
       expect(onChange.mock.calls.length).toBe(1);
       expect(onChange.mock.calls[0][0]).toBe('+38099');
-      expect(onChange.mock.calls[0][1].displayValue).toBe('+380 (99) ');
+      expect(onChange.mock.calls[0][1].inputValue).toBe('+380 (99) ');
 
       fireEvent.change(getInput(), { target: { value: '+380 (99) 999' } });
       expect(onChange.mock.calls.length).toBe(2);
       expect(onChange.mock.calls[1][0]).toBe('+38099999');
-      expect(onChange.mock.calls[1][1].displayValue).toBe('+380 (99) 999 ');
+      expect(onChange.mock.calls[1][1].inputValue).toBe('+380 (99) 999 ');
 
       fireEvent.change(getInput(), { target: { value: '' } });
       expect(onChange.mock.calls.length).toBe(3);
       expect(onChange.mock.calls[2][0]).toBe('');
-      expect(onChange.mock.calls[2][1].displayValue).toBe('');
+      expect(onChange.mock.calls[2][1].inputValue).toBe('');
 
       fireEvent.change(getInput(), { target: { value: '+1 403 555-6666' } });
       expect(onChange.mock.calls.length).toBe(4);
       expect(onChange.mock.calls[3][0]).toBe('+14035556666');
-      expect(onChange.mock.calls[3][1].displayValue).toBe('+1 (403) 555-6666');
+      expect(onChange.mock.calls[3][1].inputValue).toBe('+1 (403) 555-6666');
     });
 
     test('should call onChange on initialization (value is not in e164 format)', () => {
@@ -165,20 +165,20 @@ describe('PhoneInput', () => {
       );
       expect(onChange.mock.calls.length).toBe(1);
       expect(onChange.mock.calls[0][0]).toBe('+1');
-      expect(onChange.mock.calls[0][1].displayValue).toBe('+1 ');
-      expect(onChange.mock.calls[0][1].displayValue).toBe(getInput().value);
+      expect(onChange.mock.calls[0][1].inputValue).toBe('+1 ');
+      expect(onChange.mock.calls[0][1].inputValue).toBe(getInput().value);
 
       fireEvent.change(getInput(), { target: { value: '+38099' } });
       expect(onChange.mock.calls.length).toBe(2);
       expect(onChange.mock.calls[1][0]).toBe('+38099');
-      expect(onChange.mock.calls[1][1].displayValue).toBe('+380 (99) ');
-      expect(onChange.mock.calls[1][1].displayValue).toBe(getInput().value);
+      expect(onChange.mock.calls[1][1].inputValue).toBe('+380 (99) ');
+      expect(onChange.mock.calls[1][1].inputValue).toBe(getInput().value);
 
       fireEvent.change(getInput(), { target: { value: '+38099 99' } });
       expect(onChange.mock.calls.length).toBe(3);
       expect(onChange.mock.calls[2][0]).toBe('+3809999');
-      expect(onChange.mock.calls[2][1].displayValue).toBe('+380 (99) 99');
-      expect(onChange.mock.calls[2][1].displayValue).toBe(getInput().value);
+      expect(onChange.mock.calls[2][1].inputValue).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[2][1].inputValue).toBe(getInput().value);
 
       // undo
       fireEvent.keyDown(getInput(), {
@@ -189,8 +189,8 @@ describe('PhoneInput', () => {
       });
       expect(onChange.mock.calls.length).toBe(4);
       expect(onChange.mock.calls[3][0]).toBe('+38099');
-      expect(onChange.mock.calls[3][1].displayValue).toBe('+380 (99) ');
-      expect(onChange.mock.calls[3][1].displayValue).toBe(getInput().value);
+      expect(onChange.mock.calls[3][1].inputValue).toBe('+380 (99) ');
+      expect(onChange.mock.calls[3][1].inputValue).toBe(getInput().value);
 
       // redo
       fireEvent.keyDown(getInput(), {
@@ -201,8 +201,8 @@ describe('PhoneInput', () => {
       });
       expect(onChange.mock.calls.length).toBe(5);
       expect(onChange.mock.calls[4][0]).toBe('+3809999');
-      expect(onChange.mock.calls[4][1].displayValue).toBe('+380 (99) 99');
-      expect(onChange.mock.calls[4][1].displayValue).toBe(getInput().value);
+      expect(onChange.mock.calls[4][1].inputValue).toBe('+380 (99) 99');
+      expect(onChange.mock.calls[4][1].inputValue).toBe(getInput().value);
     });
 
     test('should return data object as second argument', () => {
@@ -212,7 +212,7 @@ describe('PhoneInput', () => {
       expect(onChange.mock.calls[0][0]).toBe('+1');
       expect(onChange.mock.calls[0][1]).toMatchObject({
         country: getCountry({ field: 'iso2', value: 'us' }),
-        displayValue: '+1 ',
+        inputValue: '+1 ',
       });
 
       fireEvent.change(getInput(), { target: { value: '+1234' } });
@@ -220,7 +220,7 @@ describe('PhoneInput', () => {
       expect(onChange.mock.calls[1][0]).toBe('+1234');
       expect(onChange.mock.calls[1][1]).toMatchObject({
         country: getCountry({ field: 'iso2', value: 'us' }),
-        displayValue: '+1 (234) ',
+        inputValue: '+1 (234) ',
       });
 
       fireEvent.change(getInput(), { target: { value: '+380991234567' } });
@@ -228,7 +228,7 @@ describe('PhoneInput', () => {
       expect(onChange.mock.calls[2][0]).toBe('+380991234567');
       expect(onChange.mock.calls[2][1]).toMatchObject({
         country: getCountry({ field: 'iso2', value: 'ua' }),
-        displayValue: '+380 (99) 123 45 67',
+        inputValue: '+380 (99) 123 45 67',
       });
     });
   });
@@ -1172,6 +1172,55 @@ describe('PhoneInput', () => {
 
       await user.type(getInput(), '+1 (123) 456-7890');
       expect(getInput().value).toBe('+11234567890');
+    });
+  });
+
+  describe('ref forwarding', () => {
+    test('should forward ref to input element', async () => {
+      const ref = React.createRef<PhoneInputRefType>();
+
+      expect(ref.current).toBeNull();
+      render(<PhoneInput ref={ref} />);
+      expect(ref.current).not.toBeNull();
+      expect(ref.current?.value).toBe(getInput().value);
+      expect(ref.current?.tagName.toLowerCase()).toBe('input');
+    });
+
+    test('should support custom setCountry method', async () => {
+      const ref = React.createRef<PhoneInputRefType>();
+
+      render(<PhoneInput ref={ref} />);
+      expect(getInput().value).toBe('+1 ');
+
+      act(() => ref.current?.setCountry('ua'));
+      expect(getInput().value).toBe('+380 ');
+    });
+
+    test('should support custom state property', async () => {
+      const ref = React.createRef<PhoneInputRefType>();
+
+      render(<PhoneInput ref={ref} />);
+      expect(getInput().value).toBe('+1 ');
+
+      expect(ref.current?.state).toMatchObject({
+        phone: '+1',
+        inputValue: '+1 ',
+        country: getCountry({ field: 'iso2', value: 'us' }),
+      });
+
+      act(() => ref.current?.setCountry('ua'));
+      expect(ref.current?.state).toMatchObject({
+        phone: '+380',
+        inputValue: '+380 ',
+        country: getCountry({ field: 'iso2', value: 'ua' }),
+      });
+
+      fireChangeEvent('+1 (204) 555-5555');
+      expect(ref.current?.state).toMatchObject({
+        phone: '+12045555555',
+        inputValue: '+1 (204) 555-5555',
+        country: getCountry({ field: 'iso2', value: 'ca' }),
+      });
     });
   });
 });

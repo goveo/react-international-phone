@@ -13,16 +13,16 @@ Use `phone` (as value), `handlePhoneValueChange` (as onChange callback) and `inp
 // import { usePhoneInput } from 'react-international-phone';
 
 const {
+  inputValue,
+  phone,
   country,
   setCountry,
-  phone,
-  e164Phone,
   handlePhoneValueChange,
   inputRef,
 } = usePhoneInput({
   defaultCountry: 'us',
   value: '+1 (234)',
-  onChange: ({ phone, e164Phone, country }) => {
+  onChange: ({ phone, inputValue, country }) => {
     // make something on change
   },
 });
@@ -41,7 +41,7 @@ defaultValue={'""'}
 ### `onChange`
 
 <PropDescription
-type="(data: { phone: string; e164Phone: string; country: ParsedCountry }) => void"
+type="(data: { phone: string; inputValue: string; country: ParsedCountry }) => void"
 description="Callback that calls on phone change"
 defaultValue="undefined"
 />
@@ -144,14 +144,14 @@ defaultValue="undefined"
 
 ## Returned values
 
-### `phone`
+### `inputValue`
 
 <PropDescription
 type="string"
 description="Formatted phone string. Value that should be rendered inside input element."
 />
 
-### `e164Phone`
+### `phone`
 
 <PropDescription
 type="string"
