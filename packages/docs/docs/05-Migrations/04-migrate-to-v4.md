@@ -40,3 +40,9 @@ The second argument is now an object that contains additional information about 
 
 `usePhoneInput` returns a parsed [country object](/docs/Usage/PhoneInput#parsedcountry-type) instead of iso2 code.<br/>
 Check updated `usePhoneInput` API reference [here](/docs/Advanced%20Usage/usePhoneInput).
+
+## CountrySelectorDropdown item id updated
+
+Dropdown item ids are now prefixed with the library name to avoid id conflicts: `react-international-phone__${iso2}-option`<br/>
+Before: `id="ua-option"`<br/>
+After: `id="react-international-phone__ua-option"`

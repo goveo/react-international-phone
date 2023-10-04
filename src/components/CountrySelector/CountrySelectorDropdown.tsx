@@ -227,7 +227,7 @@ export const CountrySelectorDropdown: React.FC<
       onKeyDown={handleKeyDown}
       onBlur={onClose}
       tabIndex={-1}
-      aria-activedescendant={`${
+      aria-activedescendant={`react-international-phone__${
         parseCountry(countries[focusedItemIndex]).iso2
       }-option`}
     >
@@ -244,7 +244,7 @@ export const CountrySelectorDropdown: React.FC<
             role="option"
             aria-selected={isSelected}
             aria-label={`${country.name} ${dialCodePrefix}${country.dialCode}`}
-            id={`${country.iso2}-option`}
+            id={`react-international-phone__${country.iso2}-option`}
             className={buildClassNames({
               addPrefix: [
                 'country-selector-dropdown__list-item',
