@@ -255,6 +255,7 @@ export const CountrySelectorDropdown: React.FC<
             })}
             onClick={() => handleCountrySelect(country)}
             style={styleProps.listItemStyle}
+            title={country.name}
           >
             <FlagEmoji
               iso2={country.iso2}
