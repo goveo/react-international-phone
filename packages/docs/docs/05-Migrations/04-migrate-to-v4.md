@@ -46,3 +46,8 @@ Check updated `usePhoneInput` API reference [here](/docs/Advanced%20Usage/usePho
 Dropdown item ids are now prefixed with the library name to avoid id conflicts: `react-international-phone__${iso2}-option`<br/>
 Before: `id="ua-option"`<br/>
 After: `id="react-international-phone__ua-option"`
+
+## `FlagEmoji` has been renamed to `FlagImage`
+
+Since the flag component can render custom images, it is not necessarily an emoji.<br/>
+Please update component name if you used it.

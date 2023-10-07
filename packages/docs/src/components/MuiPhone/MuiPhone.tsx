@@ -17,7 +17,7 @@ import React from 'react';
 import {
   CountryIso2,
   defaultCountries,
-  FlagEmoji,
+  FlagImage,
   parseCountry,
   usePhoneInput,
 } from 'react-international-phone';
@@ -94,14 +94,14 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
               value={country.iso2}
               onChange={(e) => setCountry(e.target.value as CountryIso2)}
               renderValue={(value) => (
-                <FlagEmoji iso2={value} style={{ display: 'flex' }} />
+                <FlagImage iso2={value} style={{ display: 'flex' }} />
               )}
             >
               {defaultCountries.map((c) => {
                 const country = parseCountry(c);
                 return (
                   <MenuItem key={country.iso2} value={country.iso2}>
-                    <FlagEmoji
+                    <FlagImage
                       iso2={country.iso2}
                       style={{ marginRight: '8px' }}
                     />

@@ -1,7 +1,7 @@
 // Twemoji is used for emoji rendering
 // https://twemoji.twitter.com
 
-import './FlagEmoji.style.scss';
+import './FlagImage.style.scss';
 
 import React, { CSSProperties } from 'react';
 
@@ -35,7 +35,7 @@ const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
   return [codepoints[iso2[0]], codepoints[iso2[1]]].join('-');
 };
 
-interface FlagEmojiProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface FlagImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   /**
    * @description iso2 code of country flag
    * @required
@@ -63,7 +63,7 @@ interface FlagEmojiProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   disableLazyLoading?: boolean;
 }
 
-export const FlagEmoji: React.FC<FlagEmojiProps> = ({
+export const FlagImage: React.FC<FlagImageProps> = ({
   iso2,
   size,
   src,
