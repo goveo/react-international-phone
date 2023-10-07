@@ -1,7 +1,7 @@
 export { CountrySelector } from './components/CountrySelector/CountrySelector';
 export { CountrySelectorDropdown } from './components/CountrySelector/CountrySelectorDropdown';
 export { DialCodePreview } from './components/DialCodePreview/DialCodePreview';
-export { FlagEmoji } from './components/FlagEmoji/FlagEmoji';
+export { FlagImage } from './components/FlagImage/FlagImage';
 export type { PhoneInputProps } from './components/PhoneInput/PhoneInput';
 export { PhoneInput } from './components/PhoneInput/PhoneInput';
 export { defaultCountries } from './data/countryData';

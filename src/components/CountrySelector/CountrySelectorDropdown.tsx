@@ -11,7 +11,7 @@ import {
   ParsedCountry,
 } from '../../types';
 import { parseCountry, scrollToChild } from '../../utils';
-import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
+import { FlagImage } from '../FlagImage/FlagImage';
 
 const SEARCH_DEBOUNCE_MS = 1000;
 
@@ -257,7 +257,7 @@ export const CountrySelectorDropdown: React.FC<
             style={styleProps.listItemStyle}
             title={country.name}
           >
-            <FlagEmoji
+            <FlagImage
               iso2={country.iso2}
               src={flag?.src}
               className={buildClassNames({

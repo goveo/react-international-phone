@@ -1,9 +1,9 @@
 import RequiredMark from '@site/src/components/RequiredMark'
 import PropDescription from '@site/src/components/PropDescription'
 
-# FlagEmoji API
+# FlagImage API
 
-**FlagEmoji** is component for rendering country flag.
+**FlagImage** is component for rendering country flag.
 It's used in [`CountrySelector`](./01-CountrySelector.md) and [`CountrySelectorDropdown`](./02-CountrySelectorDropdown.md) components.
 
 ## Usage Example
@@ -11,20 +11,20 @@ It's used in [`CountrySelector`](./01-CountrySelector.md) and [`CountrySelectorD
 Import component
 
 ```tsx
-import { FlagEmoji } from 'react-international-phone';
+import { FlagImage } from 'react-international-phone';
 ```
 
 Use by providing the _dialCode_ and _prefix_ properties.
 
 ```tsx
-<FlagEmoji iso2="ua" size="30px" />
+<FlagImage iso2="ua" size="30px" />
 ```
 
 Output:
 
-import { FlagEmoji } from 'react-international-phone';
+import { FlagImage } from 'react-international-phone';
 
-<FlagEmoji iso2="ua" size="30px" />
+<FlagImage iso2="ua" size="30px" />
 
 ## Properties
 
