@@ -60,6 +60,17 @@ export const handleUserInput = (
   const userInput = e.target.value;
   const cursorPositionAfterInput = e.target.selectionStart ?? 0;
 
+  // ignore history events (history should be handled manually)
+  // only possible way to trigger native history event is to press ctrl+z on empty input
+  if (inputType?.includes('history')) {
+    return {
+      inputValue: phoneBeforeInput,
+      phone: toE164({ phone: phoneBeforeInput, prefix }),
+      cursorPosition: phoneBeforeInput.length,
+      country,
+    };
+  }
+
   // ignore user input if typed non-digit character
   if (
     isTyped &&

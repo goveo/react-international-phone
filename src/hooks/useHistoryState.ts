@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { isShallowEqualObjects } from '../utils/common/isShallowEqualObjects';
 import { useTimer } from './useTimer';
 
 interface UseHistoryStateConfig<T> {
@@ -41,8 +42,8 @@ export function useHistoryState<T extends Record<string, unknown> | string>(
     if (
       // compare entries if passed value is object
       (typeof value === 'object' &&
-        Object.entries(value).toString() ===
-          Object.entries(state).toString()) ||
+        typeof state === 'object' &&
+        isShallowEqualObjects(value, state)) ||
       value === state
     ) {
       return;
