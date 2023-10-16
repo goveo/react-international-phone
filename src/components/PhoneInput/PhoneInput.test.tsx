@@ -130,8 +130,10 @@ describe('PhoneInput', () => {
       expect(onChange.mock.calls.length).toBe(1);
       expect(onChange.mock.calls[0][0]).toBe('+1');
 
-      fireEvent.click(getCountrySelector());
-      fireEvent.click(getDropdownOption('ua'));
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('ua'));
+      });
 
       expect(onChange.mock.calls.length).toBe(2);
       expect(onChange.mock.calls[1][0]).toBe('+380');
@@ -141,14 +143,18 @@ describe('PhoneInput', () => {
       expect(onChange.mock.calls.length).toBe(3);
       expect(onChange.mock.calls[2][0]).toBe('+1204');
 
-      fireEvent.click(getCountrySelector());
-      fireEvent.click(getDropdownOption('ca'));
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('ca'));
+      });
       expect(onChange.mock.calls.length).toBe(4);
       expect(onChange.mock.calls[3][0]).toBe('+1');
 
       // should fire change even if phone is not changed
-      fireEvent.click(getCountrySelector());
-      fireEvent.click(getDropdownOption('us'));
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('us'));
+      });
       expect(onChange.mock.calls.length).toBe(5);
       expect(onChange.mock.calls[4][0]).toBe('+1');
     });
@@ -300,19 +306,25 @@ describe('PhoneInput', () => {
   test('should open country selector dropdown', () => {
     render(<PhoneInput defaultCountry="ua" />);
     expect(getCountrySelectorDropdown()).not.toBeVisible();
-    fireEvent.click(getCountrySelector());
+    act(() => {
+      fireEvent.click(getCountrySelector());
+    });
     expect(getCountrySelectorDropdown()).toBeVisible();
   });
 
   test('should select country from dropdown', () => {
     render(<PhoneInput defaultCountry="ua" />);
-    fireEvent.click(getCountrySelector());
-    fireEvent.click(getDropdownOption('af'));
+    act(() => {
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('af'));
+    });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'af');
     expect(getInput().value).toBe('+93 ');
 
-    fireEvent.click(getCountrySelector());
-    fireEvent.click(getDropdownOption('us'));
+    act(() => {
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('us'));
+    });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
     expect(getInput().value).toBe('+1 ');
 
@@ -320,8 +332,10 @@ describe('PhoneInput', () => {
     expect(getInput().value).toBe('+1 (234) ');
     expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
 
-    fireEvent.click(getCountrySelector());
-    fireEvent.click(getDropdownOption('ca'));
+    act(() => {
+      fireEvent.click(getCountrySelector());
+      fireEvent.click(getDropdownOption('ca'));
+    });
     expect(getCountrySelector()).toHaveAttribute('data-country', 'ca');
   });
 
@@ -509,8 +523,10 @@ describe('PhoneInput', () => {
       expect(getCountrySelector()).toHaveAttribute('data-country', 'us');
       expect(getInput().value).toBe('+1 (234) 567-8900');
 
-      fireEvent.click(getCountrySelector());
-      fireEvent.click(getDropdownOption('ua'));
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('ua'));
+      });
       expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
       expect(getInput().value).toBe('+380 ');
     });
@@ -574,8 +590,10 @@ describe('PhoneInput', () => {
       expect(onChange.mock.calls[2][0]).toBe('+1');
       expect(getInput().value).toBe('');
 
-      fireEvent.click(getCountrySelector());
-      fireEvent.click(getDropdownOption('ua'));
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('ua'));
+      });
 
       expect(onChange.mock.calls.length).toBe(4);
       expect(onChange.mock.calls[3][0]).toBe('+380');
@@ -680,8 +698,10 @@ describe('PhoneInput', () => {
       expect(getDialCodePreview()?.textContent).toBe('+1');
       expect(getInput().value).toBe('');
 
-      fireEvent.click(getCountrySelector());
-      fireEvent.click(getDropdownOption('ua'));
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('ua'));
+      });
       expect(getCountrySelector()).toHaveAttribute('data-country', 'ua');
       expect(getDialCodePreview()?.textContent).toBe('+380');
       expect(getInput().value).toBe('');
@@ -1099,8 +1119,10 @@ describe('PhoneInput', () => {
       const country = parseCountry(c);
 
       // change country using dropdown
-      fireEvent.click(getCountrySelector());
-      fireEvent.click(getDropdownOption(country.iso2));
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption(country.iso2));
+      });
 
       const userInput = '999999';
       const inputValue = `${country.dialCode}${userInput}`;
