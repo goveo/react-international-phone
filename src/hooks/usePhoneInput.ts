@@ -415,7 +415,7 @@ export const usePhoneInput = ({
     return value;
   };
 
-  const setNewCountry = (countryIso2: CountryIso2) => {
+  const setNewCountry = (countryIso2: CountryIso2, focusAfterUpdate = true) => {
     const newCountry = getCountry({
       value: countryIso2,
       field: 'iso2',
@@ -432,10 +432,12 @@ export const usePhoneInput = ({
       country: newCountry.iso2,
     });
 
-    // Next tick is used to support UI libraries (had an issue with MUI)
-    Promise.resolve().then(() => {
-      inputRef.current?.focus();
-    });
+    if (focusAfterUpdate) {
+      // Next tick is used to support UI libraries (had an issue with MUI)
+      Promise.resolve().then(() => {
+        inputRef.current?.focus();
+      });
+    }
   };
 
   const [initialized, setInitialized] = useState(false);
