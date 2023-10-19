@@ -32,7 +32,9 @@ const Title: React.FC<{
   );
 };
 
-const PhoneWrapper: React.FC = ({ children }) => {
+const PhoneWrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return <div style={{ marginBottom: '20px' }}>{children}</div>;
 };
 

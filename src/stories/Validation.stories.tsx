@@ -45,7 +45,7 @@ export const Default = () => {
 };
 
 export const Prefilled = () => {
-  const [phone, setPhone] = useState('+1 (204) 999-9999');
+  const [phone, setPhone] = useState('+12049999999');
   const isValid = validatePhone(phone);
 
   return (
