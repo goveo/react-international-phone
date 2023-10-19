@@ -7,3 +7,4 @@ pnpm-lock.yaml
 /packages/docs/.docusaurus
 CHANGELOG.md
 /storybook-static
+/examples
