@@ -309,7 +309,12 @@ export const usePhoneInput = ({
       field: 'iso2',
       countries,
     });
-    if (!newCountry) return;
+    if (!newCountry) {
+      console.error(
+        `[react-international-phone]: can not find a country with "${countryIso2}" iso2 code`,
+      );
+      return;
+    }
 
     const inputValue = disableDialCodeAndPrefix
       ? ''

@@ -1169,7 +1169,7 @@ describe('PhoneInput', () => {
       expect(getInput().value).toBe('+1 1234567890');
     });
 
-    test('should remove handle default mask', async () => {
+    test('should handle default mask', async () => {
       const user = userEvent.setup({ delay: null });
 
       render(<PhoneInput disableFormatting defaultMask="(...) ... ... ..." />);
@@ -1209,6 +1209,10 @@ describe('PhoneInput', () => {
     });
 
     test('should support custom setCountry method', async () => {
+      const logSpy = jest
+        .spyOn(global.console, 'error')
+        .mockImplementation(() => null);
+
       const ref = React.createRef<PhoneInputRefType>();
 
       render(<PhoneInput ref={ref} />);
@@ -1216,6 +1220,16 @@ describe('PhoneInput', () => {
 
       act(() => ref.current?.setCountry('ua'));
       expect(getInput().value).toBe('+380 ');
+
+      // should log error if not valid country code provided
+      act(() => ref.current?.setCountry('test-country'));
+      expect(getInput().value).toBe('+380 ');
+
+      expect(logSpy).toHaveBeenCalledTimes(1);
+      expect(logSpy).toHaveBeenCalledWith(
+        '[react-international-phone]: can not find a country with "test-country" iso2 code',
+      );
+      logSpy.mockRestore();
     });
 
     test('should support custom state property', async () => {
