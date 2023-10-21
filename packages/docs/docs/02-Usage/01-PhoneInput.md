@@ -257,7 +257,7 @@ interface ParsedCountry {
   name: string;
   iso2: CountryIso2;
   dialCode: string;
-  format: string | FormatConfig | undefined;
+  format: FormatConfig | string | undefined;
   priority: number | undefined;
   areaCodes: string[] | undefined;
 }

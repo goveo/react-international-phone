@@ -61,6 +61,8 @@ You can encounter some breaking changes after update between major versions.
 
 Checkout migration documents that contain a list of breaking changes and ways to migrate:
 <br/>
+[Update from v3 to v4](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v4)
+<br/>
 [Update from v2 to v3](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v3)
 <br/>
 [Update from v1 to v2](https://react-international-phone-docs.vercel.app/docs/Migrations/migrate-to-v2)
