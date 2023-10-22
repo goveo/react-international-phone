@@ -10,22 +10,22 @@ export default {
 };
 
 export const MaterialUI = () => {
-  const [phone, setPhone] = useState('+1 (123)');
+  const [phone, setPhone] = useState('+1123');
   return <MuiPhone value={phone} onChange={setPhone} />;
 };
 
 export const MaterialUIStyle2 = () => {
-  const [phone, setPhone] = useState('+1 (123)');
+  const [phone, setPhone] = useState('+1123');
   return <MuiPhone2 value={phone} onChange={setPhone} />;
 };
 MaterialUIStyle2.storyName = 'Material UI (With button)';
 
 export const ChakraUI = () => {
-  const [phone, setPhone] = useState('+1 (123)');
+  const [phone, setPhone] = useState('+1123');
   return <ChakraPhone value={phone} onChange={setPhone} />;
 };
 
 export const AntDesign = () => {
-  const [phone, setPhone] = useState('+1 (123)');
+  const [phone, setPhone] = useState('+1123');
   return <AntPhone value={phone} onChange={setPhone} />;
 };

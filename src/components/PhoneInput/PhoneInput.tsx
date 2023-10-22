@@ -1,12 +1,11 @@
 import './PhoneInput.style.scss';
 
-import React, { useMemo } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
 import { buildClassNames } from '../../style/buildClassNames';
-import { CountryIso2 } from '../../types';
-import { getCountry } from '../../utils';
+import { CountryIso2, ParsedCountry } from '../../types';
 import {
   CountrySelector,
   CountrySelectorProps,
@@ -28,6 +27,8 @@ export interface PhoneInputStyleProps {
   dialCodePreviewStyleProps?: DialCodePreviewStyleProps;
 }
 
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+
 export interface PhoneInputProps
   extends Omit<UsePhoneInputConfig, 'onChange'>,
     PhoneInputStyleProps {
@@ -38,30 +39,12 @@ export interface PhoneInputProps
   hideDropdown?: CountrySelectorProps['hideDropdown'];
 
   /**
-   * @description Input's placeholder
-   * @default undefined
-   */
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
-
-  /**
-   * @description Disable phone input and country selector.
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
    * @description
    * Show prefix and dial code between country selector and phone input.
    * Works only when *disableDialCodeAndPrefix* is *true*
    * @default false
    */
   showDisabledDialCodeAndPrefix?: boolean;
-
-  /**
-   * @description Default input component props
-   * @default undefined
-   */
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 
   /**
    * @description Custom flag URLs array
@@ -71,97 +54,167 @@ export interface PhoneInputProps
 
   /**
    * @description Callback that calls on phone change
-   * @params `phone` - new phone value, `country` - country iso2 value
+   * @param phone - New phone value in E.164 format.
+   * @param meta - Additional information about the phone.
+   * @param data.country - New phone country object.
+   * @param data.inputValue - Value that is displayed in input element.
    * @default undefined
    */
-  onChange?: (phone: string, country: CountryIso2) => void;
+  onChange?: (
+    phone: string,
+    meta: {
+      country: ParsedCountry;
+      inputValue: string;
+    },
+  ) => void;
+
+  /**
+   * @description Default input component props
+   * @default undefined
+   */
+  inputProps?: InputProps;
+
+  // pass most used input props as top level props for easy integration
+  onFocus?: InputProps['onFocus'];
+  onBlur?: InputProps['onBlur'];
+  name?: InputProps['name'];
+  required?: InputProps['required'];
+  autoFocus?: InputProps['autoFocus'];
+  disabled?: InputProps['disabled'];
+  placeholder?: InputProps['placeholder'];
 }
 
-export const PhoneInput: React.FC<PhoneInputProps> = ({
-  hideDropdown,
-  placeholder,
-  disabled,
-  showDisabledDialCodeAndPrefix,
-  inputProps,
-  flags,
-  onChange,
+export type PhoneInputRefType =
+  | null
+  | (HTMLInputElement & {
+      setCountry: (iso2: CountryIso2) => void;
+      state: {
+        phone: string;
+        inputValue: string;
+        country: ParsedCountry;
+      };
+    });
 
-  style,
-  className,
-  inputStyle,
-  inputClassName,
-  countrySelectorStyleProps,
-  dialCodePreviewStyleProps,
+export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
+  (
+    {
+      value,
+      onChange,
+      countries = defaultCountries,
+      hideDropdown,
+      showDisabledDialCodeAndPrefix,
+      flags,
 
-  value,
-  countries = defaultCountries,
-  ...usePhoneInputConfig
-}) => {
-  const { phone, inputRef, country, setCountry, handlePhoneValueChange } =
-    usePhoneInput({
+      style,
+      className,
+      inputStyle,
+      inputClassName,
+      countrySelectorStyleProps,
+      dialCodePreviewStyleProps,
+
+      inputProps,
+      placeholder,
+      disabled,
+      name,
+      onFocus,
+      onBlur,
+      required,
+      autoFocus,
+
+      ...usePhoneInputConfig
+    },
+    ref,
+  ) => {
+    const {
+      phone,
+      inputValue,
+      inputRef,
+      country,
+      setCountry,
+      handlePhoneValueChange,
+    } = usePhoneInput({
       value,
       countries,
       ...usePhoneInputConfig,
       onChange: (data) => {
-        onChange?.(data.phone, data.country);
+        onChange?.(data.phone, {
+          country: data.country,
+          inputValue: data.inputValue,
+        });
       },
     });
 
-  const fullCountry = useMemo(() => {
-    if (!country) return;
-    return getCountry({
-      value: country,
-      field: 'iso2',
-      countries,
-    });
-  }, [countries, country]);
+    const showDialCodePreview =
+      usePhoneInputConfig.disableDialCodeAndPrefix &&
+      showDisabledDialCodeAndPrefix &&
+      country?.dialCode;
 
-  const showDialCodePreview =
-    usePhoneInputConfig.disableDialCodeAndPrefix &&
-    showDisabledDialCodeAndPrefix &&
-    fullCountry?.dialCode;
+    useImperativeHandle<PhoneInputRefType, PhoneInputRefType>(
+      ref,
+      () => {
+        if (!inputRef.current) return null;
 
-  return (
-    <div
-      className={buildClassNames({
-        addPrefix: ['input-container'],
-        rawClassNames: [className],
-      })}
-      style={style}
-    >
-      <CountrySelector
-        onSelect={(country) => setCountry(country.iso2)}
-        flags={flags}
-        selectedCountry={country}
-        countries={countries}
-        disabled={disabled}
-        hideDropdown={hideDropdown}
-        {...countrySelectorStyleProps}
-      />
+        return Object.assign(inputRef.current, {
+          // extend input ref with additional properties
+          setCountry,
+          state: {
+            phone,
+            inputValue,
+            country,
+          },
+        });
+      },
+      [inputRef, setCountry, phone, inputValue, country],
+    );
 
-      {showDialCodePreview && (
-        <DialCodePreview
-          dialCode={fullCountry.dialCode}
-          prefix={usePhoneInputConfig.prefix ?? '+'}
-          disabled={disabled}
-          {...dialCodePreviewStyleProps}
-        />
-      )}
-
-      <input
-        onChange={handlePhoneValueChange}
-        value={phone}
-        type="tel"
-        ref={inputRef}
+    return (
+      <div
+        ref={ref}
         className={buildClassNames({
-          addPrefix: ['input', disabled && 'input--disabled'],
-          rawClassNames: [inputClassName],
+          addPrefix: ['input-container'],
+          rawClassNames: [className],
         })}
-        placeholder={placeholder}
-        disabled={disabled}
-        style={inputStyle}
-        {...inputProps}
-      />
-    </div>
-  );
-};
+        style={style}
+      >
+        <CountrySelector
+          onSelect={(country) => setCountry(country.iso2)}
+          flags={flags}
+          selectedCountry={country.iso2}
+          countries={countries}
+          disabled={disabled}
+          hideDropdown={hideDropdown}
+          {...countrySelectorStyleProps}
+        />
+
+        {showDialCodePreview && (
+          <DialCodePreview
+            dialCode={country.dialCode}
+            prefix={usePhoneInputConfig.prefix ?? '+'}
+            disabled={disabled}
+            {...dialCodePreviewStyleProps}
+          />
+        )}
+
+        <input
+          onChange={handlePhoneValueChange}
+          value={inputValue}
+          type="tel"
+          ref={inputRef}
+          className={buildClassNames({
+            addPrefix: ['input', disabled && 'input--disabled'],
+            rawClassNames: [inputClassName],
+          })}
+          placeholder={placeholder}
+          disabled={disabled}
+          style={inputStyle}
+          name={name}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          autoFocus={autoFocus}
+          required={required}
+          {...inputProps}
+        />
+      </div>
+    );
+  },
+);

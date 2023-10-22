@@ -62,11 +62,32 @@ Each country in `defaultCountries` follows this format:
   string, // country name
   CountryIso2, // iso2 code
   string, // international dial code
-  string, // format (optional)
+  FormatConfig | string, // format (optional)
   number, // order priority (optional)
   string[], // area codes (optional)
 ]
 ```
+
+:::note
+The format can be either a string or a format-config object of the following type:
+
+```ts
+// Record with required "default" key
+type FormatConfig = Record<string, string> & { default: string };
+```
+
+It should contain stringified regexp as keys and mask as value. Providing `default` key is required.<br/>
+Example of format config object:
+
+```js
+{
+  'default': '. .... ....',
+  '/^4/': '... ... ...',
+  '/^5(?!50)/': '... ... ...'
+}
+```
+
+:::
 
 You can use these data to filter/modify country list.
 
@@ -90,4 +111,4 @@ const lowercasedCountries = defaultCountries.map((country) => {
 
 :::
 
-Country data was taken from [react-phone-input-2](https://github.com/bl00mber/react-phone-input-2/blob/master/src/rawCountries.js) :pray:
+Country data was originally taken from [react-phone-input-2](https://github.com/bl00mber/react-phone-input-2/blob/master/src/rawCountries.js) :pray:

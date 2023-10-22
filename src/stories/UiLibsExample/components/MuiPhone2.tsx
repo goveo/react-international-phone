@@ -5,7 +5,7 @@ import { CountrySelector, usePhoneInput } from '../../../index';
 import { MUIPhoneProps } from './MuiPhone';
 
 export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
-  const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
+  const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: 'us',
       value,
@@ -17,7 +17,7 @@ export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <CountrySelector
-        selectedCountry={country}
+        selectedCountry={country.iso2}
         onSelect={(country) => setCountry(country.iso2)}
         renderButtonWrapper={({ children, rootProps }) => (
           <IconButton
@@ -32,7 +32,7 @@ export const MuiPhone2: React.FC<MUIPhoneProps> = ({ value, onChange }) => {
       <TextField
         label="Phone number"
         color="primary"
-        value={phone}
+        value={inputValue}
         onChange={handlePhoneValueChange}
         inputRef={inputRef}
       />

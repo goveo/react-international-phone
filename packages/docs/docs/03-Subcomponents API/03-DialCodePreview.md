@@ -1,4 +1,5 @@
 import RequiredMark from '@site/src/components/RequiredMark'
+import PropDescription from '@site/src/components/PropDescription'
 
 # DialCodePreview API
 
@@ -24,13 +25,29 @@ import { DialCodePreview } from 'react-international-phone';
 
 <DialCodePreview dialCode="1" prefix="+" style={{ width: "40px", height: "36px" }} />
 
-### Properties
+## Properties
 
-| Prop                     | Type      | Description              | Default value |
-| ------------------------ | --------- | ------------------------ | ------------- |
-| dialCode <RequiredMark/> | `string`  | Country dial code (iso2) |               |
-| prefix <RequiredMark/>   | `string`  | Dial code prefix         |               |
-| disabled                 | `boolean` | Is component disabled    | `undefined`   |
+### `dialCode` <RequiredMark/>
+
+<PropDescription
+type="string"
+description="Country dial code (iso2)"
+/>
+
+### `prefix` <RequiredMark/>
+
+<PropDescription
+type="string"
+description="Dial code prefix"
+/>
+
+### `disabled`
+
+<PropDescription
+type="boolean"
+description="Is component disabled"
+defaultValue="undefined"
+/>
 
 ### Style properties (`DialCodePreviewStyleProps` type)
 

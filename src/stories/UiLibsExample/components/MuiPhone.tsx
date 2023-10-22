@@ -11,7 +11,7 @@ import React from 'react';
 import {
   CountryIso2,
   defaultCountries,
-  FlagEmoji,
+  FlagImage,
   parseCountry,
   usePhoneInput,
 } from '../../../index';
@@ -26,9 +26,9 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
   onChange,
   ...restProps
 }) => {
-  const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
+  const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      defaultCountry: 'us',
+      defaultCountry: 'au',
       value,
       countries: defaultCountries,
       onChange: (data) => {
@@ -42,7 +42,7 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
       label="Phone number"
       color="primary"
       placeholder="Phone number"
-      value={phone}
+      value={inputValue}
       onChange={handlePhoneValueChange}
       type="tel"
       inputRef={inputRef}
@@ -85,17 +85,17 @@ export const MuiPhone: React.FC<MUIPhoneProps> = ({
                   right: 0,
                 },
               }}
-              value={country}
+              value={country.iso2}
               onChange={(e) => setCountry(e.target.value as CountryIso2)}
               renderValue={(value) => (
-                <FlagEmoji iso2={value} style={{ display: 'flex' }} />
+                <FlagImage iso2={value} style={{ display: 'flex' }} />
               )}
             >
               {defaultCountries.map((c) => {
                 const country = parseCountry(c);
                 return (
                   <MenuItem key={country.iso2} value={country.iso2}>
-                    <FlagEmoji
+                    <FlagImage
                       iso2={country.iso2}
                       style={{ marginRight: '8px' }}
                     />

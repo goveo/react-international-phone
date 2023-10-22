@@ -30,7 +30,7 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <Space.Compact>
         <CountrySelector
-          selectedCountry={phoneInput.country}
+          selectedCountry={phoneInput.country.iso2}
           onSelect={(country) => phoneInput.setCountry(country.iso2)}
           renderButtonWrapper={({ children, rootProps }) => (
             <Button
@@ -53,9 +53,11 @@ export const AntPhone: React.FC<AntPhoneProps> = ({ value, onChange }) => {
         <Input
           placeholder="Phone number"
           type="tel"
-          value={phoneInput.phone}
+          value={phoneInput.inputValue}
           onChange={phoneInput.handlePhoneValueChange}
           ref={inputRef}
+          name="phone"
+          autoComplete="tel"
         />
       </Space.Compact>
     </div>

@@ -1,3 +1,5 @@
+import PropDescription from '@site/src/components/PropDescription'
+
 # CountrySelector API
 
 **CountrySelector** is a button component for selecting a country.
@@ -25,20 +27,47 @@ import { CountrySelector } from 'react-international-phone';
 
 <CountrySelector selectedCountry="ua" />
 
-### Properties
+## Properties
 
-| Prop                | Type                                                                                                                | Description                                                                                                                                                                                                                                                  | Default value |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
-| selectedCountry     | `CountryIso2`                                                                                                       | Selected country (iso2)                                                                                                                                                                                                                                      | `undefined`   |
-| disabled            | `boolean`                                                                                                           | Is CountrySelector disabled                                                                                                                                                                                                                                  | `undefined`   |
-| hideDropdown        | `boolean`                                                                                                           | Hide dropdown icon and make CountrySelector not clickable                                                                                                                                                                                                    | `undefined`   |
-| renderButtonWrapper | `(props: { children: React.ReactNode; rootProps: React.ButtonHTMLAttributes<HTMLButtonElement>) => React.ReactNode` | Render function for custom button wrapper. `children` and `rootProps` should be passed to button props. `rootProps` contains a click handler and properties that are required for accessibility. `rootProps` should be spread like `<button {...rootProps}>` | `undefined`   |
+### `selectedCountry`
 
-### Events
+<PropDescription
+type="CountryIso2"
+description="Selected country (iso2)."
+defaultValue="undefined"
+/>
 
-| Prop     | Type                               | Description                           |
-| -------- | ---------------------------------- | ------------------------------------- |
-| onSelect | `(country: ParsedCountry) => void` | Callback that calls on country select |
+### `onSelect`
+
+<PropDescription
+type="(country: ParsedCountry) => void"
+description="Callback that calls on country select"
+defaultValue="undefined"
+/>
+
+### `disabled`
+
+<PropDescription
+type="boolean"
+description="Is CountrySelector disabled"
+defaultValue="undefined"
+/>
+
+### `hideDropdown`
+
+<PropDescription
+type="boolean"
+description="Hide dropdown icon and make CountrySelector not clickable"
+defaultValue="undefined"
+/>
+
+### `renderButtonWrapper`
+
+<PropDescription
+type="(props: { children: React.ReactNode; rootProps: React.ButtonHTMLAttributes<HTMLButtonElement>) => React.ReactNode"
+description={<span>Render function for custom button wrapper. <code>children</code> and <code>rootProps</code> should be passed to button props. <code>rootProps</code> contains a click handler and properties that are required for accessibility. <code>rootProps</code> should be spread like <code>&lt;button &#123;...rootProps&#125; /&gt;</code></span>}
+defaultValue="undefined"
+/>
 
 ### Style properties (`CountrySelectorStyleProps` type)
 

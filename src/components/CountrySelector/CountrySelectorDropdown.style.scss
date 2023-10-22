@@ -76,8 +76,11 @@ $dropdown-top: var(--react-international-phone-dropdown-left, 44px);
     }
 
     &-country-name {
+      overflow: hidden;
       margin-right: 8px;
       font-size: $dropdown-item-font-size;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     &-dial-code {

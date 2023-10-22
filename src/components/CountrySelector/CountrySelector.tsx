@@ -6,7 +6,7 @@ import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
 import { CountryData, CountryIso2 } from '../../types';
 import { getCountry } from '../../utils';
-import { FlagEmoji } from '../FlagEmoji/FlagEmoji';
+import { FlagImage } from '../FlagImage/FlagImage';
 import {
   CountrySelectorDropdown,
   CountrySelectorDropdownProps,
@@ -115,7 +115,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         })}
         style={styleProps.buttonContentWrapperStyle}
       >
-        <FlagEmoji
+        <FlagImage
           iso2={selectedCountry}
           src={flags?.find((f) => f.iso2 === selectedCountry)?.src}
           className={buildClassNames({

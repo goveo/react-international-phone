@@ -1,15 +1,13 @@
 import { Meta } from '@storybook/react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { CountrySelectorStyleProps } from '../components/CountrySelector/CountrySelector';
-import { PhoneInput } from '../components/PhoneInput/PhoneInput';
-import { defaultCountries } from '../data/countryData';
 import {
-  getCountry,
-  guessCountryByPartialPhoneNumber,
-  parseCountry,
-  removeDialCode,
-} from '../index';
+  PhoneInput,
+  PhoneInputRefType,
+} from '../components/PhoneInput/PhoneInput';
+import { defaultCountries } from '../data/countryData';
+import { parseCountry } from '../index';
 import { MuiPhone } from './UiLibsExample/components/MuiPhone';
 
 export default {
@@ -34,7 +32,9 @@ const Title: React.FC<{
   );
 };
 
-const PhoneWrapper: React.FC = ({ children }) => {
+const PhoneWrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return <div style={{ marginBottom: '20px' }}>{children}</div>;
 };
 
@@ -117,7 +117,7 @@ export const TwoInputsTest = () => {
 
   return (
     <div>
-      <p style={{ color: 'black' }}>Phone: {phone}</p>
+      <p>Phone: {phone}</p>
       <PhoneInput
         value={phone}
         onChange={setPhone}
@@ -148,41 +148,83 @@ export const WrongDefaultCountryCode = () => {
 };
 
 export const WithoutDialCode = () => {
-  const initialPhone = '+14045555555';
-
-  const [country, setCountry] = useState(() => {
-    // guessing country of inital phone
-    return guessCountryByPartialPhoneNumber({ phone: initialPhone }).country;
-  });
-
-  const [phone, setPhone] = useState(
-    // removing dial code for inital phone
-    // '+14045555555' -> '4045555555'
-    removeDialCode({
-      phone: initialPhone,
-      dialCode: country?.dialCode || '',
-    }),
-  );
-
-  // constructing E164 format from country and phone value
-  const e164Phone = country
-    ? `+${country.dialCode}${phone.replace(/\D/g, '')}`
-    : '';
+  const [phone, setPhone] = useState('+14041234567');
 
   return (
-    <div style={{ color: 'black', fontSize: '13px' }}>
-      <span>E164 phone: {e164Phone}</span>
-      <PhoneInput
-        value={phone}
-        onChange={(phone, country) => {
-          setPhone(phone);
-          // save country to get ability to construct E164
-          setCountry(getCountry({ field: 'iso2', value: country }));
+    <div style={{ fontSize: '13px' }}>
+      <span>Phone: {phone}</span>
+      <PhoneInput value={phone} onChange={setPhone} disableDialCodeAndPrefix />
+    </div>
+  );
+};
+
+export const Ref = () => {
+  const [phone, setPhone] = useState('');
+
+  const ref = useRef<PhoneInputRefType>(null);
+
+  return (
+    <div
+      style={{
+        fontSize: '13px',
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        maxWidth: '230px',
+        gap: '10px',
+      }}
+    >
+      <div>Phone: {phone}</div>
+      <PhoneInput value={phone} onChange={setPhone} ref={ref} />
+
+      <button
+        onClick={() => {
+          if (!ref.current) return;
+
+          ref.current.setCountry('ua');
+          ref.current.focus();
         }}
-        // passing country as "defaultCountry"
-        defaultCountry={country?.iso2}
-        disableDialCodeAndPrefix
-      />
+      >
+        Set Ukraine
+      </button>
+
+      <div
+        style={{
+          height: '150vh',
+          background: 'ghostwhite',
+        }}
+      >
+        Scroll to bottom
+      </div>
+      <button
+        onClick={() => {
+          if (!ref.current) return;
+          ref.current.scrollIntoView({ behavior: 'smooth' });
+        }}
+      >
+        Scroll to phone
+      </button>
+    </div>
+  );
+};
+
+export const Test = () => {
+  const [phone, setPhone] = useState('+1');
+
+  return (
+    <div style={{ fontSize: '13px' }}>
+      <div>
+        <button
+          onClick={() => {
+            setPhone('+12041234567');
+          }}
+        >
+          Set Canada
+        </button>
+      </div>
+
+      <span>Phone: {phone}</span>
+      <PhoneInput value={phone} onChange={setPhone} disableDialCodeAndPrefix />
     </div>
   );
 };

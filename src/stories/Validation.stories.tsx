@@ -32,12 +32,14 @@ export const Default = () => {
 
   return (
     <div>
+      <p>phone: {phone}</p>
       <PhoneInput
         defaultCountry="ua"
         value={phone}
         onChange={(phone) => {
           setPhone(phone);
         }}
+        name="phone"
       />
       <ValidationResult isValid={isValid} />
     </div>
@@ -45,17 +47,19 @@ export const Default = () => {
 };
 
 export const Prefilled = () => {
-  const [phone, setPhone] = useState('+1 (204) 999-9999');
+  const [phone, setPhone] = useState('+12049999999');
   const isValid = validatePhone(phone);
 
   return (
     <div>
+      <p>phone: {phone}</p>
       <PhoneInput
         defaultCountry="ua"
         value={phone}
         onChange={(phone) => {
           setPhone(phone);
         }}
+        name="phone"
       />
       <ValidationResult isValid={isValid} />
     </div>
@@ -68,7 +72,7 @@ export const ReactHookForm = () => {
     trigger,
     formState: { errors },
   } = useForm({
-    defaultValues: { phone: '+1 (201)' },
+    defaultValues: { phone: '+1201' },
     mode: 'onChange',
   });
 
@@ -84,15 +88,16 @@ export const ReactHookForm = () => {
         name="phone"
         control={control}
         render={({ field }) => (
-          <PhoneInput
-            defaultCountry="us"
-            value={field.value}
-            onChange={field.onChange}
-            inputProps={{
-              name: field.name,
-              onBlur: field.onBlur,
-            }}
-          />
+          <div>
+            <p>phone: {field.value}</p>
+            <PhoneInput
+              defaultCountry="us"
+              value={field.value}
+              onChange={field.onChange}
+              name={field.name}
+              onBlur={field.onBlur}
+            />
+          </div>
         )}
         rules={{
           validate: (phone) => validatePhone(phone),
@@ -106,7 +111,7 @@ export const ReactHookForm = () => {
 export const Formik = () => {
   const { values, errors, setFieldTouched, setFieldValue } = useFormik({
     initialValues: {
-      phone: '+1 (204)',
+      phone: '+1204',
     },
     onSubmit: () => undefined,
     validateOnChange: true,
@@ -125,6 +130,7 @@ export const Formik = () => {
 
   return (
     <div>
+      <p>phone: {values.phone}</p>
       <PhoneInput
         defaultCountry="us"
         value={values.phone}
@@ -132,9 +138,7 @@ export const Formik = () => {
           setFieldTouched('phone');
           setFieldValue('phone', newPhone);
         }}
-        inputProps={{
-          name: 'phone',
-        }}
+        name="phone"
       />
       <ValidationResult isValid={!errors.phone} />
     </div>
@@ -152,7 +156,7 @@ const formValidationSchema = Yup.object().shape({
 export const FormikWithYup = () => {
   const { values, errors, setFieldTouched, setFieldValue } = useFormik({
     initialValues: {
-      phone: '+1 (204)',
+      phone: '+1205',
     },
     onSubmit: () => undefined,
     validateOnChange: true,
@@ -162,6 +166,7 @@ export const FormikWithYup = () => {
 
   return (
     <div>
+      <p>phone: {values.phone}</p>
       <PhoneInput
         defaultCountry="us"
         value={values.phone}
@@ -169,9 +174,7 @@ export const FormikWithYup = () => {
           setFieldTouched('phone');
           setFieldValue('phone', newPhone);
         }}
-        inputProps={{
-          name: 'phone',
-        }}
+        name="phone"
       />
       <ValidationResult isValid={!errors.phone} />
     </div>
