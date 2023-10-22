@@ -12,7 +12,7 @@ const Story = (props: PhoneInputProps) => {
 
   return (
     <div>
-      <p style={{ color: 'black' }}>Phone: {phone}</p>
+      <p>Phone: {phone}</p>
       <button onClick={setRandomNumber}>Set random number</button>
       <PhoneInput value={phone} onChange={setPhone} {...props} />
     </div>

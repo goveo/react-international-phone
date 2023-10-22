@@ -117,7 +117,7 @@ export const TwoInputsTest = () => {
 
   return (
     <div>
-      <p style={{ color: 'black' }}>Phone: {phone}</p>
+      <p>Phone: {phone}</p>
       <PhoneInput
         value={phone}
         onChange={setPhone}
@@ -151,7 +151,7 @@ export const WithoutDialCode = () => {
   const [phone, setPhone] = useState('+14041234567');
 
   return (
-    <div style={{ color: 'black', fontSize: '13px' }}>
+    <div style={{ fontSize: '13px' }}>
       <span>Phone: {phone}</span>
       <PhoneInput value={phone} onChange={setPhone} disableDialCodeAndPrefix />
     </div>
@@ -166,7 +166,6 @@ export const Ref = () => {
   return (
     <div
       style={{
-        color: 'black',
         fontSize: '13px',
         display: 'flex',
         flexDirection: 'column',
@@ -213,7 +212,7 @@ export const Test = () => {
   const [phone, setPhone] = useState('+1');
 
   return (
-    <div style={{ color: 'black', fontSize: '13px' }}>
+    <div style={{ fontSize: '13px' }}>
       <div>
         <button
           onClick={() => {
