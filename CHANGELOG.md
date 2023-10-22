@@ -1,3 +1,52 @@
+# [4.0.0](https://github.com/goveo/react-international-phone/compare/v3.1.2...v4.0.0) (2023-10-22)
+
+
+### Bug Fixes
+
+* allow type prefix if input is empty ([08e5811](https://github.com/goveo/react-international-phone/commit/08e581135182a28b296f9c04b936431ba2d09484))
+* **CountrySelector:** add library prefix to country selector list-item id ([b45af25](https://github.com/goveo/react-international-phone/commit/b45af2533d05dcc64493d0fa972b48d504a6c96b))
+* **CountrySelector:** fix country name overflow ([09e7097](https://github.com/goveo/react-international-phone/commit/09e7097e47552cb870f3a627ffc556f4fb332d2a))
+* fix dynamic format mask with disableDialCodeAndPrefix ([5cb1e11](https://github.com/goveo/react-international-phone/commit/5cb1e116374b8af97b4fb48e0795c874ef3984ec))
+* **forceDialCode:** fix e164Phone value update when input is cleared ([0c353e0](https://github.com/goveo/react-international-phone/commit/0c353e06b2c5a26509499937759e2bd8510b961c))
+* **getCursorPosition:** reuse isNumeric utility function ([65d8618](https://github.com/goveo/react-international-phone/commit/65d861813ee0e844b0e1bbfdd6a3ec35b1f1ca4c))
+* **getCursorPosition:** update cursor position logic, fix cursor jump on disabled dial code values ([5256439](https://github.com/goveo/react-international-phone/commit/5256439d394f1d006d77bef2aae6226dfaca7f5d))
+* guess initial country when dial code is disabled ([c79adc3](https://github.com/goveo/react-international-phone/commit/c79adc3ed784368bda589ca5cc957c606dcce0a9))
+* **handlePhoneChange:** return current country on partial dial code match ([dbbf20d](https://github.com/goveo/react-international-phone/commit/dbbf20d3c414ec1a2fa1cbfbc7a4f031d94f09f4))
+* **history:** ignore history events on empty input ([9c781c1](https://github.com/goveo/react-international-phone/commit/9c781c11a4208ec2129eae9dd1d815ca0a5a7f2e))
+* ignore input handling if user typed non digit character ([b175b4e](https://github.com/goveo/react-international-phone/commit/b175b4e28a4c3ac0c81dbd9c827f4ce8e7efc054))
+* **PhoneInput:** make ref inherit inner input-ref ([819b48d](https://github.com/goveo/react-international-phone/commit/819b48d08117913162e3be318771f67f6c2a84ed))
+* **PhoneInput:** rename formattedValue to displayValue in onChange metadata arg ([3479ae5](https://github.com/goveo/react-international-phone/commit/3479ae590f5bbca48550dd8f98ba2c66b0d81ca8))
+* **PhoneInput:** support ref forwarding ([f2d3de8](https://github.com/goveo/react-international-phone/commit/f2d3de8b50229f15136673e3ead761ea9b730827))
+* rename displayValue to inputValue in onChange callback ([e78a13e](https://github.com/goveo/react-international-phone/commit/e78a13e61e3c34ee98b6350d34206c6d85b2997a))
+* rename getCountryCurrentFormat to getCountryMaskFormat, add it to export ([fca84d4](https://github.com/goveo/react-international-phone/commit/fca84d415cbf99bc4b2d36c154c049df70fab945))
+* rename getCountryMaskFormat helper function to getActiveFormattingMask ([aec5e9e](https://github.com/goveo/react-international-phone/commit/aec5e9ee0e587e77ab24dc4a2cd0e3331241d4d0))
+* return country object instead of iso2 code from usePhoneInput and onChange ([17c1365](https://github.com/goveo/react-international-phone/commit/17c1365a8d014ac414c7d029cb51d5a085f98289))
+* **usePhoneInput:** fix e164Phone value on setCountry ([cec0700](https://github.com/goveo/react-international-phone/commit/cec07004327215166ea3ff5c9d2d388c531ccee8))
+* **usePhoneInput:** log error if an invalid country code is passed to setNewCountry ([6098a99](https://github.com/goveo/react-international-phone/commit/6098a999252cc2e776f6aa4be96510ed71c1025b))
+
+
+* fix!: rename flag image component to FlagImage ([c4b0abd](https://github.com/goveo/react-international-phone/commit/c4b0abde0f401e5e6bc3f7e2cdd1f1db93109f29))
+* fix(usePhoneInput)!: rename return property names ([42e4ef2](https://github.com/goveo/react-international-phone/commit/42e4ef29cd16995e0ecc3fba4f6311904604a8d2))
+* fix!: return E164 phone in onChange callback ([939275a](https://github.com/goveo/react-international-phone/commit/939275aef742f25b5fc1b26674da1dc10e128103))
+* feat!: add support for multiple masks per country ([f758bb3](https://github.com/goveo/react-international-phone/commit/f758bb36dabacf1cb50cc21018a3844924f6f347))
+
+
+### Features
+
+* add disableFormatting prop ([e6ada39](https://github.com/goveo/react-international-phone/commit/e6ada39cd16715b6f34be464c36a62aded145d8f))
+* add inputRef prop ([386f396](https://github.com/goveo/react-international-phone/commit/386f396508dcb51587a9d56d32ae3dbad4511e90))
+* add state property to the forwarded ref ([e008c90](https://github.com/goveo/react-international-phone/commit/e008c9047de69a21bf4dc37751fc1b6e5eff15cf))
+* **disableFormatting:** move disableFormatting prop to getCountryMaskFormat util function ([935d6ff](https://github.com/goveo/react-international-phone/commit/935d6ffcdcbd3574240c665eac959a6f6e010e4b))
+* **PhoneInput:** add most used input props as top level props for easy integration ([7a29744](https://github.com/goveo/react-international-phone/commit/7a2974483c8c844f127a467919ea1686e0d7d395))
+
+
+### BREAKING CHANGES
+
+* FlagEmoji component is no longer exported, use FlagImage instead
+* "phone" is renamed to "inputValue", "e164Phone" is renamed to "phone"
+* phone value is unified to E164 format
+* the value of the country format can be of type object
+
 ## [3.1.2](https://github.com/goveo/react-international-phone/compare/v3.1.1...v3.1.2) (2023-08-23)
 
 
