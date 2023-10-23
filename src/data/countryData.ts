@@ -257,7 +257,7 @@ export const defaultCountries: CountryData[] = [
   ['Sudan', 'sd', '249'],
   ['Suriname', 'sr', '597'],
   ['Swaziland', 'sz', '268'],
-  ['Sweden', 'se', '46', '(...) ...-...'],
+  ['Sweden', 'se', '46', '... ... ...'],
   ['Switzerland', 'ch', '41', '.. ... .. ..'],
   ['Syria', 'sy', '963'],
   ['Taiwan', 'tw', '886'],
