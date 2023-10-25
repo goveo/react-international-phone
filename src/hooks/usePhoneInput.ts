@@ -178,6 +178,12 @@ export const usePhoneInput = ({
      * useTimeout with 0ms provides issues when two keys are pressed same time
      */
     Promise.resolve().then(() => {
+      // workaround for safari autofocus bug:
+      // Check if the input is focused before setting the cursor, otherwise safari sometimes autofocuses on setSelectionRange
+      if (inputRef.current !== document?.activeElement) {
+        return;
+      }
+
       inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
     });
   };

@@ -128,3 +128,6 @@ yarn-error.log*
 
 # storybook
 storybook-static
+
+# IDE
+.idea
