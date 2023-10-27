@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/goveo/react-international-phone/compare/v4.0.0...v4.0.1) (2023-10-27)
+
+
+### Bug Fixes
+
+* update Sweden format mask ([1500e0b](https://github.com/goveo/react-international-phone/commit/1500e0b67f330e557ffa74daa5e567b63442c6f0))
+
 # [4.0.0](https://github.com/goveo/react-international-phone/compare/v3.1.2...v4.0.0) (2023-10-22)
 
 
