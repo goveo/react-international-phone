@@ -144,7 +144,7 @@ export const defaultCountries: CountryData[] = [
   ['Gabon', 'ga', '241'],
   ['Gambia', 'gm', '220'],
   ['Georgia', 'ge', '995'],
-  ['Germany', 'de', '49', '... .........'],
+  ['Germany', 'de', '49', '.... ........'],
   ['Ghana', 'gh', '233'],
   ['Greece', 'gr', '30'],
   ['Grenada', 'gd', '1473'],
