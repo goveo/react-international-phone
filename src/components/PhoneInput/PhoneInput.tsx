@@ -53,6 +53,12 @@ export interface PhoneInputProps
   flags?: CountrySelectorProps['flags'];
 
   /**
+   * @description when enabled, it will append the selected country dial code to the input value unless starts with `+`
+   * @default undefined
+   */
+  preferSelectedCountry?: boolean;
+
+  /**
    * @description Callback that calls on phone change
    * @param phone - New phone value in E.164 format.
    * @param meta - Additional information about the phone.

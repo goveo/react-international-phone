@@ -87,6 +87,12 @@ export interface UsePhoneInputConfig {
   disableDialCodeAndPrefix?: boolean;
 
   /**
+   * @description When enabled, it will prepend the selected country dial code to the input value unless user input starts with `+`
+   * @default false
+   */
+  preferSelectedCountry?: boolean;
+
+  /**
    * @description Disable phone value mask formatting. All formatting characters will not be displayed, but the mask length will be preserved.
    * @default false
    */
@@ -126,6 +132,7 @@ export const defaultConfig: Required<
   disableDialCodePrefill: false,
   forceDialCode: false,
   disableDialCodeAndPrefix: false,
+  preferSelectedCountry: false,
   disableFormatting: false,
   countries: defaultCountries,
 };
@@ -142,6 +149,7 @@ export const usePhoneInput = ({
   disableDialCodePrefill = defaultConfig.disableDialCodePrefill,
   forceDialCode: forceDialCodeConfig = defaultConfig.forceDialCode,
   disableDialCodeAndPrefix = defaultConfig.disableDialCodeAndPrefix,
+  preferSelectedCountry = defaultConfig.preferSelectedCountry,
   disableFormatting = defaultConfig.disableFormatting,
   onChange,
   inputRef: inputRefProp,
@@ -158,6 +166,7 @@ export const usePhoneInput = ({
     defaultMask,
     countryGuessingEnabled,
     disableFormatting,
+    preferSelectedCountry,
   };
 
   const ref = useRef<HTMLInputElement | null>(null);
@@ -169,6 +178,15 @@ export const usePhoneInput = ({
      * useTimeout with 0ms provides issues when two keys are pressed same time
      */
     Promise.resolve().then(() => {
+      // workaround for safari autofocus bug:
+      // Check if the input is focused before setting the cursor, otherwise safari sometimes autofocuses on setSelectionRange
+      if (
+        typeof window === 'undefined' ||
+        inputRef.current !== document?.activeElement
+      ) {
+        return;
+      }
+
       inputRef.current?.setSelectionRange(cursorPosition, cursorPosition);
     });
   };
@@ -211,6 +229,7 @@ export const usePhoneInput = ({
           country: initialCountry,
           insertDialCodeOnEmpty: !disableDialCodePrefill,
           ...phoneFormattingConfig,
+          preferSelectedCountry: false,
         });
 
         setCursorPosition(inputValue.length);
@@ -365,6 +384,7 @@ export const usePhoneInput = ({
       country: fullCountry,
       insertDialCodeOnEmpty: !disableDialCodePrefill,
       ...phoneFormattingConfig,
+      preferSelectedCountry: false,
     });
 
     updateHistory({
