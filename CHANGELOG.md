@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/goveo/react-international-phone/compare/v4.0.1...v4.0.2) (2023-10-31)
+
+
+### Bug Fixes
+
+* safari autofocus bug ([b7acf49](https://github.com/goveo/react-international-phone/commit/b7acf49811415764fc104113042ce8b7c530adae))
+
 ## [4.0.1](https://github.com/goveo/react-international-phone/compare/v4.0.0...v4.0.1) (2023-10-27)
 
 
