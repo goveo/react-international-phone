@@ -57,3 +57,10 @@ jobs:
 
       - name: Run prettier
         run: pnpm format:check
+
+  check-commit-messages:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: webiny/action-conventional-commits@v1.1.0
