@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/goveo/react-international-phone/compare/v4.0.2...v4.0.3) (2023-11-02)
+
+
+### Bug Fixes
+
+* **countryData:** add country codes for Puerto Rico ([411a441](https://github.com/goveo/react-international-phone/commit/411a4418353079264bd4307ec7d619ccf376c9fd))
+
 ## [4.0.2](https://github.com/goveo/react-international-phone/compare/v4.0.1...v4.0.2) (2023-10-31)
 
 
