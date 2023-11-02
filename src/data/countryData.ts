@@ -227,7 +227,7 @@ export const defaultCountries: CountryData[] = [
   ['Philippines', 'ph', '63', '.... .......'],
   ['Poland', 'pl', '48', '...-...-...'],
   ['Portugal', 'pt', '351'],
-  ['Puerto Rico', 'pr', '1', '', 3],
+  ['Puerto Rico', 'pr', '1', '', 3, ['787', '939']],
   ['Qatar', 'qa', '974'],
   ['Réunion', 're', '262'],
   ['Romania', 'ro', '40'],
