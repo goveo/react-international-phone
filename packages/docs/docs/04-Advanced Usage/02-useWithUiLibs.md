@@ -44,7 +44,7 @@ import {
 } from 'react-international-phone';
 
 export const MuiPhone = ({ value, onChange, ...restProps }) => {
-  const { phone, handlePhoneValueChange, inputRef, country, setCountry } =
+  const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: 'us',
       value,
@@ -60,7 +60,7 @@ export const MuiPhone = ({ value, onChange, ...restProps }) => {
       label="Phone number"
       color="primary"
       placeholder="Phone number"
-      value={phone}
+      value={inputValue}
       onChange={handlePhoneValueChange}
       type="tel"
       inputRef={inputRef}
