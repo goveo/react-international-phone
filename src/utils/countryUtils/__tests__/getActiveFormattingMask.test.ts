@@ -53,6 +53,34 @@ describe('getActiveFormattingMask', () => {
       }),
     ).toBe('. .... ....');
 
+    expect(
+      getActiveFormattingMask({
+        phone: '+61131234',
+        country: getCountryByIso2('au'),
+      }),
+    ).toBe('.. .. ..');
+
+    expect(
+      getActiveFormattingMask({
+        phone: '+611300123456',
+        country: getCountryByIso2('au'),
+      }),
+    ).toBe('.... ... ...');
+
+    expect(
+      getActiveFormattingMask({
+        phone: '+611801234',
+        country: getCountryByIso2('au'),
+      }),
+    ).toBe('... ....');
+
+    expect(
+      getActiveFormattingMask({
+        phone: '+611800123456',
+        country: getCountryByIso2('au'),
+      }),
+    ).toBe('.... ... ...');
+
     // should return default mask if provided phone is empty
     expect(
       getActiveFormattingMask({
