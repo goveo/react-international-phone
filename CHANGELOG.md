@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/goveo/react-international-phone/compare/v4.0.3...v4.0.4) (2023-11-11)
+
+
+### Bug Fixes
+
+* **country-data:** add additional Australia formats ([9453169](https://github.com/goveo/react-international-phone/commit/9453169836c192254cf66cde4f5345cf7b216ac7))
+
 ## [4.0.3](https://github.com/goveo/react-international-phone/compare/v4.0.2...v4.0.3) (2023-11-02)
 
 
