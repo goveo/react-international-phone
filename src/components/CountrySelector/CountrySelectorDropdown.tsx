@@ -1,6 +1,6 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
@@ -38,6 +38,7 @@ export interface CountrySelectorDropdownProps
   dialCodePrefix?: string;
   selectedCountry: CountryIso2;
   countries?: CountryData[];
+  preferredCountries?: CountryIso2[];
   flags?: CustomFlagImage[];
   onSelect?: (country: ParsedCountry) => void;
   onClose?: () => void;
@@ -50,6 +51,7 @@ export const CountrySelectorDropdown: React.FC<
   dialCodePrefix = '+',
   selectedCountry,
   countries = defaultCountries,
+  preferredCountries = [],
   flags,
   onSelect,
   onClose,
@@ -57,6 +59,24 @@ export const CountrySelectorDropdown: React.FC<
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
   const lastScrolledCountry = useRef<CountryIso2>();
+
+  const preferredCountrySet = useMemo(() => {
+    return new Set(preferredCountries);
+  }, [preferredCountries]);
+
+  const orderedCountries = useMemo(() => {
+    const preferred: CountryData[] = [];
+    const others = [...countries];
+
+    preferredCountries.forEach((iso2) => {
+      const idx = others.findIndex((c) => parseCountry(c).iso2 === iso2);
+      if (idx !== -1) {
+        preferred.push(others.splice(idx, 1)[0]);
+      }
+    });
+
+    return preferred.concat(others);
+  }, [countries, preferredCountries]);
 
   const searchRef = useRef<{
     updatedAt: Date | undefined;
@@ -76,7 +96,7 @@ export const CountrySelectorDropdown: React.FC<
       updatedAt: new Date(),
     };
 
-    const searchedCountryIndex = countries.findIndex((c) =>
+    const searchedCountryIndex = orderedCountries.findIndex((c) =>
       parseCountry(c).name.toLowerCase().startsWith(searchRef.current.value),
     );
 
@@ -88,9 +108,9 @@ export const CountrySelectorDropdown: React.FC<
 
   const getCountryIndex = useCallback(
     (country: CountryIso2) => {
-      return countries.findIndex((c) => parseCountry(c).iso2 === country);
+      return orderedCountries.findIndex((c) => parseCountry(c).iso2 === country);
     },
-    [countries],
+    [orderedCountries],
   );
 
   const [focusedItemIndex, setFocusedItemIndex] = useState(
@@ -111,7 +131,7 @@ export const CountrySelectorDropdown: React.FC<
   );
 
   const moveFocusedItem = (to: 'prev' | 'next' | 'first' | 'last') => {
-    const lastPossibleIndex = countries.length - 1;
+    const lastPossibleIndex = orderedCountries.length - 1;
 
     const getNewIndex = (currentIndex: number) => {
       if (to === 'prev') return currentIndex - 1;
@@ -133,7 +153,7 @@ export const CountrySelectorDropdown: React.FC<
 
     if (e.key === 'Enter') {
       e.preventDefault();
-      const focusedCountry = parseCountry(countries[focusedItemIndex]);
+      const focusedCountry = parseCountry(orderedCountries[focusedItemIndex]);
       handleCountrySelect(focusedCountry);
       return;
     }
@@ -180,7 +200,7 @@ export const CountrySelectorDropdown: React.FC<
   const scrollToFocusedCountry = useCallback(() => {
     if (!listRef.current || focusedItemIndex === undefined) return;
 
-    const focusedCountry = parseCountry(countries[focusedItemIndex]).iso2;
+    const focusedCountry = parseCountry(orderedCountries[focusedItemIndex]).iso2;
     if (focusedCountry === lastScrolledCountry.current) return;
 
     const element = listRef.current.querySelector(
@@ -190,7 +210,7 @@ export const CountrySelectorDropdown: React.FC<
     scrollToChild(listRef.current, element as HTMLElement);
 
     lastScrolledCountry.current = focusedCountry;
-  }, [focusedItemIndex, countries]);
+  }, [focusedItemIndex, orderedCountries]);
 
   // Scroll to focused item on change
   useEffect(() => {
@@ -228,10 +248,10 @@ export const CountrySelectorDropdown: React.FC<
       onBlur={onClose}
       tabIndex={-1}
       aria-activedescendant={`react-international-phone__${
-        parseCountry(countries[focusedItemIndex]).iso2
+        parseCountry(orderedCountries[focusedItemIndex]).iso2
       }-option`}
     >
-      {countries.map((c, index) => {
+      {orderedCountries.map((c, index) => {
         const country = parseCountry(c);
         const isSelected = country.iso2 === selectedCountry;
         const isFocused = index === focusedItemIndex;
@@ -248,6 +268,7 @@ export const CountrySelectorDropdown: React.FC<
             className={buildClassNames({
               addPrefix: [
                 'country-selector-dropdown__list-item',
+                preferredCountrySet.has(country.iso2) && 'country-selector-dropdown__list-item--preferred',
                 isSelected && 'country-selector-dropdown__list-item--selected',
                 isFocused && 'country-selector-dropdown__list-item--focused',
               ],

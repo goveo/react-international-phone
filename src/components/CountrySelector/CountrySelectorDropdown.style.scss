@@ -93,6 +93,10 @@ $dropdown-top: var(--react-international-phone-dropdown-left, 44px);
       cursor: pointer;
     }
 
+    &--preferred + &:not(&--preferred) {
+      border-top: 1px solid base.$border-color;
+    }
+
     &--selected,
     &--focused {
       background-color: $selected-dropdown-item-background-color;

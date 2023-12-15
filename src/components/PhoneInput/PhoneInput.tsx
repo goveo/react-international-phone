@@ -101,6 +101,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
       value,
       onChange,
       countries = defaultCountries,
+      preferredCountries = [],
       hideDropdown,
       showDisabledDialCodeAndPrefix,
       flags,
@@ -181,6 +182,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
           flags={flags}
           selectedCountry={country.iso2}
           countries={countries}
+          preferredCountries={preferredCountries}
           disabled={disabled}
           hideDropdown={hideDropdown}
           {...countrySelectorStyleProps}
