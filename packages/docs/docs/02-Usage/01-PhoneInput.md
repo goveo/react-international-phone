@@ -150,6 +150,14 @@ description={<span>Show prefix and dial code between country selector and phone 
 defaultValue="false"
 />
 
+### `disableFocusAfterCountrySelect`
+
+<PropDescription
+type="boolean"
+description="Disable auto focus on input field after country select."
+defaultValue="false"
+/>
+
 ### `disableFormatting`
 
 <PropDescription

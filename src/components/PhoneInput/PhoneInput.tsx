@@ -47,6 +47,12 @@ export interface PhoneInputProps
   showDisabledDialCodeAndPrefix?: boolean;
 
   /**
+   * @description Disable auto focus on input field after country select.
+   * @default false
+   */
+  disableFocusAfterCountrySelect?: boolean;
+
+  /**
    * @description Custom flag URLs array
    * @default undefined
    */
@@ -103,6 +109,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
       countries = defaultCountries,
       hideDropdown,
       showDisabledDialCodeAndPrefix,
+      disableFocusAfterCountrySelect,
       flags,
 
       style,
@@ -178,7 +185,9 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
       >
         <CountrySelector
           onSelect={(country) =>
-            setCountry(country.iso2, { focusOnInput: true })
+            setCountry(country.iso2, {
+              focusOnInput: !disableFocusAfterCountrySelect,
+            })
           }
           flags={flags}
           selectedCountry={country.iso2}
