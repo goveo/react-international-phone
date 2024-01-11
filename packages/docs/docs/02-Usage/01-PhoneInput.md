@@ -150,6 +150,14 @@ description={<span>Show prefix and dial code between country selector and phone 
 defaultValue="false"
 />
 
+### `disableFocusAfterCountrySelect`
+
+<PropDescription
+type="boolean"
+description="Disable auto focus on input field after country select."
+defaultValue="false"
+/>
+
 ### `disableFormatting`
 
 <PropDescription
@@ -237,7 +245,7 @@ In addition to the [HTMLInputElement API](https://developer.mozilla.org/en-US/do
 #### `setCountry`
 
 <PropDescription
-type="(iso2: CountryIso2) => void"
+type="(iso2: CountryIso2, options?: { focusOnInput: boolean }) => void"
 description="Set some country value (works same as country selector country item click handler)"
 />
 

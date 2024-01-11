@@ -182,6 +182,6 @@ description="Current country object."
 ### `setCountry`
 
 <PropDescription
-type="(country: CountryIso2) => void"
+type="(country: CountryIso2, options?: { focusOnInput: boolean })) => void"
 description="Country setter."
 />

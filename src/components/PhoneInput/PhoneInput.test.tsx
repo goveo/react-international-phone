@@ -1259,4 +1259,48 @@ describe('PhoneInput', () => {
       });
     });
   });
+
+  describe('disableFocusAfterCountrySelect', () => {
+    test('should focus on input if disableFocusAfterCountrySelect is not provided', async () => {
+      render(<PhoneInput />);
+
+      expect(getInput().value).toBe('+1 ');
+
+      getInput().focus();
+      expect(getInput()).toHaveFocus();
+
+      // remove focus from input
+      (document.activeElement as HTMLElement).blur();
+
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('ua'));
+      });
+
+      await Promise.resolve();
+
+      expect(getInput()).toHaveFocus();
+    });
+
+    test('should not focus on input if disableFocusAfterCountrySelect is true', async () => {
+      render(<PhoneInput disableFocusAfterCountrySelect />);
+
+      expect(getInput().value).toBe('+1 ');
+
+      getInput().focus();
+      expect(getInput()).toHaveFocus();
+
+      // remove focus from input
+      (document.activeElement as HTMLElement)?.blur();
+
+      act(() => {
+        fireEvent.click(getCountrySelector());
+        fireEvent.click(getDropdownOption('ua'));
+      });
+
+      await Promise.resolve();
+
+      expect(getInput()).not.toHaveFocus();
+    });
+  });
 });

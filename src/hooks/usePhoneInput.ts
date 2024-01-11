@@ -312,7 +312,10 @@ export const usePhoneInput = ({
     return value;
   };
 
-  const setNewCountry = (countryIso2: CountryIso2) => {
+  const setCountry = (
+    countryIso2: CountryIso2,
+    options = { focusOnInput: false },
+  ) => {
     const newCountry = getCountry({
       value: countryIso2,
       field: 'iso2',
@@ -335,10 +338,12 @@ export const usePhoneInput = ({
       country: newCountry.iso2,
     });
 
-    // Next tick is used to support UI libraries (had an issue with MUI)
-    Promise.resolve().then(() => {
-      inputRef.current?.focus();
-    });
+    if (options.focusOnInput) {
+      // Next tick is used to support UI libraries (had an issue with MUI)
+      Promise.resolve().then(() => {
+        inputRef.current?.focus();
+      });
+    }
   };
 
   const [initialized, setInitialized] = useState(false);
@@ -388,7 +393,7 @@ export const usePhoneInput = ({
     phone, // Phone in E164 format
     inputValue, // Formatted phone string. Value that should be rendered inside input element.
     country: fullCountry, // Current country object.
-    setCountry: setNewCountry, // Country setter.
+    setCountry, // Country setter.
     handlePhoneValueChange, // Change handler for input component
     inputRef, // Ref object for input component (handles caret position, focus and undo/redo).
   };
