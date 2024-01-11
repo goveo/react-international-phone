@@ -5,7 +5,7 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
 import { buildClassNames } from '../../style/buildClassNames';
-import { CountryIso2, ParsedCountry } from '../../types';
+import { ParsedCountry } from '../../types';
 import {
   CountrySelector,
   CountrySelectorProps,
@@ -87,7 +87,7 @@ export interface PhoneInputProps
 export type PhoneInputRefType =
   | null
   | (HTMLInputElement & {
-      setCountry: (iso2: CountryIso2) => void;
+      setCountry: ReturnType<typeof usePhoneInput>['setCountry'];
       state: {
         phone: string;
         inputValue: string;
@@ -177,7 +177,9 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
         style={style}
       >
         <CountrySelector
-          onSelect={(country) => setCountry(country.iso2)}
+          onSelect={(country) =>
+            setCountry(country.iso2, { focusOnInput: true })
+          }
           flags={flags}
           selectedCountry={country.iso2}
           countries={countries}
