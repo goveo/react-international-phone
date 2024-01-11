@@ -1,3 +1,11 @@
+# [4.1.0](https://github.com/goveo/react-international-phone/compare/v4.0.4...v4.1.0) (2024-01-11)
+
+
+### Features
+
+* add disableFocusAfterCountrySelect prop ([f2750e0](https://github.com/goveo/react-international-phone/commit/f2750e02587212e21c09418fa537985b71f2254f))
+* **usePhoneInput:** add ability to skip focus on input after country change in country setter ([8277809](https://github.com/goveo/react-international-phone/commit/82778093f235e0abec4ef528c98e529281b191ad))
+
 ## [4.0.4](https://github.com/goveo/react-international-phone/compare/v4.0.3...v4.0.4) (2023-11-11)
 
 
