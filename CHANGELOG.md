@@ -1,3 +1,16 @@
+# [4.2.0](https://github.com/goveo/react-international-phone/compare/v4.1.0...v4.2.0) (2024-01-15)
+
+
+### Bug Fixes
+
+* **CountrySelector:** render preferred country list divider as hr element ([d1df651](https://github.com/goveo/react-international-phone/commit/d1df65175a7b7d1f1c99717e4b5f5fa51d302ada))
+* **CountrySelector:** update countries ordering logic ([bcb8b89](https://github.com/goveo/react-international-phone/commit/bcb8b8945f53a78b131f729e312f4ac3886ede31))
+
+
+### Features
+
+* **component:** add "preferredCountries" feature ([ed8f6e5](https://github.com/goveo/react-international-phone/commit/ed8f6e5a3f3fcb396c1a2379e5e259e148862824)), closes [#137](https://github.com/goveo/react-international-phone/issues/137)
+
 # [4.1.0](https://github.com/goveo/react-international-phone/compare/v4.0.4...v4.1.0) (2024-01-11)
 
 
