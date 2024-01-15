@@ -66,22 +66,17 @@ export const CountrySelectorDropdown: React.FC<
   const listRef = useRef<HTMLUListElement>(null);
   const lastScrolledCountry = useRef<CountryIso2>();
 
-  const preferredCountrySet = useMemo(() => {
-    return new Set(preferredCountries);
-  }, [preferredCountries]);
+  const orderedCountries = useMemo<CountryData[]>(() => {
+    if (!preferredCountries || !preferredCountries.length) {
+      return countries;
+    }
 
-  const orderedCountries = useMemo(() => {
-    const preferred: CountryData[] = [];
-    const others = [...countries];
+    return [...countries].sort((c) => {
+      const country = parseCountry(c);
+      const isPreferredCountry = preferredCountries.includes(country.iso2);
 
-    preferredCountries.forEach((iso2) => {
-      const idx = others.findIndex((c) => parseCountry(c).iso2 === iso2);
-      if (idx !== -1) {
-        preferred.push(others.splice(idx, 1)[0]);
-      }
+      return isPreferredCountry ? -1 : 0;
     });
-
-    return preferred.concat(others);
   }, [countries, preferredCountries]);
 
   const searchRef = useRef<{
@@ -265,6 +260,7 @@ export const CountrySelectorDropdown: React.FC<
         const country = parseCountry(c);
         const isSelected = country.iso2 === selectedCountry;
         const isFocused = index === focusedItemIndex;
+        const isPreferred = preferredCountries.includes(country.iso2);
         const flag = flags?.find((f) => f.iso2 === country.iso2);
 
         return (
@@ -278,7 +274,7 @@ export const CountrySelectorDropdown: React.FC<
             className={buildClassNames({
               addPrefix: [
                 'country-selector-dropdown__list-item',
-                preferredCountrySet.has(country.iso2) &&
+                isPreferred &&
                   'country-selector-dropdown__list-item--preferred',
                 isSelected && 'country-selector-dropdown__list-item--selected',
                 isFocused && 'country-selector-dropdown__list-item--focused',

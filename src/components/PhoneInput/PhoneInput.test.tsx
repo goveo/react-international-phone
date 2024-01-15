@@ -908,6 +908,9 @@ describe('PhoneInput', () => {
       expect(getCountrySelectorDropdown().childNodes[1]).toBe(
         getDropdownOption('gb'),
       );
+      expect(getCountrySelectorDropdown().childNodes.length).toBe(
+        defaultCountries.length,
+      );
     });
 
     test('should ignore invalid preferred countries', () => {
