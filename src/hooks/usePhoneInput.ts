@@ -26,10 +26,16 @@ export interface UsePhoneInputConfig {
   value?: string;
 
   /**
-   * @description Array of available countries for guessing
+   * @description Array of available countries for guessing.
    * @default defaultCountries // full country list
    */
   countries?: CountryData[];
+
+  /**
+   * @description Countries to display at the top of the list of dropdown options.
+   * @default []
+   */
+  preferredCountries?: CountryIso2[];
 
   /**
    * @description Prefix for phone value.
@@ -128,6 +134,7 @@ export const defaultConfig: Required<
   disableDialCodeAndPrefix: false,
   disableFormatting: false,
   countries: defaultCountries,
+  preferredCountries: [],
 };
 
 export const usePhoneInput = ({

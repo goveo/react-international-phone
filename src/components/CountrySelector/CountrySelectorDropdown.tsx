@@ -1,6 +1,12 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
@@ -30,6 +36,9 @@ export interface CountrySelectorDropdownStyleProps {
 
   listItemDialCodeStyle?: React.CSSProperties;
   listItemDialCodeClassName?: string;
+
+  preferredListDividerStyle?: React.CSSProperties;
+  preferredListDividerClassName?: string;
 }
 
 export interface CountrySelectorDropdownProps
@@ -38,6 +47,7 @@ export interface CountrySelectorDropdownProps
   dialCodePrefix?: string;
   selectedCountry: CountryIso2;
   countries?: CountryData[];
+  preferredCountries?: CountryIso2[];
   flags?: CustomFlagImage[];
   onSelect?: (country: ParsedCountry) => void;
   onClose?: () => void;
@@ -50,6 +60,7 @@ export const CountrySelectorDropdown: React.FC<
   dialCodePrefix = '+',
   selectedCountry,
   countries = defaultCountries,
+  preferredCountries = [],
   flags,
   onSelect,
   onClose,
@@ -57,6 +68,19 @@ export const CountrySelectorDropdown: React.FC<
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
   const lastScrolledCountry = useRef<CountryIso2>();
+
+  const orderedCountries = useMemo<CountryData[]>(() => {
+    if (!preferredCountries || !preferredCountries.length) {
+      return countries;
+    }
+
+    return [...countries].sort((c) => {
+      const country = parseCountry(c);
+      const isPreferredCountry = preferredCountries.includes(country.iso2);
+
+      return isPreferredCountry ? -1 : 0;
+    });
+  }, [countries, preferredCountries]);
 
   const searchRef = useRef<{
     updatedAt: Date | undefined;
@@ -76,7 +100,7 @@ export const CountrySelectorDropdown: React.FC<
       updatedAt: new Date(),
     };
 
-    const searchedCountryIndex = countries.findIndex((c) =>
+    const searchedCountryIndex = orderedCountries.findIndex((c) =>
       parseCountry(c).name.toLowerCase().startsWith(searchRef.current.value),
     );
 
@@ -88,9 +112,11 @@ export const CountrySelectorDropdown: React.FC<
 
   const getCountryIndex = useCallback(
     (country: CountryIso2) => {
-      return countries.findIndex((c) => parseCountry(c).iso2 === country);
+      return orderedCountries.findIndex(
+        (c) => parseCountry(c).iso2 === country,
+      );
     },
-    [countries],
+    [orderedCountries],
   );
 
   const [focusedItemIndex, setFocusedItemIndex] = useState(
@@ -111,7 +137,7 @@ export const CountrySelectorDropdown: React.FC<
   );
 
   const moveFocusedItem = (to: 'prev' | 'next' | 'first' | 'last') => {
-    const lastPossibleIndex = countries.length - 1;
+    const lastPossibleIndex = orderedCountries.length - 1;
 
     const getNewIndex = (currentIndex: number) => {
       if (to === 'prev') return currentIndex - 1;
@@ -133,7 +159,7 @@ export const CountrySelectorDropdown: React.FC<
 
     if (e.key === 'Enter') {
       e.preventDefault();
-      const focusedCountry = parseCountry(countries[focusedItemIndex]);
+      const focusedCountry = parseCountry(orderedCountries[focusedItemIndex]);
       handleCountrySelect(focusedCountry);
       return;
     }
@@ -180,7 +206,9 @@ export const CountrySelectorDropdown: React.FC<
   const scrollToFocusedCountry = useCallback(() => {
     if (!listRef.current || focusedItemIndex === undefined) return;
 
-    const focusedCountry = parseCountry(countries[focusedItemIndex]).iso2;
+    const focusedCountry = parseCountry(
+      orderedCountries[focusedItemIndex],
+    ).iso2;
     if (focusedCountry === lastScrolledCountry.current) return;
 
     const element = listRef.current.querySelector(
@@ -190,7 +218,7 @@ export const CountrySelectorDropdown: React.FC<
     scrollToChild(listRef.current, element as HTMLElement);
 
     lastScrolledCountry.current = focusedCountry;
-  }, [focusedItemIndex, countries]);
+  }, [focusedItemIndex, orderedCountries]);
 
   // Scroll to focused item on change
   useEffect(() => {
@@ -228,66 +256,85 @@ export const CountrySelectorDropdown: React.FC<
       onBlur={onClose}
       tabIndex={-1}
       aria-activedescendant={`react-international-phone__${
-        parseCountry(countries[focusedItemIndex]).iso2
+        parseCountry(orderedCountries[focusedItemIndex]).iso2
       }-option`}
     >
-      {countries.map((c, index) => {
+      {orderedCountries.map((c, index) => {
         const country = parseCountry(c);
         const isSelected = country.iso2 === selectedCountry;
         const isFocused = index === focusedItemIndex;
+        const isPreferred = preferredCountries.includes(country.iso2);
+        const isLastPreferred = index === preferredCountries.length - 1;
         const flag = flags?.find((f) => f.iso2 === country.iso2);
 
         return (
-          <li
-            key={country.iso2}
-            data-country={country.iso2}
-            role="option"
-            aria-selected={isSelected}
-            aria-label={`${country.name} ${dialCodePrefix}${country.dialCode}`}
-            id={`react-international-phone__${country.iso2}-option`}
-            className={buildClassNames({
-              addPrefix: [
-                'country-selector-dropdown__list-item',
-                isSelected && 'country-selector-dropdown__list-item--selected',
-                isFocused && 'country-selector-dropdown__list-item--focused',
-              ],
-              rawClassNames: [styleProps.listItemClassName],
-            })}
-            onClick={() => handleCountrySelect(country)}
-            style={styleProps.listItemStyle}
-            title={country.name}
-          >
-            <FlagImage
-              iso2={country.iso2}
-              src={flag?.src}
-              className={buildClassNames({
-                addPrefix: ['country-selector-dropdown__list-item-flag-emoji'],
-                rawClassNames: [styleProps.listItemFlagClassName],
-              })}
-              style={styleProps.listItemFlagStyle}
-            />
-            <span
+          <React.Fragment key={country.iso2}>
+            <li
+              data-country={country.iso2}
+              role="option"
+              aria-selected={isSelected}
+              aria-label={`${country.name} ${dialCodePrefix}${country.dialCode}`}
+              id={`react-international-phone__${country.iso2}-option`}
               className={buildClassNames({
                 addPrefix: [
-                  'country-selector-dropdown__list-item-country-name',
+                  'country-selector-dropdown__list-item',
+                  isPreferred &&
+                    'country-selector-dropdown__list-item--preferred',
+                  isSelected &&
+                    'country-selector-dropdown__list-item--selected',
+                  isFocused && 'country-selector-dropdown__list-item--focused',
                 ],
-                rawClassNames: [styleProps.listItemCountryNameClassName],
+                rawClassNames: [styleProps.listItemClassName],
               })}
-              style={styleProps.listItemCountryNameStyle}
+              onClick={() => handleCountrySelect(country)}
+              style={styleProps.listItemStyle}
+              title={country.name}
             >
-              {country.name}
-            </span>
-            <span
-              className={buildClassNames({
-                addPrefix: ['country-selector-dropdown__list-item-dial-code'],
-                rawClassNames: [styleProps.listItemDialCodeClassName],
-              })}
-              style={styleProps.listItemDialCodeStyle}
-            >
-              {dialCodePrefix}
-              {country.dialCode}
-            </span>
-          </li>
+              <FlagImage
+                iso2={country.iso2}
+                src={flag?.src}
+                className={buildClassNames({
+                  addPrefix: [
+                    'country-selector-dropdown__list-item-flag-emoji',
+                  ],
+                  rawClassNames: [styleProps.listItemFlagClassName],
+                })}
+                style={styleProps.listItemFlagStyle}
+              />
+              <span
+                className={buildClassNames({
+                  addPrefix: [
+                    'country-selector-dropdown__list-item-country-name',
+                  ],
+                  rawClassNames: [styleProps.listItemCountryNameClassName],
+                })}
+                style={styleProps.listItemCountryNameStyle}
+              >
+                {country.name}
+              </span>
+              <span
+                className={buildClassNames({
+                  addPrefix: ['country-selector-dropdown__list-item-dial-code'],
+                  rawClassNames: [styleProps.listItemDialCodeClassName],
+                })}
+                style={styleProps.listItemDialCodeStyle}
+              >
+                {dialCodePrefix}
+                {country.dialCode}
+              </span>
+            </li>
+            {isLastPreferred ? (
+              <hr
+                className={buildClassNames({
+                  addPrefix: [
+                    'country-selector-dropdown__preferred-list-divider',
+                  ],
+                  rawClassNames: [styleProps.preferredListDividerClassName],
+                })}
+                style={styleProps.preferredListDividerStyle}
+              />
+            ) : null}
+          </React.Fragment>
         );
       })}
     </ul>

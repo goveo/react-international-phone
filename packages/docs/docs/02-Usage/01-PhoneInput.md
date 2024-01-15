@@ -62,6 +62,14 @@ description="An array of available countries to select (and guess)"
 defaultValue="defaultCountries"
 />
 
+### `preferredCountries`
+
+<PropDescription
+type="CountryIso2[]"
+description="An array of countries to display at the top of the dropdown list"
+defaultValue="[]"
+/>
+
 ### `hideDropdown`
 
 <PropDescription

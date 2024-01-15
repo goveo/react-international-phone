@@ -898,6 +898,30 @@ describe('PhoneInput', () => {
     });
   });
 
+  describe('preferred countries', () => {
+    test('should display preferred countries on top', () => {
+      render(<PhoneInput preferredCountries={['us', 'gb']} />);
+
+      expect(getCountrySelectorDropdown().childNodes[0]).toBe(
+        getDropdownOption('us'),
+      );
+      expect(getCountrySelectorDropdown().childNodes[1]).toBe(
+        getDropdownOption('gb'),
+      );
+      expect(getCountrySelectorDropdown().childNodes.length).toBe(
+        defaultCountries.length + 1, // sections divider included
+      );
+    });
+
+    test('should ignore invalid preferred countries', () => {
+      render(<PhoneInput preferredCountries={['xxx', 'us']} />);
+
+      expect(getCountrySelectorDropdown().childNodes[0]).toBe(
+        getDropdownOption('us'),
+      );
+    });
+  });
+
   describe('cursor position', () => {
     const user = userEvent.setup({ delay: null });
 

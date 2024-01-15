@@ -97,8 +97,10 @@ defaultValue="undefined"
 | --react-international-phone-dropdown-item-dial-code-color           | `gray`                                                              |
 | --react-international-phone-selected-dropdown-item-text-color       | --react-international-phone-text-color                              |
 | --react-international-phone-selected-dropdown-item-background-color | `whitesmoke`                                                        |
-| --react-international-phone-selected-dropdown-item-dial-code-color  | -react-international-phone-dropdown-item-dial-code-color            |
+| --react-international-phone-selected-dropdown-item-dial-code-color  | --react-international-phone-dropdown-item-dial-code-color           |
 | --react-international-phone-focused-dropdown-item-background-color  | --react-international-phone-selected-dropdown-item-background-color |
 | --react-international-phone-dropdown-shadow                         | `2px 2px 16px rgb(0 0 0 / 25%)`                                     |
 | --react-international-phone-dropdown-left                           | `0`                                                                 |
 | --react-international-phone-dropdown-top                            | `44px`                                                              |
+| --react-international-phone-dropdown-preferred-list-divider-color   | --react-international-phone-border-color                            |
+| --react-international-phone-dropdown-preferred-list-divider-margin  | `0`                                                                 |
