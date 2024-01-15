@@ -53,6 +53,7 @@ export interface CountrySelectorProps extends CountrySelectorStyleProps {
   disabled?: boolean;
   hideDropdown?: boolean;
   countries?: CountryData[];
+  preferredCountries?: CountryIso2[];
   flags?: CountrySelectorDropdownProps['flags'];
   renderButtonWrapper?: (props: {
     children: React.ReactNode;
@@ -66,6 +67,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   disabled,
   hideDropdown,
   countries = defaultCountries,
+  preferredCountries = [],
   flags,
   renderButtonWrapper,
   ...styleProps
@@ -186,6 +188,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       <CountrySelectorDropdown
         show={showDropdown}
         countries={countries}
+        preferredCountries={preferredCountries}
         flags={flags}
         onSelect={(country) => {
           setShowDropdown(false);
