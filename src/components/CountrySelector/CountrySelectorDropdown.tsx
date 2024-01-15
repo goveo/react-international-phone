@@ -36,6 +36,9 @@ export interface CountrySelectorDropdownStyleProps {
 
   listItemDialCodeStyle?: React.CSSProperties;
   listItemDialCodeClassName?: string;
+
+  preferredListDividerStyle?: React.CSSProperties;
+  preferredListDividerClassName?: string;
 }
 
 export interface CountrySelectorDropdownProps
@@ -261,61 +264,77 @@ export const CountrySelectorDropdown: React.FC<
         const isSelected = country.iso2 === selectedCountry;
         const isFocused = index === focusedItemIndex;
         const isPreferred = preferredCountries.includes(country.iso2);
+        const isLastPreferred = index === preferredCountries.length - 1;
         const flag = flags?.find((f) => f.iso2 === country.iso2);
 
         return (
-          <li
-            key={country.iso2}
-            data-country={country.iso2}
-            role="option"
-            aria-selected={isSelected}
-            aria-label={`${country.name} ${dialCodePrefix}${country.dialCode}`}
-            id={`react-international-phone__${country.iso2}-option`}
-            className={buildClassNames({
-              addPrefix: [
-                'country-selector-dropdown__list-item',
-                isPreferred &&
-                  'country-selector-dropdown__list-item--preferred',
-                isSelected && 'country-selector-dropdown__list-item--selected',
-                isFocused && 'country-selector-dropdown__list-item--focused',
-              ],
-              rawClassNames: [styleProps.listItemClassName],
-            })}
-            onClick={() => handleCountrySelect(country)}
-            style={styleProps.listItemStyle}
-            title={country.name}
-          >
-            <FlagImage
-              iso2={country.iso2}
-              src={flag?.src}
-              className={buildClassNames({
-                addPrefix: ['country-selector-dropdown__list-item-flag-emoji'],
-                rawClassNames: [styleProps.listItemFlagClassName],
-              })}
-              style={styleProps.listItemFlagStyle}
-            />
-            <span
+          <React.Fragment key={country.iso2}>
+            <li
+              data-country={country.iso2}
+              role="option"
+              aria-selected={isSelected}
+              aria-label={`${country.name} ${dialCodePrefix}${country.dialCode}`}
+              id={`react-international-phone__${country.iso2}-option`}
               className={buildClassNames({
                 addPrefix: [
-                  'country-selector-dropdown__list-item-country-name',
+                  'country-selector-dropdown__list-item',
+                  isPreferred &&
+                    'country-selector-dropdown__list-item--preferred',
+                  isSelected &&
+                    'country-selector-dropdown__list-item--selected',
+                  isFocused && 'country-selector-dropdown__list-item--focused',
                 ],
-                rawClassNames: [styleProps.listItemCountryNameClassName],
+                rawClassNames: [styleProps.listItemClassName],
               })}
-              style={styleProps.listItemCountryNameStyle}
+              onClick={() => handleCountrySelect(country)}
+              style={styleProps.listItemStyle}
+              title={country.name}
             >
-              {country.name}
-            </span>
-            <span
-              className={buildClassNames({
-                addPrefix: ['country-selector-dropdown__list-item-dial-code'],
-                rawClassNames: [styleProps.listItemDialCodeClassName],
-              })}
-              style={styleProps.listItemDialCodeStyle}
-            >
-              {dialCodePrefix}
-              {country.dialCode}
-            </span>
-          </li>
+              <FlagImage
+                iso2={country.iso2}
+                src={flag?.src}
+                className={buildClassNames({
+                  addPrefix: [
+                    'country-selector-dropdown__list-item-flag-emoji',
+                  ],
+                  rawClassNames: [styleProps.listItemFlagClassName],
+                })}
+                style={styleProps.listItemFlagStyle}
+              />
+              <span
+                className={buildClassNames({
+                  addPrefix: [
+                    'country-selector-dropdown__list-item-country-name',
+                  ],
+                  rawClassNames: [styleProps.listItemCountryNameClassName],
+                })}
+                style={styleProps.listItemCountryNameStyle}
+              >
+                {country.name}
+              </span>
+              <span
+                className={buildClassNames({
+                  addPrefix: ['country-selector-dropdown__list-item-dial-code'],
+                  rawClassNames: [styleProps.listItemDialCodeClassName],
+                })}
+                style={styleProps.listItemDialCodeStyle}
+              >
+                {dialCodePrefix}
+                {country.dialCode}
+              </span>
+            </li>
+            {isLastPreferred ? (
+              <hr
+                className={buildClassNames({
+                  addPrefix: [
+                    'country-selector-dropdown__preferred-list-divider',
+                  ],
+                  rawClassNames: [styleProps.preferredListDividerClassName],
+                })}
+                style={styleProps.preferredListDividerStyle}
+              />
+            ) : null}
+          </React.Fragment>
         );
       })}
     </ul>

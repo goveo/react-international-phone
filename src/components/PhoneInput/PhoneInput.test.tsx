@@ -909,7 +909,7 @@ describe('PhoneInput', () => {
         getDropdownOption('gb'),
       );
       expect(getCountrySelectorDropdown().childNodes.length).toBe(
-        defaultCountries.length,
+        defaultCountries.length + 1, // sections divider included
       );
     });
 
