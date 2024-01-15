@@ -1,6 +1,12 @@
 import './CountrySelectorDropdown.style.scss';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
@@ -108,7 +114,9 @@ export const CountrySelectorDropdown: React.FC<
 
   const getCountryIndex = useCallback(
     (country: CountryIso2) => {
-      return orderedCountries.findIndex((c) => parseCountry(c).iso2 === country);
+      return orderedCountries.findIndex(
+        (c) => parseCountry(c).iso2 === country,
+      );
     },
     [orderedCountries],
   );
@@ -200,7 +208,9 @@ export const CountrySelectorDropdown: React.FC<
   const scrollToFocusedCountry = useCallback(() => {
     if (!listRef.current || focusedItemIndex === undefined) return;
 
-    const focusedCountry = parseCountry(orderedCountries[focusedItemIndex]).iso2;
+    const focusedCountry = parseCountry(
+      orderedCountries[focusedItemIndex],
+    ).iso2;
     if (focusedCountry === lastScrolledCountry.current) return;
 
     const element = listRef.current.querySelector(
@@ -268,7 +278,8 @@ export const CountrySelectorDropdown: React.FC<
             className={buildClassNames({
               addPrefix: [
                 'country-selector-dropdown__list-item',
-                preferredCountrySet.has(country.iso2) && 'country-selector-dropdown__list-item--preferred',
+                preferredCountrySet.has(country.iso2) &&
+                  'country-selector-dropdown__list-item--preferred',
                 isSelected && 'country-selector-dropdown__list-item--selected',
                 isFocused && 'country-selector-dropdown__list-item--focused',
               ],
