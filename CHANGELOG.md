@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/goveo/react-international-phone/compare/v4.2.0...v4.2.1) (2024-01-24)
+
+
+### Bug Fixes
+
+* export ref type ([13fd47d](https://github.com/goveo/react-international-phone/commit/13fd47d377175b9d6f41aa915848e90fd050eab6))
+
 # [4.2.0](https://github.com/goveo/react-international-phone/compare/v4.1.0...v4.2.0) (2024-01-15)
 
 
