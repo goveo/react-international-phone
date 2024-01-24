@@ -241,6 +241,8 @@ const PhoneWithRef = () => {
 If you use typescript you should use `PhoneInputRefType` for as ref type:
 
 ```tsx
+import { PhoneInputRefType } from 'react-international-phone';
+// ...
 const ref = useRef<PhoneInputRefType>(null);
 ```
 
