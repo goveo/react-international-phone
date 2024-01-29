@@ -1,3 +1,10 @@
+## [4.2.2](https://github.com/goveo/react-international-phone/compare/v4.2.1...v4.2.2) (2024-01-29)
+
+
+### Bug Fixes
+
+* **CountrySelectorDropdown:** fix preferred countries ordering ([9ba9082](https://github.com/goveo/react-international-phone/commit/9ba9082c78ba613e05412a9d5973871c66871995))
+
 ## [4.2.1](https://github.com/goveo/react-international-phone/compare/v4.2.0...v4.2.1) (2024-01-24)
 
 
