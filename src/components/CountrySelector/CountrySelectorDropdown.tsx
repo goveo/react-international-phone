@@ -74,12 +74,19 @@ export const CountrySelectorDropdown: React.FC<
       return countries;
     }
 
-    return [...countries].sort((c) => {
-      const country = parseCountry(c);
-      const isPreferredCountry = preferredCountries.includes(country.iso2);
+    const preferred: CountryData[] = [];
+    const rest = [...countries];
 
-      return isPreferredCountry ? -1 : 0;
-    });
+    for (const iso2 of preferredCountries) {
+      const index = rest.findIndex((c) => parseCountry(c).iso2 === iso2);
+
+      if (index !== -1) {
+        const preferredCountry = rest.splice(index, 1)[0];
+        preferred.push(preferredCountry);
+      }
+    }
+
+    return preferred.concat(rest);
   }, [countries, preferredCountries]);
 
   const searchRef = useRef<{
