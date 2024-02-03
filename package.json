@@ -22,7 +22,7 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./build/index.d.ts",
+        "types": "./build/index.d.mts",
         "default": "./build/index.mjs"
       },
       "require": {
@@ -34,12 +34,13 @@
   },
   "types": "./build/index.d.ts",
   "main": "./build/index.js",
+  "module": "./build/index.mjs",
   "files": [
     "build/**/*"
   ],
   "scripts": {
     "cm": "cz",
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsup",
     "test": "jest",
     "test-storybook": "test-storybook",
     "test:coverage": "jest --coverage",
