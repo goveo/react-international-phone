@@ -1,3 +1,10 @@
+## [4.2.3](https://github.com/goveo/react-international-phone/compare/v4.2.2...v4.2.3) (2024-02-03)
+
+
+### Bug Fixes
+
+* remove unreachable d.ts references ([01c084b](https://github.com/goveo/react-international-phone/commit/01c084bf88d90c9e95df6ad09b43bb0759815b6e))
+
 ## [4.2.2](https://github.com/goveo/react-international-phone/compare/v4.2.1...v4.2.2) (2024-01-29)
 
 
