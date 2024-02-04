@@ -1,3 +1,10 @@
+## [4.2.4](https://github.com/goveo/react-international-phone/compare/v4.2.3...v4.2.4) (2024-02-04)
+
+
+### Bug Fixes
+
+* **build:** change build folder to dist, fix repo link ([7d495c9](https://github.com/goveo/react-international-phone/commit/7d495c93f0fdba9268d1799541ac7123ac003231))
+
 ## [4.2.3](https://github.com/goveo/react-international-phone/compare/v4.2.2...v4.2.3) (2024-02-03)
 
 
