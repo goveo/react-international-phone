@@ -7,6 +7,5 @@ export default defineConfig({
   clean: true,
   minify: true,
   format: ['esm', 'cjs'],
-  outDir: 'build',
-  dts: true,
+  outDir: 'dist',
 });
