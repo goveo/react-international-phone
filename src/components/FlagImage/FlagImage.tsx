@@ -35,7 +35,8 @@ const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
   return [codepoints[iso2[0]], codepoints[iso2[1]]].join('-');
 };
 
-interface FlagImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+export interface FlagImageProps
+  extends React.ImgHTMLAttributes<HTMLImageElement> {
   /**
    * @description iso2 code of country flag
    * @required
