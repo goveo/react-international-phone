@@ -1,3 +1,10 @@
+## [4.2.6](https://github.com/goveo/react-international-phone/compare/v4.2.5...v4.2.6) (2024-02-22)
+
+
+### Bug Fixes
+
+* some CSS variables ([62f901f](https://github.com/goveo/react-international-phone/commit/62f901f50b0f3fedf3b768a6a0cb371cbde1bb4e))
+
 ## [4.2.5](https://github.com/goveo/react-international-phone/compare/v4.2.4...v4.2.5) (2024-02-12)
 
 
