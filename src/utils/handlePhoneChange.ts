@@ -15,6 +15,7 @@ export interface PhoneFormattingConfig {
   defaultMask: string;
   countryGuessingEnabled: boolean;
   disableFormatting: boolean;
+  preferSelectedCountry: boolean;
 }
 
 interface HandlePhoneChangeProps extends PhoneFormattingConfig {
@@ -38,12 +39,24 @@ export function handlePhoneChange({
   defaultMask,
   countryGuessingEnabled,
   disableFormatting,
+  preferSelectedCountry,
 }: HandlePhoneChangeProps): {
   phone: string;
   inputValue: string;
   country: ParsedCountry;
 } {
   let inputPhone = value;
+
+  // if preferSelectedCountry is enabled, then we should prefill the already selected country dial code to prevent guessing
+  // slightly different from disableDialCodeAndPrefix as that also hides the dial code
+  if (
+    preferSelectedCountry &&
+    country?.dialCode &&
+    inputPhone &&
+    !inputPhone.startsWith(`${prefix}`)
+  ) {
+    inputPhone = `${prefix}${country.dialCode}${inputPhone}`;
+  }
 
   // make sure that inputPhone starts with dial code when dial code is disabled
   if (disableDialCodeAndPrefix) {
