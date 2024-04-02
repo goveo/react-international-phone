@@ -1,6 +1,10 @@
 import './PhoneInput.style.scss';
 
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, {
+  forwardRef,
+  KeyboardEventHandler,
+  useImperativeHandle,
+} from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
@@ -75,6 +79,12 @@ export interface PhoneInputProps
   ) => void;
 
   /**
+   * @description Pass-through of onKeyDown event
+   * @default undefined
+   */
+  onKeyDown?: KeyboardEventHandler | undefined;
+
+  /**
    * @description Default input component props
    * @default undefined
    */
@@ -106,6 +116,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
     {
       value,
       onChange,
+      onKeyDown,
       countries = defaultCountries,
       preferredCountries = [],
       hideDropdown,
@@ -210,6 +221,7 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
 
         <input
           onChange={handlePhoneValueChange}
+          onKeyDown={onKeyDown}
           value={inputValue}
           type="tel"
           ref={inputRef}

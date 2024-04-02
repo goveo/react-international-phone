@@ -38,6 +38,14 @@ description="Phone value."
 defaultValue={'""'}
 />
 
+### `onKeyDown`
+
+<PropDescription
+type="KeyboardEventHandler | undefined"
+description="Callback that calls when a key is pressed in the input element"
+defaultValue="undefined"
+/>
+
 ### `onChange`
 
 <PropDescription

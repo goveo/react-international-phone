@@ -239,6 +239,17 @@ describe('PhoneInput', () => {
     });
   });
 
+  describe('onKeyDown', () => {
+    test("should call onKeyDown when input element's associated event is called", async () => {
+      const onKeyDown = jest.fn();
+      render(
+        <PhoneInput value="+1" defaultCountry="us" onKeyDown={onKeyDown} />,
+      );
+      fireEvent.keyDown(getInput());
+      expect(onKeyDown.mock.calls.length).toBe(1);
+    });
+  });
+
   describe('country flag', () => {
     test('should set flag on initial render', () => {
       render(<PhoneInput value="+1" defaultCountry="ca" />);
