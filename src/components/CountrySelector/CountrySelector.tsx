@@ -1,12 +1,13 @@
 import './CountrySelector.style.scss';
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useMemo, useRef, useState } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { buildClassNames } from '../../style/buildClassNames';
-import { CountryData, CountryIso2 } from '../../types';
+import { CountryData, CountryIso2, ParsedCountry } from '../../types';
 import { getCountry } from '../../utils';
 import { FlagImage } from '../FlagImage/FlagImage';
+import { AvailableKeys } from '../PhoneInput/PhoneInput';
 import {
   CountrySelectorDropdown,
   CountrySelectorDropdownProps,
@@ -59,6 +60,9 @@ export interface CountrySelectorProps extends CountrySelectorStyleProps {
     children: React.ReactNode;
     rootProps: RenderButtonWrapperRootProps;
   }) => React.ReactNode;
+  order?: AvailableKeys[];
+  country?: ParsedCountry;
+  customArrow?: ReactNode;
 }
 
 export const CountrySelector: React.FC<CountrySelectorProps> = ({
@@ -70,6 +74,9 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   preferredCountries = [],
   flags,
   renderButtonWrapper,
+  order,
+  country,
+  customArrow,
   ...styleProps
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -109,14 +116,8 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       'aria-expanded': showDropdown,
     };
 
-    const buttonContent = (
-      <div
-        className={buildClassNames({
-          addPrefix: ['country-selector-button__button-content'],
-          rawClassNames: [styleProps.buttonContentWrapperClassName],
-        })}
-        style={styleProps.buttonContentWrapperStyle}
-      >
+    const orderItems = {
+      flag: (
         <FlagImage
           iso2={selectedCountry}
           src={flags?.find((f) => f.iso2 === selectedCountry)?.src}
@@ -132,20 +133,33 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
             ...styleProps.flagStyle,
           }}
         />
-        {!hideDropdown && (
-          <div
-            className={buildClassNames({
-              addPrefix: [
-                'country-selector-button__dropdown-arrow',
-                disabled && 'country-selector-button__dropdown-arrow--disabled',
-                showDropdown &&
-                  'country-selector-button__dropdown-arrow--active',
-              ],
-              rawClassNames: [styleProps.dropdownArrowClassName],
-            })}
-            style={styleProps.dropdownArrowStyle}
-          />
-        )}
+      ),
+      country: <div>{country?.name}</div>,
+      dial: <div>+{country?.dialCode}</div>,
+      arrow: customArrow || (
+        <div
+          className={buildClassNames({
+            addPrefix: [
+              'country-selector-button__dropdown-arrow',
+              disabled && 'country-selector-button__dropdown-arrow--disabled',
+              showDropdown && 'country-selector-button__dropdown-arrow--active',
+            ],
+            rawClassNames: [styleProps.dropdownArrowClassName],
+          })}
+          style={styleProps.dropdownArrowStyle}
+        />
+      ),
+    };
+
+    const buttonContent = (
+      <div
+        className={buildClassNames({
+          addPrefix: ['country-selector-button__button-content'],
+          rawClassNames: [styleProps.buttonContentWrapperClassName],
+        })}
+        style={styleProps.buttonContentWrapperStyle}
+      >
+        {order?.map((item) => orderItems[item])}
       </div>
     );
     if (renderButtonWrapper) {

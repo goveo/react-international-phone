@@ -68,6 +68,8 @@ $disabled-country-selector-background-color: var(
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 4px;
+    padding: 0 4px;
   }
 
   &__flag-emoji {
