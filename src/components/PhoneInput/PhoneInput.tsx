@@ -90,6 +90,8 @@ export interface PhoneInputProps
   placeholder?: InputProps['placeholder'];
   order?: AvailableKeys[];
   customArrow?: ReactNode;
+  openDropdown?: boolean;
+  setIsOpenDropdown?: (value: React.SetStateAction<boolean>) => void;
 }
 
 export type AvailableKeys = 'flag' | 'country' | 'dial' | 'arrow';
@@ -132,8 +134,11 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
       onBlur,
       required,
       autoFocus,
+
       order,
       customArrow,
+      openDropdown,
+      setIsOpenDropdown,
 
       ...usePhoneInputConfig
     },
@@ -205,6 +210,8 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
           order={order}
           country={country}
           customArrow={customArrow}
+          openDropdown={openDropdown}
+          setIsOpenDropdown={setIsOpenDropdown}
           {...countrySelectorStyleProps}
         />
 

@@ -63,6 +63,8 @@ export interface CountrySelectorProps extends CountrySelectorStyleProps {
   order?: AvailableKeys[];
   country?: ParsedCountry;
   customArrow?: ReactNode;
+  openDropdown?: boolean;
+  setIsOpenDropdown?: (value: React.SetStateAction<boolean>) => void;
 }
 
 export const CountrySelector: React.FC<CountrySelectorProps> = ({
@@ -74,9 +76,13 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   preferredCountries = [],
   flags,
   renderButtonWrapper,
+
   order,
   country,
   customArrow,
+  openDropdown,
+  setIsOpenDropdown,
+
   ...styleProps
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -97,6 +103,8 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
 
     if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
       e.preventDefault();
+
+      if (setIsOpenDropdown) setIsOpenDropdown(true);
       setShowDropdown(true);
     }
   };
@@ -104,7 +112,10 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
   const renderSelectorButton = () => {
     const rootProps: RenderButtonWrapperRootProps = {
       title: fullSelectedCountry?.name,
-      onClick: () => setShowDropdown((v) => !v),
+      onClick: () => {
+        if (setIsOpenDropdown) setIsOpenDropdown((v) => !v);
+        setShowDropdown((v) => !v);
+      },
       // Need this to close dropdown on selector button click
       // https://stackoverflow.com/a/28963938
       onMouseDown: (e) => e.preventDefault(),
@@ -113,7 +124,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
       role: 'combobox',
       'aria-label': 'Country selector',
       'aria-haspopup': 'listbox',
-      'aria-expanded': showDropdown,
+      'aria-expanded': openDropdown ?? showDropdown,
     };
 
     const orderItems = {
@@ -142,7 +153,8 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
             addPrefix: [
               'country-selector-button__dropdown-arrow',
               disabled && 'country-selector-button__dropdown-arrow--disabled',
-              showDropdown && 'country-selector-button__dropdown-arrow--active',
+              (openDropdown ?? showDropdown) &&
+                'country-selector-button__dropdown-arrow--active',
             ],
             rawClassNames: [styleProps.dropdownArrowClassName],
           })}
@@ -159,7 +171,9 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         })}
         style={styleProps.buttonContentWrapperStyle}
       >
-        {order?.map((item) => orderItems[item])}
+        {order?.map((item, index) => (
+          <div key={`item#${index}`}>{orderItems[item]}</div>
+        ))}
       </div>
     );
     if (renderButtonWrapper) {
@@ -175,7 +189,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         className={buildClassNames({
           addPrefix: [
             'country-selector-button',
-            showDropdown && 'country-selector-button--active',
+            (openDropdown ?? showDropdown) && 'country-selector-button--active',
             disabled && 'country-selector-button--disabled',
             hideDropdown && 'country-selector-button--hide-dropdown',
           ],
@@ -200,16 +214,18 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
     >
       {renderSelectorButton()}
       <CountrySelectorDropdown
-        show={showDropdown}
+        show={openDropdown ?? showDropdown}
         countries={countries}
         preferredCountries={preferredCountries}
         flags={flags}
         onSelect={(country) => {
+          if (setIsOpenDropdown) setIsOpenDropdown(false);
           setShowDropdown(false);
           onSelect?.(country);
         }}
         selectedCountry={selectedCountry}
         onClose={() => {
+          if (setIsOpenDropdown) setIsOpenDropdown(false);
           setShowDropdown(false);
         }}
         {...styleProps.dropdownStyleProps}
