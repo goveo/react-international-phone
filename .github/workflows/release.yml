@@ -50,6 +50,7 @@ jobs:
         with:
           fail_ci_if_error: true
           verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Publish npm package
         uses: cycjimmy/semantic-release-action@v3
