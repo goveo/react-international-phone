@@ -1,3 +1,10 @@
+## [4.2.7](https://github.com/goveo/react-international-phone/compare/v4.2.6...v4.2.7) (2024-04-15)
+
+
+### Bug Fixes
+
+* **country-data:** update German phone format ([dab8f12](https://github.com/goveo/react-international-phone/commit/dab8f12d0b9f11220e8e71e34081854a5de6353e))
+
 ## [4.2.6](https://github.com/goveo/react-international-phone/compare/v4.2.5...v4.2.6) (2024-02-22)
 
 
