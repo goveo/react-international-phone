@@ -1,6 +1,6 @@
 import './PhoneInput.style.scss';
 
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, ReactNode, useImperativeHandle } from 'react';
 
 import { defaultCountries } from '../../data/countryData';
 import { usePhoneInput, UsePhoneInputConfig } from '../../hooks/usePhoneInput';
@@ -88,7 +88,13 @@ export interface PhoneInputProps
   autoFocus?: InputProps['autoFocus'];
   disabled?: InputProps['disabled'];
   placeholder?: InputProps['placeholder'];
+  order?: AvailableKeys[];
+  customArrow?: ReactNode;
+  openDropdown?: boolean;
+  setIsOpenDropdown?: (value: React.SetStateAction<boolean>) => void;
 }
+
+export type AvailableKeys = 'flag' | 'country' | 'dial' | 'arrow';
 
 export type PhoneInputRefType =
   | null
@@ -128,6 +134,11 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
       onBlur,
       required,
       autoFocus,
+
+      order,
+      customArrow,
+      openDropdown,
+      setIsOpenDropdown,
 
       ...usePhoneInputConfig
     },
@@ -196,6 +207,11 @@ export const PhoneInput = forwardRef<PhoneInputRefType, PhoneInputProps>(
           preferredCountries={preferredCountries}
           disabled={disabled}
           hideDropdown={hideDropdown}
+          order={order}
+          country={country}
+          customArrow={customArrow}
+          openDropdown={openDropdown}
+          setIsOpenDropdown={setIsOpenDropdown}
           {...countrySelectorStyleProps}
         />
 
