@@ -1,3 +1,10 @@
+## [4.2.8](https://github.com/goveo/react-international-phone/compare/v4.2.7...v4.2.8) (2024-04-20)
+
+
+### Bug Fixes
+
+* **country-data:** add support for Cayman Islands and Greenland ([df90c60](https://github.com/goveo/react-international-phone/commit/df90c60098128d8896d19b25ab2abad6693db6e7))
+
 ## [4.2.7](https://github.com/goveo/react-international-phone/compare/v4.2.6...v4.2.7) (2024-04-15)
 
 
