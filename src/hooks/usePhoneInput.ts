@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultCountries } from '../data/countryData';
 import { CountryData, CountryIso2, ParsedCountry } from '../types';
 import { getCountry } from '../utils';
+import { isMacOS } from '../utils/common/isMacOS';
 import {
   handlePhoneChange,
   PhoneFormattingConfig,
@@ -277,10 +278,20 @@ export const usePhoneInput = ({
       if (!e.key) return;
 
       const ctrlPressed = e.ctrlKey;
+      const metaPressed = e.metaKey;
       const shiftPressed = e.shiftKey;
       const zPressed = e.key.toLowerCase() === 'z';
 
-      if (!ctrlPressed || !zPressed) return;
+      if (!zPressed) return;
+
+      if (isMacOS()) {
+        // command+z on macOS
+        if (!metaPressed) return;
+      } else {
+        // ctrl+z on non-macOS
+        if (!ctrlPressed) return;
+      }
+
       shiftPressed ? redo() : undo();
     };
 
