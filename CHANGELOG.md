@@ -1,3 +1,10 @@
+## [4.2.9](https://github.com/goveo/react-international-phone/compare/v4.2.8...v4.2.9) (2024-04-29)
+
+
+### Bug Fixes
+
+* **undo:** fix undo/redo keys for macOS ([544151e](https://github.com/goveo/react-international-phone/commit/544151e03c01c5e7f5da73f2a660d5c24f946665))
+
 ## [4.2.8](https://github.com/goveo/react-international-phone/compare/v4.2.7...v4.2.8) (2024-04-20)
 
 
