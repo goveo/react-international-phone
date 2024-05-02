@@ -113,7 +113,8 @@ export const FlagImage: React.FC<FlagImageProps> = ({
         height: size,
         ...style,
       }}
-      alt=""
+      alt={iso2}
+      title={iso2}
       {...restProps}
     />
   );
