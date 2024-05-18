@@ -1,3 +1,16 @@
+# [4.3.0](https://github.com/goveo/react-international-phone/compare/v4.2.9...v4.3.0) (2024-05-18)
+
+
+### Bug Fixes
+
+* **country-data:** add Dominican Republic formatting mask and area codes ([79f7cf2](https://github.com/goveo/react-international-phone/commit/79f7cf23c11a16ec12cfde7e1aa48af4f32321d0))
+* **country-data:** add Puerto Rico formatting mask ([4b8721a](https://github.com/goveo/react-international-phone/commit/4b8721afd740970a92f10e3482737f673b5e1054))
+
+
+### Features
+
+* format number for The Netherlands ([2e612cd](https://github.com/goveo/react-international-phone/commit/2e612cd799df0555bda6c4dad4e91078eea5536b))
+
 ## [4.2.9](https://github.com/goveo/react-international-phone/compare/v4.2.8...v4.2.9) (2024-04-29)
 
 
