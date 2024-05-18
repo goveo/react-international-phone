@@ -1122,10 +1122,10 @@ describe('PhoneInput', () => {
 
   test('should use default mask if country data does not have mask', () => {
     // mask is undefined
-    const { rerender } = render(<PhoneInput defaultCountry="do" />);
-    fireChangeEvent('+1114567');
-    expect(getInput().value).toBe('+1 114567');
-    expect(getCountrySelector()).toHaveAttribute('data-country', 'do');
+    const { rerender } = render(<PhoneInput defaultCountry="af" />);
+    fireChangeEvent('+93114567');
+    expect(getInput().value).toBe('+93 114567');
+    expect(getCountrySelector()).toHaveAttribute('data-country', 'af');
 
     // mask is empty string
     rerender(<PhoneInput defaultCountry="gr" />);
