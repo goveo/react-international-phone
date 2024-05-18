@@ -216,7 +216,7 @@ export const defaultCountries: CountryData[] = [
   [
     'Netherlands',
     'nl',
-    '31', 
+    '31',
     {
       '/^06/': '(.). .........',
       '/^6/': '. .........',
@@ -226,7 +226,7 @@ export const defaultCountries: CountryData[] = [
         '.. ........',
       '/^0/': '(.)... .......',
       default: '... .......',
-    }
+    },
   ],
   ['New Caledonia', 'nc', '687'],
   ['New Zealand', 'nz', '64', '...-...-....'],
