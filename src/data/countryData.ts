@@ -132,7 +132,7 @@ export const defaultCountries: CountryData[] = [
   ['Denmark', 'dk', '45', '.. .. .. ..'],
   ['Djibouti', 'dj', '253'],
   ['Dominica', 'dm', '1767'],
-  ['Dominican Republic', 'do', '1', '', 2],
+  ['Dominican Republic', 'do', '1', '(...) ...-....', 2, ['809', '829', '849']],
   ['Ecuador', 'ec', '593'],
   ['Egypt', 'eg', '20'],
   ['El Salvador', 'sv', '503', '....-....'],
