@@ -182,6 +182,14 @@ description="Custom flag URLs array"
 defaultValue="undefined"
 />
 
+### `countrySelectorButtonProps`
+
+<PropDescription
+type="ButtonHTMLAttributes"
+description="Default button element props"
+defaultValue="undefined"
+>
+
 ### `inputProps`
 
 <PropDescription
