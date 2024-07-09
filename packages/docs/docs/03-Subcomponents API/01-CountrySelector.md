@@ -69,14 +69,6 @@ description={<span>Render function for custom button wrapper. <code>children</co
 defaultValue="undefined"
 />
 
-### `buttonProps`
-
-<PropDescription
-type="ButtonHTMLAttributes"
-description="Default button element props"
-defaultValue="undefined"
->
-
 ### Style properties (`CountrySelectorStyleProps` type)
 
 | Prop                          | Type                                                                                                | Description                                                     |
