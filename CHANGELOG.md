@@ -1,3 +1,15 @@
+# [4.4.0](https://github.com/goveo/react-international-phone/compare/v4.3.0...v4.4.0) (2024-12-16)
+
+
+### Bug Fixes
+
+* **country-data:** update Philippines phone format ([621003d](https://github.com/goveo/react-international-phone/commit/621003d941410270353e79de42fd3d6b9f70f40b))
+
+
+### Features
+
+* add react 19 peer dependency ([216ec0d](https://github.com/goveo/react-international-phone/commit/216ec0d6e86219b0d5d4289f2f09eb91f694903c))
+
 # [4.3.0](https://github.com/goveo/react-international-phone/compare/v4.2.9...v4.3.0) (2024-05-18)
 
 
